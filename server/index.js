@@ -22,12 +22,6 @@ const db = {
   },
 };
 
-function isObjectChanged(source, comparison) {
-  const _source = JSON.stringify(source);
-  const _comparison = JSON.stringify({ ...source, ...comparison });
-  return _source !== _comparison;
-}
-
 function queryThing(data, key) {
   return db.read()["users"].filter((f) => {
     return f[key] == data;
@@ -41,12 +35,12 @@ app.all("*", function (req, res, next) {
 
 const apiLimiter = rateLimit({
   windowMs: 60000,
-  max: 8,
+  max: 5,
   standardHeaders: true,
   legacyHeaders: false,
 });
 
-app.use("*", apiLimiter);
+app.use("/add_data", apiLimiter);
 
 app.get("/add_data", (req, res) => {
   let q = req.query;
@@ -60,10 +54,6 @@ app.get("/add_data", (req, res) => {
   };
   for (i in data) {
     if (data[i] == null || data[i] == "") return res.status(400).json();
-  }
-  let myUsernames = queryThing(data.username, "username");
-  for (j in myUsernames) {
-    if (!isObjectChanged(myUsernames[j], data)) return res.status(400).json();
   }
   let _data = db.read();
   _data["users"].push(data);
