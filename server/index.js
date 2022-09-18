@@ -62,12 +62,12 @@ app.get("/add_data", (req, res) => {
 });
 
 app.get("/query_by", (req, res) => {
-  if (!req.query.data || !res.query.key) res.status(400).json();
-  return res.status(200).json(queryThing(req.query.data, res.query.key));
+  if (!req.query.data || !req.query.key) res.status(400).json();
+  return res.status(200).json(queryThing(req.query.data, req.query.key));
 });
 
 app.get("/remove_by", (req, res) => {
-  if (!req.query.data || !res.query.key) res.status(400).json();
+  if (!req.query.data || !req.query.key) res.status(400).json();
   let _data = db.read();
   for (var i = 0; i < _data["users"].length; i++) {
     if (_data["users"][i][key] === req.query.data) {
