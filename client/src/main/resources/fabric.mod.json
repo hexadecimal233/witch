@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "id": "simplemcmod",
+  "id": "Witch",
   "version": "${version}",
-  "name": "Simple MC mod",
+  "name": "Witch by Soda",
   "environment": "*",
   "mixins": [
-    "simplemcmod.mixins.json"
+    "witch.mixins.json"
   ],
   "depends": {
     "minecraft": ">=1.19"

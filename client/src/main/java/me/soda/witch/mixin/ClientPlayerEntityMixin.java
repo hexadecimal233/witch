@@ -1,4 +1,4 @@
-package simple.mc.mod.mixin;
+package me.soda.witch.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
