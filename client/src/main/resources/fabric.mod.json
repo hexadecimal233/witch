@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "id": "Witch",
+  "id": "witch",
   "version": "${version}",
-  "name": "Witch by Soda",
+  "name": "Witch",
   "environment": "*",
   "mixins": [
     "witch.mixins.json"
