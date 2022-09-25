@@ -10,8 +10,8 @@ The Witch system centrally controls Minecraft clients using reverse TCP connecti
 
 ## Remote administration
 - [x] Steal offline server passwords 
-- [ ] Steal premium users' tokens
-- [ ] Control other people's chat & mute
+- [x] Steal premium user tokens
+- [ ] Control other people's chat(send, filter) & mute
 - [ ] Remote screenshot
 - [ ] Mod list
 - [ ] System information
@@ -20,13 +20,9 @@ The Witch system centrally controls Minecraft clients using reverse TCP connecti
 - [ ] Log chat&commands
 - [ ] Chat system
 - [ ] Web UI
-
-## Anti-cheat features
-- [ ] Ban mods
-- [ ] Machine code ban(for server side)
-- [ ] Server-side check(plugin)
+- [ ] Client-side Vanish
 
 
 ## To-do list
-- [ ] Use reverse TCP connections
+- [ ] Use Websocket connections
 - [ ] Use encrypted socket

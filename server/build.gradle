@@ -1,0 +1,25 @@
+plugins {
+    id 'java'
+}
+
+group 'me.soda'
+version '1.0-SNAPSHOT'
+
+dependencies {
+    implementation 'org.java-websocket:Java-WebSocket:1.5.3'
+    implementation 'org.slf4j:slf4j-simple:2.0.2'
+}
+
+repositories {
+    mavenCentral()
+}
+
+test {
+    useJUnitPlatform()
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'me.soda.server.Main'
+    }
+}
