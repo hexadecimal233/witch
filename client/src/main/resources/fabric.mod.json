@@ -3,11 +3,21 @@
   "id": "witch",
   "version": "${version}",
   "name": "Witch",
-  "environment": "*",
+  "authors": [
+    "SH_Sodawater"
+  ],
+  "environment": "client",
+  "contact": {
+    "homepage": "https://github.com/ThebestkillerTBK/witch",
+    "issues": "https://github.com/ThebestkillerTBK/witch/issues"
+  },
+  "icon": "assets/witch/icon.png",
   "mixins": [
     "witch.mixins.json"
   ],
+  "license": "WTFPL license",
   "depends": {
-    "minecraft": ">=1.19"
+    "fabricloader": ">=0.14.9",
+    "minecraft": ">=1.19.2"
   }
 }

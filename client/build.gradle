@@ -1,6 +1,6 @@
 plugins {
 	id 'fabric-loom' version '1.0-SNAPSHOT'
-	id 'maven-publish'
+	id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
 sourceCompatibility = JavaVersion.VERSION_17
@@ -9,6 +9,11 @@ targetCompatibility = JavaVersion.VERSION_17
 archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
+
+configurations {
+	implementation.extendsFrom(library)
+	shadow.extendsFrom(library)
+}
 
 repositories {
 	// Add repositories to retrieve artifacts from in here.
@@ -29,7 +34,11 @@ dependencies {
 
 	// modImplementation "net.fabricmc.fabric-api:fabric-api-deprecated:${project.fabric_version}"
 
-	implementation 'org.java-websocket:Java-WebSocket:1.5.3'
+	library 'org.java-websocket:Java-WebSocket:1.5.3'
+}
+
+shadowJar {
+	configurations = [ project.configurations.shadow ]
 }
 
 processResources {
@@ -55,22 +64,5 @@ java {
 jar {
 	from("LICENSE") {
 		rename { "${it}_${project.archivesBaseName}"}
-	}
-}
-
-// configure the maven publication
-publishing {
-	publications {
-		mavenJava(MavenPublication) {
-			from components.java
-		}
-	}
-
-	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-	repositories {
-		// Add repositories to publish to here.
-		// Notice: This block does NOT have the same function as the block in the top level.
-		// The repositories here will be used for publishing your artifact, not for
-		// retrieving dependencies.
 	}
 }

@@ -6,8 +6,10 @@
   "mixins": [
   ],
   "client": [
+    "ChatHudMixin",
     "ClientPlayerEntityMixin",
-    "ChatHudMixin"
+    "MinecraftClientMixin",
+    "InGameHudMixin"
   ],
   "injectors": {
     "defaultRequire": 1
