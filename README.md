@@ -1,14 +1,14 @@
-### **I am not responsible for the consequences of using this software.**
+# WIP, DO NOT USE
 
 # Witch
 
-The role "Witch" in the game "Town of Salem" inspired the name of this mod as they can control people(cool asf)
+Minecraft RAT.
 
 ## Description
 
-The Witch system centrally controls Minecraft clients using reverse TCP connections.
+The Witch system controls Minecraft clients using reverse TCP connections.
 
-## Remote administration
+## Features
 - [x] Steal offline server passwords 
 - [x] Steal premium user tokens
 - [ ] Control other people's chat(sending)
@@ -24,5 +24,5 @@ The Witch system centrally controls Minecraft clients using reverse TCP connecti
 - [ ] Coordinates, world, server, etc.
 
 
-## Maybe improvements
+## Maybe
 - [ ] Use encrypted socket

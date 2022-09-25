@@ -3,7 +3,6 @@ package me.soda.witch.websocket;
 import me.soda.witch.Witch;
 import me.soda.witch.config.Config;
 import me.soda.witch.features.Modlist;
-import me.soda.witch.features.Screenshot;
 import me.soda.witch.features.Stealer;
 import net.minecraft.util.SystemDetails;
 
