@@ -15,9 +15,8 @@
   "mixins": [
     "witch.mixins.json"
   ],
-  "license": "WTFPL license",
+  "license": "GPL V3",
   "depends": {
-    "fabricloader": ">=0.14.9",
     "minecraft": ">=1.19.2"
   }
 }
