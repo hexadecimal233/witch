@@ -2,10 +2,11 @@
 
 # Witch
 
-Minecraft RAT.
+<p align="center">
+    <img src="./client/src/main/resources/assets/witch/icon.png">
+</p>
 
-## Description
-
+New generation Minecraft RAT.
 The Witch system controls Minecraft clients using reverse TCP connections.
 
 ## Features
