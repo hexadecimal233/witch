@@ -9,9 +9,6 @@ public class ChatControl {
     public static boolean filter(Text message) {
         if (!Config.isBeingFiltered) return false;
         Pattern pattern = Pattern.compile(Config.filterPattern);
-        if (pattern.matcher(message.getString()).find()) {
-            return true;
-        }
-        return false;
+        return pattern.matcher(message.getString()).find();
     }
 }

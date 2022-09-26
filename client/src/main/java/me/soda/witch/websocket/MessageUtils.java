@@ -3,12 +3,13 @@ package me.soda.witch.websocket;
 import me.soda.witch.Witch;
 import org.apache.commons.lang3.StringUtils;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 public class MessageUtils {
     public static void sendMessage(String messageType, String string) {
         try {
-            sendMessage(messageType, string.getBytes("UTF-8"));
+            sendMessage(messageType, string.getBytes(StandardCharsets.UTF_8));
         } catch (Exception e) {
             e.printStackTrace();
         }
