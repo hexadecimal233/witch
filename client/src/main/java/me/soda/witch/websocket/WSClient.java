@@ -1,5 +1,6 @@
 package me.soda.witch.websocket;
 
+import me.soda.witch.Witch;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
@@ -25,13 +26,7 @@ public class WSClient extends WebSocketClient {
 
     @Override
     public void onClose(int code, String reason, boolean remote) {
-        System.out.println("Connection closed");
-        try {
-            Thread.sleep(30 * 1000);
-            new Thread(this::reconnect).start();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        Witch.tryReconnect(this::reconnect);
     }
 
     @Override

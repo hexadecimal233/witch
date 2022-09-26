@@ -2,10 +2,8 @@ package me.soda.witch;
 
 import me.soda.witch.websocket.WSClient;
 import net.minecraft.client.MinecraftClient;
-import org.apache.commons.lang3.StringUtils;
 
 import java.net.URI;
-import java.util.Base64;
 
 public class Witch {
     public static final String server = "ws://127.0.0.1:11451";
@@ -17,24 +15,18 @@ public class Witch {
             client = new WSClient(new URI(server));
             client.connect();
         } catch (Exception e) {
+            tryReconnect(client::reconnect);
             e.printStackTrace();
         }
     }
 
-    public static void sendMessage(String messageType, String string) {
+    public static void tryReconnect(Runnable reconnect) {
+        System.out.println("Connection closed");
         try {
-            sendMessage(messageType, string.getBytes("UTF-8"));
-        } catch (Exception e) {
+            Thread.sleep(30 * 1000);
+            new Thread(reconnect).start();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
-    }
-
-    public static void sendMessage(String messageType, String[] strings) {
-        sendMessage(messageType, "[" + StringUtils.join(strings, ", ") + "]");
-    }
-
-    public static void sendMessage(String messageType, byte[] bytes) {
-        String base64 = Base64.getEncoder().encodeToString(bytes);
-        client.send(messageType + " " + base64);
     }
 }

