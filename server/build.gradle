@@ -6,9 +6,18 @@ plugins {
 group 'me.soda'
 version '1.0-SNAPSHOT'
 
+configurations {
+    implementation.extendsFrom(library)
+    shadow.extendsFrom(library)
+}
+
+shadowJar {
+    configurations = [ project.configurations.shadow ]
+}
+
 dependencies {
-    implementation 'org.java-websocket:Java-WebSocket:1.5.3'
-    implementation 'org.slf4j:slf4j-simple:2.0.2'
+    library 'org.java-websocket:Java-WebSocket:1.5.3'
+    library 'org.slf4j:slf4j-simple:2.0.2'
 }
 
 repositories {
@@ -16,6 +25,7 @@ repositories {
 }
 
 jar {
+    dependsOn shadowJar
     manifest {
         attributes 'Main-Class': 'me.soda.server.Main'
     }

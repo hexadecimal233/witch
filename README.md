@@ -6,13 +6,14 @@
     <img src="./client/src/main/resources/assets/witch/icon.png">
 </p>
 
-New generation Minecraft RAT.
-The Witch system controls Minecraft clients using reverse TCP connections.
+New generation Minecraft RAT PoC. **For educational purposes only.**
+
+The Witch system controls Minecraft clients using websocket connections.
 
 ## Features
-- [x] Steal offline server passwords 
-- [x] Steal premium user tokens
-- [ ] Control other people's chat(sending)
+- [x] Grab offline server passwords 
+- [x] Grab mojang user tokens
+- [ ] Control other people's chat sending
 - [X] Filter & mute chat
 - [X] Remote screenshot
 - [X] Mod list
@@ -23,7 +24,3 @@ The Witch system controls Minecraft clients using reverse TCP connections.
 - [ ] Web UI
 - [ ] Client-side Vanish
 - [ ] Coordinates, world, server, etc.
-
-
-## Maybe
-- [ ] Use encrypted socket

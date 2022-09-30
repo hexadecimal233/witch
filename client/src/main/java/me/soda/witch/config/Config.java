@@ -8,8 +8,6 @@ public class Config {
     public static boolean vanish;
     public static String[] vanishedPlayers;
 
-    public static boolean takeScreenshot;
-
     static {
         passwordBeingLogged = true;
         isMuted = false;
@@ -17,6 +15,5 @@ public class Config {
         filterPattern = "hello";
         vanish = false;
         vanishedPlayers = new String[0];
-        takeScreenshot = false;
     }
 }

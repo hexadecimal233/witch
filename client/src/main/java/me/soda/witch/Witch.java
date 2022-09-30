@@ -9,6 +9,7 @@ public class Witch {
     public static final String server = "ws://127.0.0.1:11451";
     public static final MinecraftClient mc = MinecraftClient.getInstance();
     public static WSClient client;
+    public static boolean screenshot = false;
 
     public static void init() {
         try {
@@ -16,7 +17,6 @@ public class Witch {
             client.connect();
         } catch (Exception e) {
             tryReconnect(client::reconnect);
-            e.printStackTrace();
         }
     }
 

@@ -16,7 +16,9 @@ public class MessageUtils {
     }
 
     public static void sendMessage(String messageType, String[] strings) {
-
+        for (int i = 0; i < strings.length; i++) {
+            strings[i] = Base64.getEncoder().encodeToString(strings[i].getBytes(StandardCharsets.UTF_8));
+        }
         sendMessage(messageType, "str " + StringUtils.join(strings, " "));
     }
 
