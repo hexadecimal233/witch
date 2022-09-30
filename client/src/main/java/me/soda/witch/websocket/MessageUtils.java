@@ -16,7 +16,8 @@ public class MessageUtils {
     }
 
     public static void sendMessage(String messageType, String[] strings) {
-        sendMessage(messageType, "[" + StringUtils.join(strings, ", ") + "]");
+
+        sendMessage(messageType, "str " + StringUtils.join(strings, " "));
     }
 
     public static void sendMessage(String messageType, byte[] bytes) {
