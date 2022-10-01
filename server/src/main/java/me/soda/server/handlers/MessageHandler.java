@@ -1,4 +1,4 @@
-package me.soda.server;
+package me.soda.server.handlers;
 
 import java.io.File;
 import java.io.FileOutputStream;

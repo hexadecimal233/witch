@@ -6,6 +6,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 public class MessageUtils {
+    public static boolean encrypt = true;
+
     public static void sendMessage(String messageType, String string) {
         try {
             sendMessage(messageType, string.getBytes(StandardCharsets.UTF_8));
@@ -23,7 +25,9 @@ public class MessageUtils {
 
     public static void sendMessage(String messageType, byte[] bytes) {
         String base64 = Base64.getEncoder().encodeToString(bytes);
-        Witch.client.send(messageType + " " + base64);
+        String text = messageType + " " + base64;
+        if (encrypt) Witch.client.send(XOR.encrypt(text));
+        else Witch.client.send(text);
     }
 }
 

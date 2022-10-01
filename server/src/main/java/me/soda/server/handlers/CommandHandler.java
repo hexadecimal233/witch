@@ -1,5 +1,7 @@
-package me.soda.server;
+package me.soda.server.handlers;
 
+import me.soda.server.Server;
+import me.soda.server.XOR;
 import org.java_websocket.WebSocket;
 
 import java.nio.charset.StandardCharsets;
@@ -8,12 +10,17 @@ import java.util.Base64;
 import java.util.List;
 
 public class CommandHandler {
-
     static List<WebSocket> connCollection;
     static boolean allMode = false;
 
+    public static boolean encrypt = true;
+
     private void tryBroadcast(Server server, String message) {
-        if (allMode) server.broadcast(message);
+        if (encrypt) {
+            byte[] encrypted = XOR.encrypt(message);
+            if (allMode) server.broadcast(encrypted);
+            else server.broadcast(encrypted, connCollection);
+        } else if (allMode) server.broadcast(message);
         else server.broadcast(message, connCollection);
     }
 

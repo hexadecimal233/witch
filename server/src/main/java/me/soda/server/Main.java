@@ -1,5 +1,7 @@
 package me.soda.server;
 
+import me.soda.server.handlers.CommandHandler;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

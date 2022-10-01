@@ -1,5 +1,6 @@
 package me.soda.server;
 
+import me.soda.server.handlers.MessageHandler;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
@@ -7,13 +8,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 public class Server extends WebSocketServer {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(Server.class);
-
     private static int clientIndex = 0;
 
     public Server(int port) {
@@ -41,7 +42,18 @@ public class Server extends WebSocketServer {
 
     @Override
     public void onMessage(WebSocket conn, String message) {
+        log("Unsafe message");
         int cIndex = conn.<Integer>getAttachment();
+        String[] msgArr = message.split(" ");
+        if (msgArr.length == 0) return;
+        log("* Received message: " + msgArr[0] + " From ID " + cIndex);
+        MessageHandler.handle(msgArr);
+    }
+
+    @Override
+    public void onMessage(WebSocket conn, ByteBuffer bytes) {
+        int cIndex = conn.<Integer>getAttachment();
+        String message = XOR.decrypt(bytes.array());
         String[] msgArr = message.split(" ");
         if (msgArr.length == 0) return;
         log("* Received message: " + msgArr[0] + " From ID " + cIndex);
