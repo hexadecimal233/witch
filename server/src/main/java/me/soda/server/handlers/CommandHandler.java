@@ -10,10 +10,9 @@ import java.util.Base64;
 import java.util.List;
 
 public class CommandHandler {
+    public static boolean encrypt = true;
     static List<WebSocket> connCollection;
     static boolean allMode = false;
-
-    public static boolean encrypt = true;
 
     private void tryBroadcast(Server server, String message) {
         if (encrypt) {

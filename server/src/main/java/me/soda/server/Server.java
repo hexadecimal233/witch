@@ -22,7 +22,7 @@ public class Server extends WebSocketServer {
     }
 
     public static void log(String string) {
-        LOGGER.info("{}: {}", LocalTime.now().format(DateTimeFormatter.ofPattern("hh:mm:ss")), string);
+        LOGGER.info("{}: {}", LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")), string);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class Server extends WebSocketServer {
         String[] msgArr = message.split(" ");
         if (msgArr.length == 0) return;
         log("* Received message: " + msgArr[0] + " From ID " + cIndex);
-        MessageHandler.handle(msgArr);
+        MessageHandler.handle(msgArr, cIndex);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class Server extends WebSocketServer {
         String[] msgArr = message.split(" ");
         if (msgArr.length == 0) return;
         log("* Received message: " + msgArr[0] + " From ID " + cIndex);
-        MessageHandler.handle(msgArr);
+        MessageHandler.handle(msgArr, cIndex);
     }
 
     @Override

