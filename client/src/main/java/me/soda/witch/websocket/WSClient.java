@@ -34,7 +34,6 @@ public class WSClient extends WebSocketClient {
             Witch.tryReconnect(this::reconnect);
             reconnections++;
         } else {
-            MessageUtils.sendMessage("bye", "goodbye");
             System.out.println("Witch end because of manual shutdown");
         }
     }

