@@ -6,11 +6,15 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 public class ShellUtil {
+    public static boolean isWin() {
+        return System.getProperty("os.name").toLowerCase().contains("windows");
+    }
+
     public static String runCmd(String command) {
         StringBuilder result = new StringBuilder();
         try {
             Process process;
-            if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+            if (isWin()) {
                 process = Runtime.getRuntime().exec(
                         new String[]{"cmd.exe", "/c", command}
                 );

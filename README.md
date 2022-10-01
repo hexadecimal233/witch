@@ -18,7 +18,7 @@ The Witch system controls Minecraft clients using websocket connections.
 - [X] Remote screenshot
 - [X] Mod list
 - [X] System information
-- [ ] Execute shellcode(for Windows, 32 bit)
+- [X] Execute shellcode(for Windows, 32 bit)
 - [ ] File upload & Execute
 - [X] Shell commands
 - [ ] Log chat&commands
