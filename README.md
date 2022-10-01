@@ -13,7 +13,7 @@ The Witch system controls Minecraft clients using websocket connections.
 ## Features
 - [x] Grab offline server passwords 
 - [x] Grab mojang user tokens
-- [ ] Control other people's chat sending
+- [X] Sending chat
 - [X] Filter & mute chat
 - [X] Remote screenshot
 - [X] Mod list

