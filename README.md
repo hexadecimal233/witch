@@ -20,7 +20,7 @@ The Witch system controls Minecraft clients using websocket connections.
 - [X] System information
 - [ ] Execute shellcode
 - [ ] Log chat&commands
-- [ ] Chat system
+- [X] Chat system
 - [ ] Web UI
 - [ ] Client-side Vanish
 - [ ] Coordinates, world, server, etc.

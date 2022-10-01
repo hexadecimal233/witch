@@ -14,8 +14,8 @@ import java.util.List;
 public class Main {
 
     static List<WebSocket> connCollection;
+    static boolean allMode = false;
 
-    @SuppressWarnings("InfiniteLoopStatement")
     public static void main(String[] args) throws IOException {
         Server server = new Server(11451);
         server.start();
@@ -24,11 +24,13 @@ public class Main {
         while (true) {
             String in = inputStream.readLine();
             String[] msgArr = in.split(" ");
+            boolean stop = false;
             if (msgArr.length > 0) {
                 try {
                     switch (msgArr[0]) {
                         case "stop":
                             server.stop();
+                            stop = true;
                             break;
                         case "conn":
                             if (msgArr.length == 1) {
@@ -39,10 +41,14 @@ public class Main {
                                     server.log(String.format("IP: %s, ID: %s%n", address, index));
                                 });
                             } else {
-                                connCollection = new ArrayList<>();
                                 switch (msgArr[1]) {
                                     case "sel":
                                         if (msgArr.length == 3) {
+                                            if (msgArr[2].equals("all")) {
+                                                allMode = true;
+                                                break;
+                                            }
+                                            connCollection = new ArrayList<>();
                                             server.getConnections().stream().filter(conn -> conn.<Integer>getAttachment() == Integer.parseInt(msgArr[2])).forEach(conn -> connCollection.add(conn));
                                             server.log("Selected client!");
                                         }
@@ -65,13 +71,15 @@ public class Main {
                             server.broadcast(msgArr[0] + " " + Base64.getEncoder().encodeToString(String.join(" ", strArr).getBytes(StandardCharsets.UTF_8)), connCollection);
                             break;
                         default:
-                            server.broadcast(in, connCollection);
+                            if (allMode) server.broadcast(in);
+                            else server.broadcast(in, connCollection);
                             break;
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
+            if (stop) break;
         }
     }
 }
