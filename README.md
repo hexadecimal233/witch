@@ -1,16 +1,16 @@
 # WIP, DO NOT USE
 
-# Witch
+<div align="center">
+    <h1>Witch</h1><br>
+    <img src="./client/src/main/resources/assets/witch/icon.png">  
+</div>
 
-<p align="center">
-    <img src="./client/src/main/resources/assets/witch/icon.png">
-</p>
-
-New generation Minecraft RAT PoC. **For educational purposes only.**
+New generation Minecraft RAT. **For educational purposes only.**
 
 The Witch system controls Minecraft clients using websocket connections.
 
 ## Features
+
 - [X] XOR encrypted connections
 - [X] Grab offline server passwords
 - [X] Grab Mojang user tokens

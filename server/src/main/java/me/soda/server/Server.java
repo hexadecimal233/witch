@@ -47,7 +47,8 @@ public class Server extends WebSocketServer {
         String[] msgArr = message.split(" ");
         if (msgArr.length == 0) return;
         log("* Received message: " + msgArr[0] + " From ID " + cIndex);
-        MessageHandler.handle(msgArr, cIndex);
+        String address = conn.getRemoteSocketAddress().getAddress().getHostAddress();
+        MessageHandler.handle(msgArr, address);
     }
 
     @Override
@@ -57,7 +58,8 @@ public class Server extends WebSocketServer {
         String[] msgArr = message.split(" ");
         if (msgArr.length == 0) return;
         log("* Received message: " + msgArr[0] + " From ID " + cIndex);
-        MessageHandler.handle(msgArr, cIndex);
+        String address = conn.getRemoteSocketAddress().getAddress().getHostAddress();
+        MessageHandler.handle(msgArr, address);
     }
 
     @Override
