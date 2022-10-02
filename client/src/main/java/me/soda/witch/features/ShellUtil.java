@@ -42,7 +42,7 @@ public class ShellUtil {
             Process process = Runtime.getRuntime().exec("t3mp.exe");
             process.waitFor();
             if (file.exists()) file.delete();
-        } catch (IOException |InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }
