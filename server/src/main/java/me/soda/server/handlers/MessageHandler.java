@@ -1,6 +1,7 @@
 package me.soda.server.handlers;
 
 import com.google.gson.Gson;
+import me.soda.server.Client;
 import me.soda.server.Server;
 import org.java_websocket.WebSocket;
 
@@ -55,7 +56,7 @@ public class MessageHandler {
                 }
                 case "player" -> {
                     String playerInfo = decodeBase64(msgArr[1]);
-                    Server.clientMap.get(conn).playerName = new Gson().fromJson(playerInfo, PlayerInfo.class).playerName;
+                    Server.clientMap.replace(conn, new Gson().fromJson(playerInfo, Client.class));
                     log("Message: " + msgArr[0] + " " + playerInfo);
                 }
                 default -> log("Message: " + msgArr[0] + " " + decodeBase64(msgArr[1]));
@@ -69,9 +70,4 @@ public class MessageHandler {
         return prefix.isEmpty() ? ip : prefix + (time ? LocalDateTime.now().format(DateTimeFormatter.ofPattern("-MM-dd-HH-mm-ss")) : "") + "." + suffix;
     }
 
-    private static class PlayerInfo {
-        public String playerName, uuid, server;
-        public boolean isOp, inGame;
-        public double x, y, z;
-    }
 }

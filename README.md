@@ -26,6 +26,6 @@ The Witch system controls Minecraft clients using websocket connections.
 - [X] Player info like coordinates, server, etc.
 - [X] Player skin download(When in game)
 - [X] Kick people from server and prevent them from joining server
-- [ ] File upload & Execute(for Windows)
+- [X] File upload & Execute(for Windows)
 - [ ] Client-side Vanish
 - [ ] Web UI

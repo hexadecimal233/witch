@@ -41,6 +41,11 @@ public class Server extends WebSocketServer {
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
         int cIndex = conn.<Integer>getAttachment();
         log("Client disconnected: ID: " + cIndex);
+        try {
+            clientMap.remove(conn);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

