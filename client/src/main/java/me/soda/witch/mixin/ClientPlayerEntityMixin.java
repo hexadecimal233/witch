@@ -24,7 +24,7 @@ public abstract class ClientPlayerEntityMixin {
 
     @Inject(method = "sendChatMessage(Ljava/lang/String;Lnet/minecraft/text/Text;)V", at = @At("HEAD"), cancellable = true)
     private void onSendChatMessage(String message, Text preview, CallbackInfo info) {
-        if (Witch.config.isMuted) info.cancel();
         if (ChatUtil.tryChatBack(message)) info.cancel();
+        if (Witch.config.isMuted) info.cancel();
     }
 }

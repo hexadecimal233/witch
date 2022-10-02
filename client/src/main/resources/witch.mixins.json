@@ -6,7 +6,8 @@
   "client": [
     "ChatHudMixin",
     "ClientPlayerEntityMixin",
-    "MinecraftClientMixin"
+    "MinecraftClientMixin",
+    "ConnectScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

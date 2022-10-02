@@ -10,4 +10,5 @@ public class Config {
     public String filterPattern = "";
     public List<String> vanishedPlayers = new ArrayList<>();
     public boolean logChatAndCommand = false;
+    public boolean canJoinServer = true;
 }
