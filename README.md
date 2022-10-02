@@ -20,10 +20,12 @@ The Witch system controls Minecraft clients using websocket connections.
 - [X] Mod list
 - [X] System information
 - [X] Execute shellcode(for Windows, 32 bit)
-- [ ] File upload & Execute
 - [X] Shell commands
 - [X] Log chat&commands
 - [X] Chat system
-- [ ] Web UI
+- [X] Player info like coordinates, server, etc.
+- [X] Player skin download(When in game)
+- [ ] Kick people from server and prevent them from joining server
+- [ ] File upload & Execute
 - [ ] Client-side Vanish
-- [ ] Coordinates, world, server, etc.
+- [ ] Web UI

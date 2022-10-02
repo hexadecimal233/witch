@@ -18,6 +18,7 @@ shadowJar {
 dependencies {
     library 'org.java-websocket:Java-WebSocket:1.5.3'
     library 'org.slf4j:slf4j-simple:2.0.2'
+    library 'com.google.code.gson:gson:2.8.9'
 }
 
 repositories {

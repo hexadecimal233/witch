@@ -1,6 +1,7 @@
 package me.soda.witch;
 
 import me.soda.witch.features.ChatCommandLogging;
+import me.soda.witch.features.Config;
 import me.soda.witch.websocket.WSClient;
 import net.minecraft.client.MinecraftClient;
 
@@ -11,6 +12,7 @@ public class Witch {
     public static final MinecraftClient mc = MinecraftClient.getInstance();
     public static WSClient client;
     public static boolean screenshot = false;
+    public static Config config = new Config();
 
     public static void init() {
         ChatCommandLogging.sendLogThread.start();

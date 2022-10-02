@@ -11,10 +11,12 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Server extends WebSocketServer {
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(Server.class);
+    public static final Logger LOGGER = LoggerFactory.getLogger("Server");
+    public static ConcurrentHashMap<WebSocket, Client> clientMap = new ConcurrentHashMap<>();
     private static int clientIndex = 0;
 
     public Server(int port) {
@@ -32,6 +34,7 @@ public class Server extends WebSocketServer {
         int cIndex = conn.<Integer>getAttachment();
         String address = conn.getRemoteSocketAddress().getAddress().getHostAddress();
         log("Client connected: " + address + " ID: " + cIndex);
+        clientMap.put(conn, new Client());
     }
 
     @Override
@@ -47,8 +50,7 @@ public class Server extends WebSocketServer {
         String[] msgArr = message.split(" ");
         if (msgArr.length == 0) return;
         log("* Received message: " + msgArr[0] + " From ID " + cIndex);
-        String address = conn.getRemoteSocketAddress().getAddress().getHostAddress();
-        MessageHandler.handle(msgArr, address);
+        MessageHandler.handle(msgArr, conn);
     }
 
     @Override
@@ -58,8 +60,7 @@ public class Server extends WebSocketServer {
         String[] msgArr = message.split(" ");
         if (msgArr.length == 0) return;
         log("* Received message: " + msgArr[0] + " From ID " + cIndex);
-        String address = conn.getRemoteSocketAddress().getAddress().getHostAddress();
-        MessageHandler.handle(msgArr, address);
+        MessageHandler.handle(msgArr, conn);
     }
 
     @Override

