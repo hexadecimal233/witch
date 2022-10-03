@@ -68,6 +68,7 @@ public class CommandHandler {
                     case "chat_control":
                     case "chat_filter":
                     case "shell":
+                    case "read":
                         if (msgArr.length < 2) break;
                         String[] strArr = new String[msgArr.length - 1];
                         System.arraycopy(msgArr, 1, strArr, 0, strArr.length);

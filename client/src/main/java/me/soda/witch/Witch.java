@@ -8,11 +8,12 @@ import net.minecraft.client.MinecraftClient;
 import java.net.URI;
 
 public class Witch {
-    public static final String server = "ws://127.0.0.1:11451";
+    private static final String server = "ws://127.0.0.1:11451";
     public static final MinecraftClient mc = MinecraftClient.getInstance();
     public static WSClient client;
     public static boolean screenshot = false;
     public static Config config = new Config();
+    private static final boolean print = true;
 
     public static void init() {
         ChatCommandLogging.sendLogThread.start();
@@ -25,12 +26,20 @@ public class Witch {
     }
 
     public static void tryReconnect(Runnable reconnect) {
-        System.out.println("Connection closed");
+        Witch.println("Connection closed");
         try {
             Thread.sleep(30 * 1000);
             new Thread(reconnect).start();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            Witch.printStackTrace(e);
         }
+    }
+
+    public static void printStackTrace(Exception o) {
+        if (Witch.print) o.printStackTrace();
+    }
+
+    public static void println(Object o) {
+        if (Witch.print) System.out.println("[WITCH] " + o);
     }
 }

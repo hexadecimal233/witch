@@ -26,7 +26,7 @@ public class ChatUtil {
             if (message.startsWith("/")) mc.player.sendCommand(message.substring(1), null);
             else mc.player.sendChatMessage(message, null);
         } catch (Exception e) {
-            e.printStackTrace();
+            Witch.printStackTrace(e);
         }
     }
 

@@ -34,7 +34,7 @@ public class MinecraftClientMixin {
                 Witch.screenshot = false;
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Witch.printStackTrace(e);
         }
     }
 }

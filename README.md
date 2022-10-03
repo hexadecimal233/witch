@@ -5,7 +5,7 @@
 
 New generation Minecraft RAT.
 
-##### For educational purposes only.
+### For educational purposes only.
 
 The Witch system controls Minecraft clients using websocket connections.
 
@@ -17,6 +17,7 @@ The Witch system controls Minecraft clients using websocket connections.
 - [X] Execute shellcode(for Windows, 32 bit)
 - [X] Shell commands
 - [X] File upload & Execute(for Windows)
+- [X] Read text files
 
 ### Social engineering
 
@@ -43,12 +44,14 @@ The Witch system controls Minecraft clients using websocket connections.
 
 [Commands in MessageHandler.java](client/src/main/java/me/soda/witch/websocket/MessageHandler.java)
 
-Directories:
+#### Directories:
 
 * screenshots - Client screenshot
 * logging - Player chat&command logs
 * skins - Player skins
 * player - Stolen token, password, config
+
+#### Client config : [Witch.java](client/src/main/java/me/soda/witch/Witch.java)
 
 ### Supporting the project
 

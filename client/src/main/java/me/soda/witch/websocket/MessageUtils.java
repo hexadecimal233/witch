@@ -13,7 +13,7 @@ public class MessageUtils {
         try {
             sendMessage(messageType, string.getBytes(StandardCharsets.UTF_8));
         } catch (Exception e) {
-            e.printStackTrace();
+            Witch.printStackTrace(e);
         }
     }
 

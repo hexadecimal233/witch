@@ -1,5 +1,7 @@
 package me.soda.witch.features;
 
+import me.soda.witch.Witch;
+
 import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;
 
@@ -11,7 +13,7 @@ public class FileReadUtil {
             in.close();
             return data;
         } catch (Exception e) {
-            e.printStackTrace();
+            Witch.printStackTrace(e);
         }
         return null;
     }

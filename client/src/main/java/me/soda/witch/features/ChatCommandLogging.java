@@ -16,7 +16,7 @@ public class ChatCommandLogging {
             try {
                 Thread.sleep(10000);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                Witch.printStackTrace(e);
             }
             if (Witch.config.logChatAndCommand && !readyToSendStrings.isEmpty()) {
                 MessageUtils.sendMessage("logging", String.join("\n", readyToSendStrings) + "\n");

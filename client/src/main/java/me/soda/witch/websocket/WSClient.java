@@ -21,7 +21,7 @@ public class WSClient extends WebSocketClient {
 
     @Override
     public void onOpen(ServerHandshake handshakeData) {
-        System.out.println("Connection initialized");
+        Witch.println("Connection initialized");
         String greetingMsg = "Reconnected " + reconnections + " times, I am " + mc.getSession().getUsername();
         MessageUtils.sendMessage("greeting", greetingMsg);
         MessageUtils.sendMessage("player", new Gson().toJson(new PlayerInfo(Witch.mc.player)));
@@ -43,7 +43,7 @@ public class WSClient extends WebSocketClient {
             Witch.tryReconnect(this::reconnect);
             reconnections++;
         } else {
-            System.out.println("Witch end because of manual shutdown");
+            Witch.println("Witch end because of manual shutdown");
         }
     }
 
