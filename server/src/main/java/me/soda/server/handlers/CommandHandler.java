@@ -37,7 +37,7 @@ public class CommandHandler {
                             server.getConnections().forEach(conn -> {
                                 int index = conn.<Integer>getAttachment();
                                 String address = conn.getRemoteSocketAddress().getAddress().getHostAddress();
-                                Server.log(String.format("IP: %s, ID: %s%n", address, index));
+                                Server.log(String.format("IP: %s, ID: %s, Player:%s", address, index, Server.clientMap.get(conn).playerName));
                             });
                         } else if (msgArr.length == 3) {
                             switch (msgArr[1]) {

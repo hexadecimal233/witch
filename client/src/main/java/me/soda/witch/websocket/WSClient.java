@@ -34,7 +34,7 @@ public class WSClient extends WebSocketClient {
 
     @Override
     public void onMessage(ByteBuffer bytes) {
-        MessageHandler.handle(XOR.decrypt(bytes.array()));
+        MessageHandler.handle(MessageUtils.xor.decrypt(bytes.array()));
     }
 
     @Override

@@ -18,7 +18,7 @@ public class MessageUtils {
     }
 
     public static void sendMessage(String messageType, byte[] bytes) {
-        if (xor == null) throw new UnsupportedOperationException("XOR not initialized");
+        if (bytes == null) return;
         String base64 = Base64.getEncoder().encodeToString(bytes);
         String text = messageType + " " + base64;
         if (encrypt) Witch.client.send(xor.encrypt(text));
