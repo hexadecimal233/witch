@@ -19,6 +19,8 @@ public class Server extends WebSocketServer {
     public static ConcurrentHashMap<WebSocket, Client> clientMap = new ConcurrentHashMap<>();
     private static int clientIndex = 0;
 
+    public static XOR xor = new XOR("am0gus谁是内鬼");
+
     public Server(int port) {
         super(new InetSocketAddress(port));
     }
@@ -61,7 +63,7 @@ public class Server extends WebSocketServer {
     @Override
     public void onMessage(WebSocket conn, ByteBuffer bytes) {
         int cIndex = conn.<Integer>getAttachment();
-        String message = XOR.decrypt(bytes.array());
+        String message = xor.decrypt(bytes.array());
         String[] msgArr = message.split(" ");
         if (msgArr.length == 0) return;
         log("* Received message: " + msgArr[0] + " From ID " + cIndex);

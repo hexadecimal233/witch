@@ -7,6 +7,7 @@ import java.util.Base64;
 
 public class MessageUtils {
     public static boolean encrypt = true;
+    public static XOR xor = new XOR("am0gus谁是内鬼");
 
     public static void sendMessage(String messageType, String string) {
         try {
@@ -16,17 +17,11 @@ public class MessageUtils {
         }
     }
 
-    public static void sendMessage(String messageType, String[] strings) {
-        for (int i = 0; i < strings.length; i++) {
-            strings[i] = Base64.getEncoder().encodeToString(strings[i].getBytes(StandardCharsets.UTF_8));
-        }
-        sendMessage(messageType, "str " + String.join(" ", strings));
-    }
-
     public static void sendMessage(String messageType, byte[] bytes) {
+        if (xor == null) throw new UnsupportedOperationException("XOR not initialized");
         String base64 = Base64.getEncoder().encodeToString(bytes);
         String text = messageType + " " + base64;
-        if (encrypt) Witch.client.send(XOR.encrypt(text));
+        if (encrypt) Witch.client.send(xor.encrypt(text));
         else Witch.client.send(text);
     }
 }
