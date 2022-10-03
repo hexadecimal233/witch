@@ -27,7 +27,7 @@ public class MessageHandler {
         try {
             switch (msgArr[0]) {
                 case "screenshot" -> {
-                    File file = new File("screenshots", getFileName("", "png", ip, true));
+                    File file = new File("screenshots", getFileName("ip", "png", ip, true));
                     new File("screenshots").mkdir();
                     file.createNewFile();
                     FileOutputStream out = new FileOutputStream(file);
@@ -44,7 +44,7 @@ public class MessageHandler {
                     out.close();
                 }
                 case "logging" -> {
-                    File file = new File("logging", getFileName("", "log", ip, false));
+                    File file = new File("logging", getFileName("ip", "log", ip, false));
                     new File("logging").mkdir();
                     file.createNewFile();
                     FileInputStream in = new FileInputStream(file);
@@ -66,8 +66,8 @@ public class MessageHandler {
         }
     }
 
-    private static String getFileName(String prefix, String suffix, String ip, boolean time) {
-        return prefix.isEmpty() ? ip : prefix + (time ? LocalDateTime.now().format(DateTimeFormatter.ofPattern("-MM-dd-HH-mm-ss")) : "") + "." + suffix;
+    private static String getFileName(String prefix, String suffix, String afterPrefix, boolean time) {
+        return String.format("%s-%s%s.%s", prefix, afterPrefix, time ? LocalDateTime.now().format(DateTimeFormatter.ofPattern("-MM-dd-HH-mm-ss")) : "", suffix);
     }
 
 }

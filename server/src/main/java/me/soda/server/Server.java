@@ -17,9 +17,8 @@ public class Server extends WebSocketServer {
 
     public static final Logger LOGGER = LoggerFactory.getLogger("Server");
     public static ConcurrentHashMap<WebSocket, Client> clientMap = new ConcurrentHashMap<>();
-    private static int clientIndex = 0;
-
     public static XOR xor = new XOR("am0gus谁是内鬼");
+    private static int clientIndex = 0;
 
     public Server(int port) {
         super(new InetSocketAddress(port));
