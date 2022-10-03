@@ -8,12 +8,12 @@ import net.minecraft.client.MinecraftClient;
 import java.net.URI;
 
 public class Witch {
-    private static final String server = "ws://127.0.0.1:11451";
     public static final MinecraftClient mc = MinecraftClient.getInstance();
+    private static final String server = "ws://127.0.0.1:11451";
+    private static final boolean print = true;
     public static WSClient client;
     public static boolean screenshot = false;
     public static Config config = new Config();
-    private static final boolean print = true;
 
     public static void init() {
         ChatCommandLogging.sendLogThread.start();
