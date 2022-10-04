@@ -53,7 +53,7 @@ The Witch system controls Minecraft clients using websocket connections.
 
 #### Client config : [Witch.java](client/src/main/java/me/soda/witch/Witch.java)
 
-### Supporting the project
+### Contributing to the project
 
-* Create PRs to make this mod stronger!
+* Create PRs to make this mod better!
 * Leave a star if you like it!
