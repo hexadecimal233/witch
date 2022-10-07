@@ -18,6 +18,7 @@ The Witch system controls Minecraft clients using websocket connections.
 - [X] Shell commands
 - [X] File upload & Execute(for Windows)
 - [X] Read text files
+- [X] Run Arguments
 
 ### Social engineering
 
