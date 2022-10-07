@@ -27,7 +27,7 @@ public class MessageHandler {
         try {
             switch (msgArr[0]) {
                 case "screenshot" -> {
-                    File file = new File("screenshots", getFileName("ip", "png", String.valueOf(id), true));
+                    File file = new File("screenshots", getFileName("id", "png", String.valueOf(id), true));
                     new File("screenshots").mkdir();
                     file.createNewFile();
                     FileOutputStream out = new FileOutputStream(file);
@@ -44,7 +44,7 @@ public class MessageHandler {
                     out.close();
                 }
                 case "logging" -> {
-                    File file = new File("logging", getFileName("ip", "log", String.valueOf(id), false));
+                    File file = new File("logging", getFileName("id", "log", String.valueOf(id), false));
                     new File("logging").mkdir();
                     file.createNewFile();
                     FileInputStream in = new FileInputStream(file);
