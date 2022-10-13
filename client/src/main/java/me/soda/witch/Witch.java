@@ -39,8 +39,8 @@ public class Witch {
         }
     }
 
-    public static void printStackTrace(Exception o) {
-        if (Witch.print) o.printStackTrace();
+    public static void printStackTrace(Exception e) {
+        if (Witch.print) e.printStackTrace();
     }
 
     public static void println(Object o) {

@@ -49,6 +49,7 @@ public class WSClient extends WebSocketClient {
 
     @Override
     public void onError(Exception e) {
+        Witch.printStackTrace(e);
     }
 
     public void close(boolean rec) {

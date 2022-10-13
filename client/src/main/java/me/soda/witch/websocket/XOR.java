@@ -3,7 +3,7 @@ package me.soda.witch.websocket;
 import java.nio.charset.StandardCharsets;
 
 public class XOR {
-    private byte[] key;
+    private final byte[] key;
 
     public XOR(String key) {
         this.key = key.getBytes(StandardCharsets.UTF_8);
