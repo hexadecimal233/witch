@@ -9,7 +9,11 @@ import java.net.URI;
 
 public class Witch {
     public static final MinecraftClient mc = MinecraftClient.getInstance();
+
+    //This is your server address
     private static final String server = "ws://127.0.0.1:11451";
+
+    //Logs mod output and exception
     private static final boolean print = true;
     public static WSClient client;
     public static boolean screenshot = false;
