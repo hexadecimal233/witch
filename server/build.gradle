@@ -1,24 +1,13 @@
 plugins {
     id 'java'
-    id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
 group 'me.soda'
 version '1.0-SNAPSHOT'
 
-configurations {
-    implementation.extendsFrom(library)
-    shadow.extendsFrom(library)
-}
-
-shadowJar {
-    configurations = [ project.configurations.shadow ]
-}
-
 dependencies {
-    library 'org.java-websocket:Java-WebSocket:1.5.3'
-    library 'org.slf4j:slf4j-simple:2.0.2'
-    library 'com.google.code.gson:gson:2.8.9'
+    implementation 'org.java-websocket:Java-WebSocket:1.5.3'
+    implementation 'com.google.code.gson:gson:2.9.0'
 }
 
 repositories {
@@ -26,7 +15,6 @@ repositories {
 }
 
 jar {
-    dependsOn shadowJar
     manifest {
         attributes 'Main-Class': 'me.soda.server.Main'
     }

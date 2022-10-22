@@ -11,11 +11,13 @@ import java.net.URI;
 
 public class Witch {
     public static final MinecraftClient mc = MinecraftClient.getInstance();
-    //Config
+
+    //config
     private static final String server = "ws://127.0.0.1:11451";
     private static final boolean print = true;
+
+    //variables
     public static WSClient client;
-    public static boolean screenshot = false;
     public static Config config = new Config();
     public static JsonObject ip = NetUtil.getIp();
 

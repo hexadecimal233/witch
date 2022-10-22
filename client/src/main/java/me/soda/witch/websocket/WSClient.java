@@ -52,8 +52,8 @@ public class WSClient extends WebSocketClient {
         Witch.printStackTrace(e);
     }
 
-    public void close(boolean rec) {
-        reconnect = rec;
+    public void close(boolean reconnect) {
+        WSClient.reconnect = reconnect;
         this.close();
     }
 }

