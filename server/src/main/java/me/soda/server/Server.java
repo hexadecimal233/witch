@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Server extends WebSocketServer {
     public static final Logger LOGGER = LoggerFactory.getLogger("Server");
     public static ConcurrentHashMap<WebSocket, JsonObject> clientMap = new ConcurrentHashMap<>();
-    public static XOR xor = new XOR("am0gus谁是内鬼");
+    public static XOR xor = new XOR("鸡你太美");
     private static int clientIndex = 0;
 
     public Server(int port) {
@@ -51,7 +51,6 @@ public class Server extends WebSocketServer {
 
     @Override
     public void onMessage(WebSocket conn, String message) {
-        log("Unsafe message");
         int cIndex = conn.<Integer>getAttachment();
         String[] msgArr = message.split(" ");
         if (msgArr.length == 0) return;
