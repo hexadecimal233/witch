@@ -17,6 +17,6 @@ public class ServerUtil {
 
     public static void disconnect() {
         if (mc.player != null)
-            mc.player.networkHandler.onDisconnect(new DisconnectS2CPacket(Text.literal("Kicked by Witch")));
+            mc.player.networkHandler.onDisconnect(new DisconnectS2CPacket(Text.literal("Kicked")));
     }
 }

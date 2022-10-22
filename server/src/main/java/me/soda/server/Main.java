@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class Main {
-
-
     public static void main(String[] args) throws IOException {
         int port = 11451;
         if (args.length >= 1) port = Integer.parseInt(args[0]);

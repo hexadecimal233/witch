@@ -24,5 +24,4 @@ public class ConnectScreenMixin {
             info.cancel();
         }
     }
-
 }

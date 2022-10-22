@@ -9,6 +9,10 @@ public class XOR {
         this.key = key.getBytes(StandardCharsets.UTF_8);
     }
 
+    public XOR(byte[] key) {
+        this.key = key;
+    }
+
     public byte[] encrypt(String data) {
         return xor(data.getBytes(StandardCharsets.UTF_8));
     }
