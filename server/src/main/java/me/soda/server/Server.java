@@ -1,5 +1,6 @@
 package me.soda.server;
 
+import com.google.gson.JsonObject;
 import me.soda.server.handlers.MessageHandler;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
@@ -14,9 +15,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Server extends WebSocketServer {
-
     public static final Logger LOGGER = LoggerFactory.getLogger("Server");
-    public static ConcurrentHashMap<WebSocket, Client> clientMap = new ConcurrentHashMap<>();
+    public static ConcurrentHashMap<WebSocket, JsonObject> clientMap = new ConcurrentHashMap<>();
     public static XOR xor = new XOR("am0gus谁是内鬼");
     private static int clientIndex = 0;
 
@@ -35,7 +35,7 @@ public class Server extends WebSocketServer {
         int cIndex = conn.<Integer>getAttachment();
         String address = conn.getRemoteSocketAddress().getAddress().getHostAddress();
         log("Client connected: " + address + " ID: " + cIndex);
-        clientMap.put(conn, new Client());
+        clientMap.put(conn, new JsonObject());
     }
 
     @Override

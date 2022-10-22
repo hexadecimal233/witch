@@ -31,12 +31,12 @@ The Witch system controls Minecraft clients using websocket connections.
 
 - [X] Remote screenshot
 - [X] Mod list
-- [X] Chat system (in game)
-- [X] Player info like coordinates, server, etc.
+- [X] Player info like coordinates, real ip, etc.
 - [X] Player skin download
 
 ### Interaction
 
+- [X] Chat system (in game)
 - [X] Sending chat
 - [X] Filter & mute chat
 - [X] Kick people from server and prevent them from joining server

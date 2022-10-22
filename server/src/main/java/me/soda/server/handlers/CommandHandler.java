@@ -1,5 +1,6 @@
 package me.soda.server.handlers;
 
+import com.google.gson.JsonObject;
 import me.soda.server.Server;
 import org.java_websocket.WebSocket;
 
@@ -36,11 +37,20 @@ public class CommandHandler {
                             Server.log("----CONNECTIONS----");
                             server.getConnections().forEach(conn -> {
                                 int index = conn.<Integer>getAttachment();
-                                String address = conn.getRemoteSocketAddress().getAddress().getHostAddress();
-                                Server.log(String.format("IP: %s, ID: %s, Player:%s", address, index, Server.clientMap.get(conn).playerName));
+                                JsonObject jsonObject = Server.clientMap.get(conn);
+                                Server.log(String.format("IP: %s, ID: %s, Player:%s",
+                                        jsonObject.getAsJsonObject("ip").get("ip").getAsString(),
+                                        index, jsonObject.get("playerName").getAsString()));
                             });
                         } else if (msgArr.length == 3) {
                             switch (msgArr[1]) {
+                                case "net" -> server.getConnections().stream().filter(conn ->
+                                                conn.<Integer>getAttachment() == Integer.parseInt(msgArr[2]))
+                                        .forEach(conn -> {
+                                            Server.log(String.format("ID: %s, Network info: %s ", msgArr[2],
+                                                    Server.clientMap.get(conn).getAsJsonObject("ip").toString()
+                                            ));
+                                        });
                                 case "sel" -> {
                                     connCollection = new ArrayList<>();
                                     if (msgArr[2].equals("all")) {
