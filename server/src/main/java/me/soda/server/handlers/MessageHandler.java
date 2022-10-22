@@ -35,7 +35,7 @@ public class MessageHandler {
                     out.close();
                 }
                 case "skin" -> {
-                    String playerName =  Server.clientMap.get(conn).get("playerName").getAsString();
+                    String playerName = Server.clientMap.get(conn).get("playerName").getAsString();
                     File file = new File("skins", getFileName(playerName, "png", String.valueOf(id), false));
                     new File("skins").mkdir();
                     file.createNewFile();

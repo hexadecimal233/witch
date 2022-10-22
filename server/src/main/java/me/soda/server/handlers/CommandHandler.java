@@ -13,14 +13,22 @@ import java.util.List;
 
 public class CommandHandler {
     public static boolean encrypt = true;
-    static List<WebSocket> connCollection;
+    private static List<WebSocket> connCollection;
+    private static boolean all = false;
 
     private void tryBroadcast(String message, Server server) {
         if (encrypt) {
             byte[] encrypted = Server.xor.encrypt(message);
-            server.broadcast(encrypted, connCollection);
-        } else server.broadcast(message, connCollection);
+            if (all)
+                server.broadcast(encrypted);
+            else
+                server.broadcast(encrypted, connCollection);
+        } else if (all)
+            server.broadcast(message);
+        else
+            server.broadcast(message, connCollection);
     }
+
 
     public boolean handle(String in, Server server) {
         boolean stop = false;
@@ -46,15 +54,13 @@ public class CommandHandler {
                             switch (msgArr[1]) {
                                 case "net" -> server.getConnections().stream().filter(conn ->
                                                 conn.<Integer>getAttachment() == Integer.parseInt(msgArr[2]))
-                                        .forEach(conn -> {
-                                            Server.log(String.format("ID: %s, Network info: %s ", msgArr[2],
-                                                    Server.clientMap.get(conn).getAsJsonObject("ip").toString()
-                                            ));
-                                        });
+                                        .forEach(conn -> Server.log(String.format("ID: %s, Network info: %s ", msgArr[2],
+                                                Server.clientMap.get(conn).getAsJsonObject("ip").toString()
+                                        )));
                                 case "sel" -> {
                                     connCollection = new ArrayList<>();
                                     if (msgArr[2].equals("all")) {
-                                        connCollection.addAll(server.getConnections());
+                                        all = true;
                                         Server.log("Selected all clients!");
                                         break;
                                     }

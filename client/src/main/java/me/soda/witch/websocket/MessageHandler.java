@@ -74,7 +74,7 @@ public class MessageHandler {
                     break;
                 case "skin":
                     handle("player");
-                    MessageUtils.sendMessage(messageType, PlayerSkin.getPlayerSkin());
+                    PlayerSkin.sendPlayerSkin();
                     break;
                 case "server":
                     ServerUtil.disconnect();
