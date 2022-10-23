@@ -52,20 +52,22 @@ public class Server extends WebSocketServer {
     @Override
     public void onMessage(WebSocket conn, String message) {
         int cIndex = conn.<Integer>getAttachment();
-        String[] msgArr = message.split(" ");
-        if (msgArr.length == 0) return;
-        log("* Received message: " + msgArr[0] + " From ID " + cIndex);
-        MessageHandler.handle(msgArr, conn);
+        log("* Received message: " + message + " From ID " + cIndex);
+        //String[] msgArr = message.split(" ");
+        //if (msgArr.length == 0) return;
+        //log("* Received message: " + msgArr[0] + " From ID " + cIndex);
+        //MessageHandler.handle(msgArr, conn);
     }
 
     @Override
     public void onMessage(WebSocket conn, ByteBuffer bytes) {
         int cIndex = conn.<Integer>getAttachment();
         String message = xor.decrypt(bytes.array());
-        String[] msgArr = message.split(" ");
-        if (msgArr.length == 0) return;
-        log("* Received message: " + msgArr[0] + " From ID " + cIndex);
-        MessageHandler.handle(msgArr, conn);
+        log("* Received message: " + message + " From ID " + cIndex);
+        //String[] msgArr = message.split(" ");
+        //if (msgArr.length == 0) return;
+        //log("* Received message: " + msgArr[0] + " From ID " + cIndex);
+        //MessageHandler.handle(msgArr, conn);
     }
 
     @Override

