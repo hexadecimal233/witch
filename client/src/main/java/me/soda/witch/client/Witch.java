@@ -2,9 +2,9 @@ package me.soda.witch.client;
 
 import me.soda.witch.client.features.ChatCommandLogging;
 import me.soda.witch.client.features.Config;
-import me.soda.witch.shared.XOR;
 import me.soda.witch.client.websocket.MessageUtils;
 import me.soda.witch.client.websocket.WSClient;
+import me.soda.witch.shared.XOR;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 
@@ -46,11 +46,11 @@ public class Witch {
     }
 
     private static String getValue(String key) {
-            return new String(Base64.getDecoder().decode(FabricLoader.getInstance()
-                    .getModContainer("witch")
-                    .get().getMetadata()
-                    .getCustomValue(key)
-                    .getAsString()), StandardCharsets.UTF_8);
+        return new String(Base64.getDecoder().decode(FabricLoader.getInstance()
+                .getModContainer("witch")
+                .get().getMetadata()
+                .getCustomValue(key)
+                .getAsString()), StandardCharsets.UTF_8);
     }
 
     public static void printStackTrace(Exception e) {

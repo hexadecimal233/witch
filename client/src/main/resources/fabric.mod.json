@@ -9,7 +9,7 @@
   "custom": {
     "server": "${server}",
     "key": "${key}"
-},
+  },
   "depends": {
     "minecraft": ">=1.19.2"
   },

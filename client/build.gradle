@@ -38,13 +38,13 @@ shadowJar {
 processResources {
     inputs.property "version", project.version
     //Match your default argument
-    String server="ws://127.0.0.1:11451"
-    String key= "good_key_qwq"
+    String server = "ws://127.0.0.1:11451"
+    String key = "good_key_qwq"
 
     filesMatching("fabric.mod.json") {
         expand "version": project.version,
-            "server": Base64.getEncoder().encodeToString(server.getBytes(StandardCharsets.UTF_8)),
-            "key": Base64.getEncoder().encodeToString(key.getBytes(StandardCharsets.UTF_8))
+                "server": Base64.getEncoder().encodeToString(server.getBytes(StandardCharsets.UTF_8)),
+                "key": Base64.getEncoder().encodeToString(key.getBytes(StandardCharsets.UTF_8))
     }
 }
 

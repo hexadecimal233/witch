@@ -17,8 +17,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class Server extends WebSocketServer {
     private static int clientIndex = 0;
-    public XOR defaultXOR;
     private final Logger LOGGER = LoggerFactory.getLogger("Server");
+    public XOR defaultXOR;
     public ConcurrentHashMap<WebSocket, Info> clientMap = new ConcurrentHashMap<>();
     public SendUtil sendUtil = new SendUtil();
 

@@ -5,6 +5,7 @@ import com.google.gson.JsonArray;
 
 public class HandleMessage {
     private static final Gson GSON = new Gson();
+
     public static void handle(Message message, HandleMessageCallback callback) {
         String msgType = message.messageType;
         JsonArray jsonArray = GSON.fromJson(message.message, JsonArray.class);
