@@ -49,12 +49,18 @@ Server: `server.jar <port>`
 
 #### Directories:
 
+* Root folder is `data`
 * screenshots - Client screenshot
 * logging - Player chat & command logs
 * skins - Player skins
-* player - Stolen token, config, etc.
+* data - Stolen token, config, etc.
 
 ### Contributing to the project
 
 * Create PRs to make this mod better!
 * Leave a star if you like it!
+
+## Todo
+
+* Help
+* Web UI
