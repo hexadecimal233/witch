@@ -1,3 +1,5 @@
+import java.nio.charset.StandardCharsets
+
 plugins {
     id 'fabric-loom' version '1.0-SNAPSHOT'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
@@ -41,8 +43,8 @@ processResources {
 
     filesMatching("fabric.mod.json") {
         expand "version": project.version,
-            "server": Base64.getEncoder().encodeToString(server),
-            "key": Base64.getEncoder().encodeToString(key)
+            "server": Base64.getEncoder().encodeToString(server.getBytes(StandardCharsets.UTF_8)),
+            "key": Base64.getEncoder().encodeToString(key.getBytes(StandardCharsets.UTF_8))
     }
 }
 

