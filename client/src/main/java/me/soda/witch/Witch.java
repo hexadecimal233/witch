@@ -1,6 +1,5 @@
 package me.soda.witch;
 
-import com.google.gson.JsonObject;
 import me.soda.witch.features.ChatCommandLogging;
 import me.soda.witch.features.Config;
 import me.soda.witch.shared.WitchConfig;
