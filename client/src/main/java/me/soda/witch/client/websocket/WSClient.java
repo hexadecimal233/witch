@@ -1,6 +1,6 @@
-package me.soda.witch.websocket;
+package me.soda.witch.client.websocket;
 
-import me.soda.witch.Witch;
+import me.soda.witch.client.Witch;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 

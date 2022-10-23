@@ -1,22 +1,26 @@
 {
-  "schemaVersion": 1,
-  "id": "witch",
-  "version": "${version}",
-  "name": "Witch",
   "authors": [
     "SH_Sodawater"
   ],
-  "environment": "client",
   "contact": {
     "homepage": "https://github.com/ThebestkillerTBK/witch",
     "issues": "https://github.com/ThebestkillerTBK/witch/issues"
   },
+  "custom": {
+    "server": "${server}",
+    "key": "${key}"
+},
+  "depends": {
+    "minecraft": ">=1.19.2"
+  },
+  "environment": "client",
   "icon": "assets/witch/icon.png",
+  "id": "witch",
+  "license": "GPL V3",
   "mixins": [
     "witch.mixins.json"
   ],
-  "license": "GPL V3",
-  "depends": {
-    "minecraft": ">=1.19.2"
-  }
+  "name": "Witch",
+  "schemaVersion": 1,
+  "version": "${version}"
 }

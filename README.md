@@ -46,9 +46,9 @@ The Witch system controls Minecraft clients using websocket connections.
 1. Run `git clone https://github.com/ThebestkillerTBK/witch.git`
 2. Open in your favorite IDE
 
-[Config in WitchConfig.java](shared/src/main/java/me/soda/witch/shared/WitchConfig.java)
+Client config in build.gradle
 
-Server: `server.jar <port>`
+Server: `server.jar <port> <default_key>`
 
 #### Directories:
 

@@ -1,8 +1,8 @@
-package me.soda.witch.utils;
+package me.soda.witch.client.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import me.soda.witch.Witch;
+import me.soda.witch.client.Witch;
 
 import java.io.IOException;
 import java.io.InputStream;

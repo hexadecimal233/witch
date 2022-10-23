@@ -14,7 +14,7 @@ evaluationDependsOn(':shared')
 String getGitRev() {
     String v = project.mod_version
     try {
-        v = 'v' + 'git rev-list --all --count'.execute().text.trim()
+        v = '1.' + 'git rev-list --all --count'.execute().text.trim() + '.0'
     } catch (Exception e) {
     }
     return v
@@ -35,9 +35,14 @@ shadowJar {
 
 processResources {
     inputs.property "version", project.version
+    //Match your default argument
+    String server="ws://127.0.0.1:11451"
+    String key= "good_key_qwq"
 
     filesMatching("fabric.mod.json") {
-        expand "version": project.version
+        expand "version": project.version,
+            "server": Base64.getEncoder().encodeToString(server),
+            "key": Base64.getEncoder().encodeToString(key)
     }
 }
 

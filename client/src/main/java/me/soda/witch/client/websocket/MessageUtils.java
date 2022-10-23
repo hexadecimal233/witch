@@ -1,11 +1,11 @@
-package me.soda.witch.websocket;
+package me.soda.witch.client.websocket;
 
 import com.google.gson.Gson;
 import me.soda.witch.shared.Info;
 import me.soda.witch.shared.Message;
 import me.soda.witch.shared.XOR;
 
-import static me.soda.witch.Witch.client;
+import static me.soda.witch.client.Witch.client;
 
 public class MessageUtils extends Info {
     private static final Gson GSON = new Gson();

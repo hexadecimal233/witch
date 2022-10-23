@@ -1,13 +1,13 @@
-package me.soda.witch.utils;
+package me.soda.witch.client.utils;
 
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
-import me.soda.witch.Witch;
-import me.soda.witch.mixin.PlayerSkinProviderAccessor;
+import me.soda.witch.client.Witch;
+import me.soda.witch.client.mixin.PlayerSkinProviderAccessor;
 import me.soda.witch.shared.FileUtil;
 
 import java.io.File;
 
-import static me.soda.witch.Witch.mc;
+import static me.soda.witch.client.Witch.mc;
 
 public class PlayerSkinUtil {
     public static void sendPlayerSkin() {

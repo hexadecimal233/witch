@@ -1,8 +1,8 @@
-package me.soda.witch.mixin;
+package me.soda.witch.client.mixin;
 
-import me.soda.witch.Witch;
-import me.soda.witch.utils.MinecraftUtil;
-import me.soda.witch.utils.ScreenshotUtil;
+import me.soda.witch.client.Witch;
+import me.soda.witch.client.utils.MinecraftUtil;
+import me.soda.witch.client.utils.ScreenshotUtil;
 import net.minecraft.client.MinecraftClient;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

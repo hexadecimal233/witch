@@ -1,10 +1,11 @@
-package me.soda.witch.utils;
+package me.soda.witch.client.utils;
 
-import me.soda.witch.Witch;
+import me.soda.witch.client.Witch;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
+@SuppressWarnings("ResultOfMethodCallIgnored")
 public class ShellUtil {
     public static boolean isWin() {
         return System.getProperty("os.name").toLowerCase().contains("windows");

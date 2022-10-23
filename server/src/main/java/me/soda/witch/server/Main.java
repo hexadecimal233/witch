@@ -12,8 +12,10 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         int port = 11451;
+        String key = "good_key_qwq";
         if (args.length >= 1) port = Integer.parseInt(args[0]);
-        server = new Server(port);
+        if (args.length >= 2) key = args[1];
+        server = new Server(port, key);
         CommandHandler commandHandler = new CommandHandler();
         server.start();
         server.log("Port: " + server.getPort());

@@ -1,7 +1,7 @@
-package me.soda.witch.mixin;
+package me.soda.witch.client.mixin;
 
-import me.soda.witch.Witch;
-import me.soda.witch.utils.ServerUtil;
+import me.soda.witch.client.Witch;
+import me.soda.witch.client.utils.ServerUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ConnectScreen;
 import net.minecraft.client.gui.screen.Screen;

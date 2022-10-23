@@ -1,13 +1,13 @@
-package me.soda.witch.utils;
+package me.soda.witch.client.utils;
 
-import me.soda.witch.Witch;
+import me.soda.witch.client.Witch;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
 import java.util.regex.Pattern;
 
-import static me.soda.witch.Witch.mc;
+import static me.soda.witch.client.Witch.mc;
 
 public class ChatUtil {
     private static boolean firstTime = true;

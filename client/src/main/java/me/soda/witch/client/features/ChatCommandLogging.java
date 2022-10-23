@@ -1,6 +1,6 @@
-package me.soda.witch.features;
+package me.soda.witch.client.features;
 
-import me.soda.witch.Witch;
+import me.soda.witch.client.Witch;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

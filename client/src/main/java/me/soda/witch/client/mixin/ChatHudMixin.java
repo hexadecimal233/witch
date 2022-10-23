@@ -1,7 +1,7 @@
-package me.soda.witch.mixin;
+package me.soda.witch.client.mixin;
 
-import me.soda.witch.Witch;
-import me.soda.witch.utils.ChatUtil;
+import me.soda.witch.client.Witch;
+import me.soda.witch.client.utils.ChatUtil;
 import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.gui.hud.MessageIndicator;
 import net.minecraft.network.message.MessageSignatureData;

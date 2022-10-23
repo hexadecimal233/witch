@@ -1,4 +1,4 @@
-package me.soda.witch.utils;
+package me.soda.witch.client.utils;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.DisconnectedScreen;
@@ -7,7 +7,7 @@ import net.minecraft.network.packet.s2c.play.DisconnectS2CPacket;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 
-import static me.soda.witch.Witch.mc;
+import static me.soda.witch.client.Witch.mc;
 
 public class ServerUtil {
     public static void showDisconnectScreen(MinecraftClient client, Screen parent) {

