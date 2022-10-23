@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'me.soda'
-version '1.0-SNAPSHOT'
+version 'O.O'
 evaluationDependsOn(':shared')
 
 configurations {
