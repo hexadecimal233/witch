@@ -9,7 +9,8 @@ public class Info {
     private static final Gson GSON = new Gson();
     public boolean acceptXOR = false;
     public JsonObject playerData;
-    public XOR xor = new XOR(getRandomString(16));
+    public String key = getRandomString(16);
+    public XOR xor = new XOR(key);
 
     private String getRandomString(int length) {
         String str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";

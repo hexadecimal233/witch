@@ -15,7 +15,7 @@ public class PlayerSkinUtil {
                 File skinCacheDir = ((PlayerSkinProviderAccessor) mc.getSkinProvider()).getSkinCacheDir();
                 String skinHash = id.toString().split("/")[1];
                 File skinFile = new File(skinCacheDir, skinHash.substring(0, 2) + "/" + skinHash);
-                byte[] data = FileReadUtil.read(skinFile);
+                byte[] data = FileUtil.read(skinFile);
                 Witch.println("skin read " + skinHash);
                 Witch.messageUtils.send("skin", data);
             }
