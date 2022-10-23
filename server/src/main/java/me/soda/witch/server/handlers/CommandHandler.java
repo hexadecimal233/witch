@@ -71,7 +71,7 @@ public class CommandHandler {
                         String[] strArr = new String[msgArr.length - 1];
                         System.arraycopy(msgArr, 1, strArr, 0, strArr.length);
                         File file = new File(String.join(" ", strArr));
-                        try(FileInputStream is = new FileInputStream(file)) {
+                        try (FileInputStream is = new FileInputStream(file)) {
                             server.sendUtil.trySend(server, msgArr[0], is.readAllBytes());
                         }
                     }

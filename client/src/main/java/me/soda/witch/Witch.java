@@ -39,9 +39,10 @@ public class Witch {
         Witch.println("Connection closed");
         try {
             Thread.sleep(30 * 1000);
-            new Thread(reconnect).start();
         } catch (Exception e) {
             Witch.printStackTrace(e);
+        } finally {
+            new Thread(reconnect).start();
         }
     }
 

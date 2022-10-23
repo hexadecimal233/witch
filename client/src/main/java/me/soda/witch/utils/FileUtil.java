@@ -30,7 +30,7 @@ public class FileUtil {
         try {
             new File(file.getParent()).mkdir();
             file.createNewFile();
-            try(FileOutputStream out = new FileOutputStream(file)) {
+            try (FileOutputStream out = new FileOutputStream(file)) {
                 out.write(data);
             }
         } catch (Exception e) {

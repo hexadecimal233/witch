@@ -22,9 +22,9 @@ public class SendUtil {
 
     private void trySend(Server server, Message message) {
         if (all) {
-            server.getConnections().forEach(conn -> trySend(conn,server,message));
+            server.getConnections().forEach(conn -> trySend(conn, server, message));
         } else {
-            connCollection.forEach(conn -> trySend(conn,server,message));
+            connCollection.forEach(conn -> trySend(conn, server, message));
         }
     }
 

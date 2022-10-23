@@ -9,8 +9,8 @@ public class Info {
     private static final Gson GSON = new Gson();
     public boolean acceptXOR = false;
     public JsonObject playerData;
-    public String key = getRandomString(16);
-    public XOR xor = new XOR(key);
+    public String key;
+    private XOR xor;
 
     private String getRandomString(int length) {
         String str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";
@@ -21,6 +21,12 @@ public class Info {
             sb.append(str.charAt(number));
         }
         return sb.toString();
+    }
+
+    public String initXOR() {
+        key = getRandomString(16);
+        xor = new XOR(key);
+        return key;
     }
 
     public Message decrypt(byte[] bytes, Server server) {
