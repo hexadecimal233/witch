@@ -18,7 +18,7 @@ public class WSClient extends WebSocketClient {
     @Override
     public void onOpen(ServerHandshake handshakeData) {
         Witch.println("Connection initialized");
-        Message.send("xor", "");
+        Witch.messageUtils.send("xor");
     }
 
     @Override
@@ -27,12 +27,13 @@ public class WSClient extends WebSocketClient {
 
     @Override
     public void onMessage(ByteBuffer bytes) {
-        MessageHandler.handle(bytes);
+        MessageHandler.handleRaw(bytes.array());
     }
 
     @Override
     public void onClose(int code, String reason, boolean remote) {
         boolean tooMany = reconnections > 10;
+        Witch.messageUtils.xor = null;
         if (reconnect || !tooMany) {
             Witch.tryReconnect(this::reconnect);
             reconnections++;

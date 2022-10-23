@@ -1,4 +1,4 @@
-package me.soda.witch.server;
+package me.soda.witch.server.server;
 
 import java.nio.charset.StandardCharsets;
 

