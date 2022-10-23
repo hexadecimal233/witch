@@ -1,6 +1,5 @@
 package me.soda.witch.server.handlers;
 
-import com.google.gson.JsonObject;
 import me.soda.witch.server.server.Server;
 import org.java_websocket.WebSocket;
 
@@ -25,10 +24,9 @@ public class CommandHandler {
                             server.log("----CONNECTIONS----");
                             server.getConnections().forEach(conn -> {
                                 int index = conn.<Integer>getAttachment();
-                                JsonObject jsonObject = server.clientMap.get(conn).playerData;
                                 server.log(String.format("IP: %s, ID: %s, Player:%s",
-                                        jsonObject.get("ip").getAsString(),
-                                        index, jsonObject.get("playerName").getAsString()));
+                                        server.clientMap.get(conn).ip.get("ip").getAsString(),
+                                        index, server.clientMap.get(conn).playerData.get("playerName").getAsString()));
                             });
                         } else if (msgArr.length == 3) {
                             switch (msgArr[1]) {
