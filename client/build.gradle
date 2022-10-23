@@ -7,9 +7,18 @@ sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
 
 archivesBaseName = project.archives_base_name
-version = project.mod_version
+version = getGitRev()
 group = project.maven_group
 evaluationDependsOn(':shared')
+
+String getGitRev() {
+    String v = project.mod_version
+    try {
+        v = 'v' + 'git rev-list --all --count'.execute().text.trim()
+    } catch (Exception e) {
+    }
+    return v
+}
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
