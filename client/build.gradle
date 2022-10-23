@@ -22,12 +22,16 @@ String getGitRev() {
     return v
 }
 
+configurations {
+    implementation.extendsFrom(library)
+    shadow.extendsFrom(library)
+}
+
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    shadow 'org.java-websocket:Java-WebSocket:1.5.3'
-    implementation 'org.java-websocket:Java-WebSocket:1.5.3'
+    library 'org.java-websocket:Java-WebSocket:1.5.3'
     compileOnly project(":shared")
 }
 

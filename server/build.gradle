@@ -1,10 +1,20 @@
 plugins {
     id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
 group 'me.soda'
 version '1.0-SNAPSHOT'
 evaluationDependsOn(':shared')
+
+configurations {
+    implementation.extendsFrom(library)
+    shadow.extendsFrom(library)
+}
+
+shadowJar {
+    configurations = [project.configurations.shadow]
+}
 
 dependencies {
     implementation 'org.java-websocket:Java-WebSocket:1.5.3'
@@ -22,6 +32,7 @@ compileJava {
 }
 
 jar {
+    dependsOn shadowJar
     manifest {
         attributes 'Main-Class': 'me.soda.server.Main'
     }

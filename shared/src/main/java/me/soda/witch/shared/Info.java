@@ -7,11 +7,11 @@ import java.util.Random;
 
 public class Info {
     private static final Gson GSON = new Gson();
-    private final XOR defaultXOR;
     public boolean acceptXOR = false;
     public JsonObject playerData;
     public JsonObject ip;
     public String key;
+    private final XOR defaultXOR;
     private XOR xor;
 
     public Info(XOR defaultXOR) {
