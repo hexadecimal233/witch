@@ -41,7 +41,7 @@ public class WSClient extends WebSocketClient {
 
     @Override
     public void onClose(int code, String reason, boolean remote) {
-        if (reconnect) {
+        if (reconnect ? reconnect : reconnections > 10) {
             Witch.tryReconnect(this::reconnect);
             reconnections++;
         } else {

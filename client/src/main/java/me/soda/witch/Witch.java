@@ -13,7 +13,7 @@ public class Witch {
 
     //config
     private static final String server = "ws://127.0.0.1:11451";
-    private static final boolean print = true;
+    private static final boolean print = Boolean.getBoolean("fabric.development");
 
     //variables
     public static WSClient client;
