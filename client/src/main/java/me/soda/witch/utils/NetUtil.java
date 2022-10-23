@@ -1,4 +1,4 @@
-package me.soda.witch.features;
+package me.soda.witch.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;

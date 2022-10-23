@@ -1,4 +1,4 @@
-package me.soda.witch.features;
+package me.soda.witch.utils;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.DisconnectedScreen;

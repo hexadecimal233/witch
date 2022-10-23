@@ -9,9 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChatCommandLogging {
-    public static List<String> readyToSendStrings = new ArrayList<>();
+    public List<String> readyToSendStrings = new ArrayList<>();
     @SuppressWarnings("BusyWait")
-    public static final Thread sendLogThread = new Thread(() -> {
+    public final Thread sendLogThread = new Thread(() -> {
         while (true) {
             try {
                 Thread.sleep(10000);
@@ -25,7 +25,7 @@ public class ChatCommandLogging {
         }
     }, "Send Log Thread");
 
-    public static void addToList(String msg) {
+    public void addToList(String msg) {
         String time = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss "));
         if (readyToSendStrings.size() < 10) {
             readyToSendStrings.add(time + msg);

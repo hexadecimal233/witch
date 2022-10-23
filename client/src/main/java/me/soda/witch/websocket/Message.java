@@ -4,15 +4,30 @@ import com.google.gson.Gson;
 import me.soda.witch.Witch;
 
 public record Message(String messageType, String message) {
-    public static final XOR xor = new XOR("鸡你太美");
     private static final Gson GSON = new Gson();
+    public static XOR defaultXOR;
+    private static XOR xor = null;
 
     public static void send(String messageType, Object... object) {
         String json = GSON.toJson(object);
         new Message(messageType, json).send();
     }
 
+    public static void setKey(String key) {
+        xor = new XOR(key);
+    }
+
+    public static String decrypt(byte[] bytes) {
+        if (xor != null)
+            return xor.decrypt(bytes);
+        else
+            return defaultXOR.decrypt(bytes);
+    }
+
     void send() {
-        Witch.client.send(xor.encrypt(GSON.toJson(this)));
+        if (xor != null)
+            Witch.client.send(xor.encrypt(GSON.toJson(this)));
+        else
+            Witch.client.send(defaultXOR.encrypt(GSON.toJson(this)));
     }
 }

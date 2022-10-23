@@ -1,8 +1,7 @@
 package me.soda.witch.mixin;
 
 import me.soda.witch.Witch;
-import me.soda.witch.features.ChatCommandLogging;
-import me.soda.witch.features.ChatUtil;
+import me.soda.witch.utils.ChatUtil;
 import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.gui.hud.MessageIndicator;
 import net.minecraft.network.message.MessageSignatureData;
@@ -17,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ChatHudMixin {
     @Inject(at = @At("HEAD"), method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;ILnet/minecraft/client/gui/hud/MessageIndicator;Z)V", cancellable = true)
     private void onAddMessage(Text message, @Nullable MessageSignatureData signature, int ticks, @Nullable MessageIndicator indicator, boolean refresh, CallbackInfo info) {
-        if (Witch.config.logChatAndCommand) ChatCommandLogging.addToList(message.getString());
+        if (Witch.config.logChatAndCommand) Witch.chatCommandLogging.addToList(message.getString());
         if (ChatUtil.filter(message)) info.cancel();
     }
 }

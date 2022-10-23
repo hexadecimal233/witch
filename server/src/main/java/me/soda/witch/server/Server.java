@@ -1,7 +1,6 @@
-package me.soda.server;
+package me.soda.witch.server;
 
 import com.google.gson.JsonObject;
-import me.soda.server.handlers.MessageHandler;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
@@ -12,19 +11,34 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Server extends WebSocketServer {
-    public static final Logger LOGGER = LoggerFactory.getLogger("Server");
-    public static ConcurrentHashMap<WebSocket, JsonObject> clientMap = new ConcurrentHashMap<>();
-    public static XOR xor = new XOR("鸡你太美");
+    private final Logger LOGGER = LoggerFactory.getLogger("Server");
+    public ConcurrentHashMap<WebSocket, JsonObject> clientMap = new ConcurrentHashMap<>();
+    public static XOR defaultXOR;
+    public static XOR xor;
     private static int clientIndex = 0;
 
-    public Server(int port) {
-        super(new InetSocketAddress(port));
+    private String getRandomString(int length){
+        String str="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";
+        Random random=new Random();
+        StringBuilder sb=new StringBuilder();
+        for(int i=0;i<length;i++){
+            int number=random.nextInt(63);
+            sb.append(str.charAt(number));
+        }
+        return sb.toString();
     }
 
-    public static void log(String string) {
+    public Server(int port, String key) {
+        super(new InetSocketAddress(port));
+        defaultXOR = new XOR(key);
+        xor = new XOR(getRandomString(16));
+    }
+
+    public void log(String string) {
         LOGGER.info("{}: {}", LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")), string);
     }
 
@@ -51,23 +65,17 @@ public class Server extends WebSocketServer {
 
     @Override
     public void onMessage(WebSocket conn, String message) {
-        int cIndex = conn.<Integer>getAttachment();
-        log("* Received message: " + message + " From ID " + cIndex);
-        //String[] msgArr = message.split(" ");
-        //if (msgArr.length == 0) return;
-        //log("* Received message: " + msgArr[0] + " From ID " + cIndex);
-        //MessageHandler.handle(msgArr, conn);
     }
 
     @Override
     public void onMessage(WebSocket conn, ByteBuffer bytes) {
         int cIndex = conn.<Integer>getAttachment();
-        String message = xor.decrypt(bytes.array());
+        String message = defaultXOR.decrypt(bytes.array());
         log("* Received message: " + message + " From ID " + cIndex);
         //String[] msgArr = message.split(" ");
         //if (msgArr.length == 0) return;
         //log("* Received message: " + msgArr[0] + " From ID " + cIndex);
-        //MessageHandler.handle(msgArr, conn);
+        //MessageHandler.handle(msgArr, conn, this);
     }
 
     @Override

