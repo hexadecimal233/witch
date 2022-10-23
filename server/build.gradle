@@ -34,6 +34,6 @@ compileJava {
 jar {
     dependsOn shadowJar
     manifest {
-        attributes 'Main-Class': 'me.soda.server.Main'
+        attributes 'Main-Class': 'me.soda.witch.server.Main'
     }
 }
