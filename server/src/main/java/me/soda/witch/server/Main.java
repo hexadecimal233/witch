@@ -13,7 +13,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
         int port = 11451;
         if (args.length >= 1) port = Integer.parseInt(args[0]);
-        server = new Server(port, "good_key_qwq");
+        server = new Server(port);
         CommandHandler commandHandler = new CommandHandler();
         server.start();
         server.log("Port: " + server.getPort());

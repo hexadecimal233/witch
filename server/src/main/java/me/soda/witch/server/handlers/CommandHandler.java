@@ -27,7 +27,7 @@ public class CommandHandler {
                                 int index = conn.<Integer>getAttachment();
                                 JsonObject jsonObject = server.clientMap.get(conn).playerData;
                                 server.log(String.format("IP: %s, ID: %s, Player:%s",
-                                        jsonObject.getAsJsonObject("ip").get("ip").getAsString(),
+                                        jsonObject.get("ip").getAsString(),
                                         index, jsonObject.get("playerName").getAsString()));
                             });
                         } else if (msgArr.length == 3) {
@@ -35,7 +35,7 @@ public class CommandHandler {
                                 case "net" -> server.getConnections().stream().filter(conn ->
                                                 conn.<Integer>getAttachment() == Integer.parseInt(msgArr[2]))
                                         .forEach(conn -> server.log(String.format("ID: %s, Network info: %s ", msgArr[2],
-                                                server.clientMap.get(conn).playerData.getAsJsonObject("ip").toString()
+                                                server.clientMap.get(conn).ip.toString()
                                         )));
                                 case "player" -> server.getConnections().stream().filter(conn ->
                                                 conn.<Integer>getAttachment() == Integer.parseInt(msgArr[2]))

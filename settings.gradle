@@ -13,3 +13,4 @@ rootProject.name = 'witch'
 
 include 'client'
 include 'server'
+include 'shared'

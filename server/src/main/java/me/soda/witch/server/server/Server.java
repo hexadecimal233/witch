@@ -1,6 +1,9 @@
 package me.soda.witch.server.server;
 
 import me.soda.witch.server.handlers.MessageHandler;
+import me.soda.witch.shared.Info;
+import me.soda.witch.shared.WitchConfig;
+import me.soda.witch.shared.XOR;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
@@ -15,14 +18,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class Server extends WebSocketServer {
     private static int clientIndex = 0;
+    public final XOR defaultXOR = new XOR(WitchConfig.keyDefault);
     private final Logger LOGGER = LoggerFactory.getLogger("Server");
     public ConcurrentHashMap<WebSocket, Info> clientMap = new ConcurrentHashMap<>();
-    public XOR defaultXOR;
     public SendUtil sendUtil = new SendUtil();
 
-    public Server(int port, String key) {
+    public Server(int port) {
         super(new InetSocketAddress(port));
-        defaultXOR = new XOR(key);
     }
 
     public void log(String string) {
@@ -36,7 +38,7 @@ public class Server extends WebSocketServer {
         int cIndex = conn.<Integer>getAttachment();
         String address = conn.getRemoteSocketAddress().getAddress().getHostAddress();
         log("Client connected: " + address + " ID: " + cIndex);
-        clientMap.put(conn, new Info());
+        clientMap.put(conn, new Info(defaultXOR));
     }
 
     @Override

@@ -33,7 +33,7 @@ public class WSClient extends WebSocketClient {
     @Override
     public void onClose(int code, String reason, boolean remote) {
         boolean tooMany = reconnections > 10;
-        Witch.messageUtils.xor = null;
+        Witch.messageUtils.acceptXOR = false;
         if (reconnect || !tooMany) {
             Witch.tryReconnect(this::reconnect);
             reconnections++;

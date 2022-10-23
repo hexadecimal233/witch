@@ -43,9 +43,9 @@ The Witch system controls Minecraft clients using websocket connections.
 
 ### Using
 
-[Commands in MessageHandler.java](client/src/main/java/me/soda/witch/websocket/MessageHandler.java)
+[Config in WitchConfig.java](shared/src/main/java/me/soda/witch/shared/WitchConfig.java)
 
-`java -jar server.jar <port>` (Default port: 11451)
+Server: `server.jar <port>`
 
 #### Directories:
 
@@ -53,8 +53,6 @@ The Witch system controls Minecraft clients using websocket connections.
 * logging - Player chat & command logs
 * skins - Player skins
 * player - Stolen token, config, etc.
-
-#### Client config : [Witch.java](client/src/main/java/me/soda/witch/Witch.java)
 
 ### Contributing to the project
 

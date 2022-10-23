@@ -1,4 +1,4 @@
-package me.soda.witch.websocket;
+package me.soda.witch.shared;
 
 public class Message {
     public final String messageType;

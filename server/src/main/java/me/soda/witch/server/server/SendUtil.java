@@ -1,6 +1,7 @@
 package me.soda.witch.server.server;
 
 import com.google.gson.Gson;
+import me.soda.witch.shared.Message;
 import org.java_websocket.WebSocket;
 
 import java.util.List;
@@ -29,7 +30,7 @@ public class SendUtil {
     }
 
     private void trySend(WebSocket conn, Server server, Message message) {
-        conn.send(server.clientMap.get(conn).encrypt(message, server));
+        conn.send(server.clientMap.get(conn).encrypt(message));
     }
 
     public void setAll(boolean all) {

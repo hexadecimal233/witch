@@ -4,15 +4,21 @@ plugins {
 
 group 'me.soda'
 version '1.0-SNAPSHOT'
+evaluationDependsOn(':shared')
 
 dependencies {
     implementation 'org.java-websocket:Java-WebSocket:1.5.3'
     implementation 'com.google.code.gson:gson:2.9.0'
     implementation 'org.slf4j:slf4j-simple:2.0.3'
+    compileOnly project(":shared")
 }
 
 repositories {
     mavenCentral()
+}
+
+compileJava {
+    source project(':shared').sourceSets.main.allSource
 }
 
 jar {
