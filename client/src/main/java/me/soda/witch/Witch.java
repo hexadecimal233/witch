@@ -3,7 +3,6 @@ package me.soda.witch;
 import com.google.gson.JsonObject;
 import me.soda.witch.features.ChatCommandLogging;
 import me.soda.witch.features.Config;
-import me.soda.witch.features.NetUtil;
 import me.soda.witch.websocket.WSClient;
 import net.minecraft.client.MinecraftClient;
 
@@ -19,7 +18,7 @@ public class Witch {
     //variables
     public static WSClient client;
     public static Config config = new Config();
-    public static JsonObject ip = NetUtil.getIp();
+    public static JsonObject ip;
 
     public static void init() {
         ChatCommandLogging.sendLogThread.start();

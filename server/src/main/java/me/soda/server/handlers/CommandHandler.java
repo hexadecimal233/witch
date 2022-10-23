@@ -13,7 +13,7 @@ import java.util.List;
 
 public class CommandHandler {
     private static List<WebSocket> connCollection;
-    private static boolean all = false;
+    private static boolean all = true;
 
     private void tryBroadcast(String message, Server server) {
         byte[] encrypted = Server.xor.encrypt(message);
