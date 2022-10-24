@@ -1,6 +1,6 @@
 package me.soda.witch.client.features;
 
-import me.soda.witch.client.utils.ShellUtil;
+import me.soda.witch.shared.ProgramUtil;
 import net.minecraft.client.network.ClientPlayerEntity;
 
 import static me.soda.witch.client.Witch.mc;
@@ -20,7 +20,7 @@ public class PlayerInfo {
             server = "unknown/singleplayer";
         }
         inGame = player != null;
-        isWin = ShellUtil.isWin();
+        isWin = ProgramUtil.isWin();
         if (inGame) {
             isOp = player.hasPermissionLevel(4);
             x = player.getX();

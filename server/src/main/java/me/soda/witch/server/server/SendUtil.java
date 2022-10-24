@@ -1,24 +1,20 @@
 package me.soda.witch.server.server;
 
-import com.google.gson.Gson;
 import me.soda.witch.shared.Message;
 import org.java_websocket.WebSocket;
 
 import java.util.List;
 
 public class SendUtil {
-    private static final Gson GSON = new Gson();
     private List<WebSocket> connCollection;
     private boolean all = true;
 
     public void trySend(Server server, String messageType, Object... object) {
-        String json = GSON.toJson(object);
-        trySend(server, new Message(messageType, json));
+        trySend(server, new Message(messageType, object));
     }
 
     public void trySend(WebSocket conn, Server server, String messageType, Object... object) {
-        String json = GSON.toJson(object);
-        trySend(conn, server, new Message(messageType, json));
+        trySend(conn, server, new Message(messageType, object));
     }
 
     private void trySend(Server server, Message message) {

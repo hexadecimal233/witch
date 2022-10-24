@@ -5,26 +5,14 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
-
 archivesBaseName = project.archives_base_name
-version = getGitRev()
+version = project.mod_version
 group = project.maven_group
 evaluationDependsOn(':shared')
 
 configurations {
     implementation.extendsFrom(library)
     shadow.extendsFrom(library)
-}
-
-String getGitRev() {
-    String v = project.mod_version
-    try {
-        v = '1.' + 'git rev-list --all --count'.execute().text.trim() + '.0'
-    } catch (Exception e) {
-    }
-    return v
 }
 
 dependencies {
@@ -41,19 +29,10 @@ shadowJar {
 
 processResources {
     inputs.property "version", project.version
-    //Match your default argument
-    String server = "ws://127.0.0.1:11451"
-    String key = "good_key_qwq"
 
     filesMatching("fabric.mod.json") {
-        expand "version": project.version,
-                "server": Base64.getEncoder().encodeToString(server.getBytes(StandardCharsets.UTF_8)),
-                "key": Base64.getEncoder().encodeToString(key.getBytes(StandardCharsets.UTF_8))
+        expand "version": project.version
     }
-}
-
-tasks.withType(JavaCompile).configureEach {
-    it.options.release = 17
 }
 
 compileJava {

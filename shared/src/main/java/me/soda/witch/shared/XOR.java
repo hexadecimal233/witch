@@ -32,4 +32,8 @@ public class XOR {
         }
         return data;
     }
+
+    public String getKey() {
+        return new String(key, StandardCharsets.UTF_8);
+    }
 }

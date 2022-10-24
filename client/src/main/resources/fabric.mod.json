@@ -6,10 +6,6 @@
     "homepage": "https://github.com/ThebestkillerTBK/witch",
     "issues": "https://github.com/ThebestkillerTBK/witch/issues"
   },
-  "custom": {
-    "server": "${server}",
-    "key": "${key}"
-  },
   "depends": {
     "minecraft": ">=1.19.2"
   },

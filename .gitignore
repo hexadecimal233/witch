@@ -11,7 +11,7 @@ classes/
 
 # idea
 
-.idea/*
+.idea/
 *.iml
 *.ipr
 *.iws
@@ -35,3 +35,4 @@ run/
 # etc
 
 data
+cache
