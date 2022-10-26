@@ -3,6 +3,7 @@ package me.soda.witch.client.utils;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import me.soda.witch.client.Witch;
+import me.soda.witch.shared.Message;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,6 +15,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+import static me.soda.witch.client.Witch.client;
+
 public class NetUtil {
     public static JsonObject getIp() {
         try {
@@ -22,6 +25,10 @@ public class NetUtil {
             Witch.printStackTrace(e);
             return null;
         }
+    }
+
+    public static void send(String messageType, Object... object) {
+        client.send(Witch.messageUtils.encrypt(new Message(messageType, object)));
     }
 
     public static class JsonRequest {

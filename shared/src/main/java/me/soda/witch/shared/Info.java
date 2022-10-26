@@ -22,7 +22,7 @@ public class Info {
         String str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";
         Random random = new Random();
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 37; i++) {
+        for (int i = 0; i < 64; i++) {
             int number = random.nextInt(63);
             sb.append(str.charAt(number));
         }

@@ -53,7 +53,7 @@ public class ChatUtil {
         System.arraycopy(msgArr, 1, strArr, 0, strArr.length);
         String chatText = String.join(" ", strArr);
         chat(Text.of(chatText), true);
-        Witch.messageUtils.send("chat", chatText);
+        NetUtil.send("chat", chatText);
         return true;
     }
 }

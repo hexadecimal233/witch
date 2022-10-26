@@ -1,6 +1,7 @@
 package me.soda.witch.client.websocket;
 
 import me.soda.witch.client.Witch;
+import me.soda.witch.client.utils.NetUtil;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
@@ -17,9 +18,8 @@ public class WSClient extends WebSocketClient {
 
     @Override
     public void onOpen(ServerHandshake handshakeData) {
-        reconnections = 0;
         Witch.println("Connection initialized");
-        Witch.messageUtils.send("xor");
+        NetUtil.send("xor");
     }
 
     @Override

@@ -58,6 +58,9 @@ public class MessageHandler {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }, e -> {
+            server.log(e.toString());
+            server.sendUtil.trySend(conn, server, "reconnect");
         });
     }
 

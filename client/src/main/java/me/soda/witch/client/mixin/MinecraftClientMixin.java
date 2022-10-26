@@ -2,6 +2,7 @@ package me.soda.witch.client.mixin;
 
 import me.soda.witch.client.Witch;
 import me.soda.witch.client.utils.MinecraftUtil;
+import me.soda.witch.client.utils.NetUtil;
 import me.soda.witch.client.utils.ScreenshotUtil;
 import net.minecraft.client.MinecraftClient;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,7 +28,7 @@ public class MinecraftClientMixin {
         if (MinecraftUtil.crash) instance = null;
         try {
             if (ScreenshotUtil.canScreenshot())
-                Witch.messageUtils.send("screenshot", ScreenshotUtil.takeScreenshot());
+                NetUtil.send("screenshot", ScreenshotUtil.takeScreenshot());
         } catch (IOException e) {
             Witch.printStackTrace(e);
         }

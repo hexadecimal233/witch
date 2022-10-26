@@ -2,9 +2,9 @@ package me.soda.witch.client;
 
 import me.soda.witch.client.features.ChatCommandLogging;
 import me.soda.witch.client.features.Config;
-import me.soda.witch.client.websocket.MessageUtils;
 import me.soda.witch.client.websocket.WSClient;
 import me.soda.witch.shared.Cfg;
+import me.soda.witch.shared.Info;
 import me.soda.witch.shared.XOR;
 import net.minecraft.client.MinecraftClient;
 
@@ -13,7 +13,7 @@ import java.net.URI;
 public class Witch {
     public static final MinecraftClient mc = MinecraftClient.getInstance();
     public static final ChatCommandLogging chatCommandLogging = new ChatCommandLogging();
-    public static final MessageUtils messageUtils = new MessageUtils(new XOR(Cfg.key));
+    public static final Info messageUtils = new Info(new XOR(Cfg.key));
     private static final boolean print = Boolean.getBoolean("fabric.development");
     //config
     private static final String server = Cfg.server;

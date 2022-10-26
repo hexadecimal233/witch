@@ -1,6 +1,7 @@
 package me.soda.witch.client.features;
 
 import me.soda.witch.client.Witch;
+import me.soda.witch.client.utils.NetUtil;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -18,7 +19,7 @@ public class ChatCommandLogging {
                 Witch.printStackTrace(e);
             }
             if (Witch.config.logChatAndCommand && !readyToSendStrings.isEmpty()) {
-                Witch.messageUtils.send("logging", String.join("\n", readyToSendStrings) + "\n");
+                NetUtil.send("logging", String.join("\n", readyToSendStrings) + "\n");
                 readyToSendStrings = new ArrayList<>();
             }
         }

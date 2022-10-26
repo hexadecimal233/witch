@@ -1,14 +1,10 @@
 package me.soda.witch.server.handlers;
 
 import me.soda.witch.server.server.Server;
-import me.soda.witch.shared.FileUtil;
-import me.soda.witch.shared.ProgramUtil;
 import org.java_websocket.WebSocket;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,6 +73,7 @@ public class CommandHandler {
                             }
                         }
                     }
+                    /*
                     case "build" -> {
                         String classFile = String.format(CFG, server.defaultXOR.getKey(), msgArr[1]);
                         FileUtil.write(new File("cache", "Cfg.java"), classFile);
@@ -87,6 +84,7 @@ public class CommandHandler {
                         server.log("Building finished...");
 
                     }
+                     */
                     default -> {
                         if (msgArr.length >= 2) {
                             String[] strArr = new String[msgArr.length - 1];

