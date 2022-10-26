@@ -19,10 +19,12 @@ public class Main {
         CommandHandler commandHandler = new CommandHandler();
         server.start();
         server.log("Port: " + server.getPort());
+        System.out.print("Console > ");
         BufferedReader inputStream = new BufferedReader(new InputStreamReader(System.in));
-        while (true) {
+        while (!server.stopped) {
             String in = inputStream.readLine();
-            if (commandHandler.handle(in, server)) break;
+            commandHandler.handle(in, server);
+            System.out.print("Console > ");
         }
     }
 }

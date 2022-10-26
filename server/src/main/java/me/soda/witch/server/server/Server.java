@@ -21,6 +21,7 @@ public class Server extends WebSocketServer {
     public XOR defaultXOR;
     public ConcurrentHashMap<WebSocket, Info> clientMap = new ConcurrentHashMap<>();
     public SendUtil sendUtil = new SendUtil();
+    public boolean stopped = false;
 
     public Server(int port, String key) {
         super(new InetSocketAddress(port));

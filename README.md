@@ -41,13 +41,15 @@ The Witch system controls Minecraft clients using websocket connections.
 - [X] Filter & mute chat
 - [X] Kick people from server and prevent them from joining server
 
-### Using
+### Coding
 
 1. Run `git clone https://github.com/ThebestkillerTBK/witch.git`
 2. Open in your favorite IDE
 
-* Build client: run `build <server_address>` and you will see `client.jar` in `cache` folder.
-* Server: `server.jar <port> <default_key>`
+### Using
+
+* Build client: run `build <server_address>` and you will see `client.jar` in `data` folder.
+* Server: `java -jar server-O.O-all.jar <port> <default_key>`
 * Default port and key: `11451` and `good_key_qwq`
 
 #### Directories:

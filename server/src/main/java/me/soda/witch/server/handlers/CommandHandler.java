@@ -7,8 +7,9 @@ import org.java_websocket.WebSocket;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
+import java.io.IOException;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,15 +23,14 @@ public class CommandHandler {
             }
             """;
 
-    public boolean handle(String in, Server server) {
-        boolean stop = false;
+    public void handle(String in, Server server) {
         String[] msgArr = in.split(" ");
         if (msgArr.length > 0) {
             try {
                 switch (msgArr[0]) {
                     case "stop" -> {
                         server.stop();
-                        stop = true;
+                        server.stopped = true;
                     }
                     case "conn" -> {
                         if (msgArr.length == 1) {
@@ -82,11 +82,12 @@ public class CommandHandler {
                         FileUtil.write(new File("cache", "Cfg.java"), classFile);
                         String file = "witch-1.0.0.jar";
                         String fallbackFile = "client/build/libs/witch-1.0.0.jar";
+                        File client = new File("cache/client.jar");
                         try {
-                            Files.copy(new File(file).toPath(), new File("cache/client.jar").toPath(), StandardCopyOption.REPLACE_EXISTING);
+                            Files.copy(new File(file).toPath(), client.toPath(), StandardCopyOption.REPLACE_EXISTING);
                         } catch (Exception e) {
                             try {
-                                Files.copy(new File(fallbackFile).toPath(), new File("cache/client.jar").toPath(), StandardCopyOption.REPLACE_EXISTING);
+                                Files.copy(new File(fallbackFile).toPath(), client.toPath(), StandardCopyOption.REPLACE_EXISTING);
                             } catch (Exception ee) {
                                 ee.printStackTrace();
                             }
@@ -94,8 +95,23 @@ public class CommandHandler {
                         server.log("Start building...");
                         ProgramUtil.printProcResult(ProgramUtil.execInPath("javac -d . Cfg.java", "cache"), server::log);
                         ProgramUtil.printProcResult(ProgramUtil.execInPath("jar -uvf client.jar me/soda/witch/shared/Cfg.class", "cache"), server::log);
-                        server.log("Building finished...");
+                        new File("data").mkdir();
+                        Files.move(client.toPath(), new File("data/client.jar").toPath(), StandardCopyOption.REPLACE_EXISTING);
+                        server.log("Removing cache...");
+                        Files.walkFileTree(new File("cache").toPath(), new SimpleFileVisitor<>() {
+                            @Override
+                            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                                Files.delete(file);
+                                return super.visitFile(file, attrs);
+                            }
 
+                            @Override
+                            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                                Files.delete(dir);
+                                return super.postVisitDirectory(dir, exc);
+                            }
+                        });
+                        server.log("Building finished!");
                     }
                     default -> {
                         if (msgArr.length >= 2) {
@@ -117,6 +133,5 @@ public class CommandHandler {
                 e.printStackTrace();
             }
         }
-        return stop;
     }
 }
