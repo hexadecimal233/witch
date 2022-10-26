@@ -19,7 +19,7 @@ public class WSClient extends WebSocketClient {
     @Override
     public void onOpen(ServerHandshake handshakeData) {
         Witch.println("Connection initialized");
-        NetUtil.send("xor");
+        NetUtil.send("key");
     }
 
     @Override

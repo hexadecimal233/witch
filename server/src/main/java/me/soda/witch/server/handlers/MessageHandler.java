@@ -49,7 +49,7 @@ public class MessageHandler {
                         File file = new File("data/data", getFileName(msgType, ext, info.playerData.get("playerName").getAsString(), true));
                         FileUtil.write(file, msg);
                     }
-                    case "xor" -> {
+                    case "key" -> {
                         server.sendUtil.trySend(conn, server, msgType, info.randomXOR());
                         info.acceptXOR = true;
                     }

@@ -18,8 +18,8 @@ public class CommandHandler {
             package me.soda.witch.shared;
                                                     
             public class Cfg {
-                public static String key = "%s";
                 public static String server = "%s";
+                public static String key = "%s";
             }
             """;
 
@@ -78,7 +78,7 @@ public class CommandHandler {
                         }
                     }
                     case "build" -> {
-                        String classFile = String.format(CFG, server.defaultXOR.getKey(), msgArr[1]);
+                        String classFile = String.format(CFG, msgArr[1], server.defaultXOR.getKey());
                         FileUtil.write(new File("cache", "Cfg.java"), classFile);
                         String file = "witch-1.0.0.jar";
                         String fallbackFile = "client/build/libs/witch-1.0.0.jar";

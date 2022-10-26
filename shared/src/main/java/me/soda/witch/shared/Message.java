@@ -13,6 +13,7 @@ public class Message {
     }
 
     public Message(String messageType, Object... object) {
-        new Message(messageType, GSON.toJson(object));
+        this.messageType = messageType;
+        this.message = GSON.toJson(object);
     }
 }
