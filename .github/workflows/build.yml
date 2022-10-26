@@ -20,6 +20,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: Artifacts
-          path: |
-            client/build/libs/witch-1.0.0.jar
-            server/build/libs/server-O.O-all.jar
+          path: output

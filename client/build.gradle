@@ -51,3 +51,12 @@ jar {
         rename { "${it}_${project.archivesBaseName}" }
     }
 }
+
+task copyJars(type: Copy) {
+    from "build/libs/witch-1.0.0.jar"
+    into "../output"
+}
+
+build {
+    finalizedBy copyJars
+}

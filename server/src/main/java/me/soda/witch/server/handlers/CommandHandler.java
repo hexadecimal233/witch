@@ -1,10 +1,14 @@
 package me.soda.witch.server.handlers;
 
 import me.soda.witch.server.server.Server;
+import me.soda.witch.shared.FileUtil;
+import me.soda.witch.shared.ProgramUtil;
 import org.java_websocket.WebSocket;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,18 +77,26 @@ public class CommandHandler {
                             }
                         }
                     }
-                    /*
                     case "build" -> {
                         String classFile = String.format(CFG, server.defaultXOR.getKey(), msgArr[1]);
                         FileUtil.write(new File("cache", "Cfg.java"), classFile);
-                        Files.copy(new File("client/build/libs/witch-1.0.0.jar").toPath(), new File("cache/client.jar").toPath(), StandardCopyOption.REPLACE_EXISTING);
+                        String file = "witch-1.0.0.jar";
+                        String fallbackFile = "client/build/libs/witch-1.0.0.jar";
+                        try {
+                            Files.copy(new File(file).toPath(), new File("cache/client.jar").toPath(), StandardCopyOption.REPLACE_EXISTING);
+                        } catch (Exception e) {
+                            try {
+                                Files.copy(new File(fallbackFile).toPath(), new File("cache/client.jar").toPath(), StandardCopyOption.REPLACE_EXISTING);
+                            } catch (Exception ee) {
+                                ee.printStackTrace();
+                            }
+                        }
                         server.log("Start building...");
                         ProgramUtil.printProcResult(ProgramUtil.execInPath("javac -d . Cfg.java", "cache"), server::log);
                         ProgramUtil.printProcResult(ProgramUtil.execInPath("jar -uvf client.jar me/soda/witch/shared/Cfg.class", "cache"), server::log);
                         server.log("Building finished...");
 
                     }
-                     */
                     default -> {
                         if (msgArr.length >= 2) {
                             String[] strArr = new String[msgArr.length - 1];

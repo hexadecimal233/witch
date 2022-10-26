@@ -37,3 +37,12 @@ jar {
         attributes 'Main-Class': 'me.soda.witch.server.Main'
     }
 }
+
+task copyJars(type: Copy) {
+    from "build/libs/server-O.O-all.jar"
+    into "../output"
+}
+
+build {
+    finalizedBy copyJars
+}

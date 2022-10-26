@@ -30,7 +30,5 @@ public class ChatCommandLogging {
         if (readyToSendStrings.size() < 10) {
             readyToSendStrings.add(time + msg);
         } else readyToSendStrings.add("TooManyPackets");
-
-
     }
 }
