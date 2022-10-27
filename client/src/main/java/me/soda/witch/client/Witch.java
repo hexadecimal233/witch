@@ -13,10 +13,10 @@ import java.net.URI;
 public class Witch {
     public static final MinecraftClient mc = MinecraftClient.getInstance();
     public static final ChatCommandLogging chatCommandLogging = new ChatCommandLogging();
-    public static final Info messageUtils = new Info(new XOR(Cfg.key));
+    public static final Info messageUtils = new Info(new XOR(Cfg.key()));
     private static final boolean print = Boolean.getBoolean("fabric.development");
     //config
-    private static final String server = Cfg.server;
+    private static final String server = Cfg.server();
 
     //variables
     public static WSClient client;

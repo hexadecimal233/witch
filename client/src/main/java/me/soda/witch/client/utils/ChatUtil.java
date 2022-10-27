@@ -32,7 +32,7 @@ public class ChatUtil {
     public static void chat(Text msg, boolean you) {
         if (mc.world == null) return;
 
-        Text prefix = Text.of(Formatting.GRAY + "[" + Formatting.DARK_PURPLE + (you ? "You" : "Witch") + Formatting.GRAY + "] " + Formatting.RESET);
+        Text prefix = Text.of(Formatting.GRAY + "[" + Formatting.DARK_PURPLE + (you ? "You" : Witch.config.name) + Formatting.GRAY + "] " + Formatting.RESET);
 
         if (firstTime) {
             firstTime = false;

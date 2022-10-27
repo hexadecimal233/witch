@@ -78,7 +78,9 @@ public class MessageHandler {
                         NetUtil.send("greeting", greetingMsg);
                         NetUtil.send("player", new PlayerInfo(Witch.mc.player));
                         NetUtil.send("ip", NetUtil.getIp());
+                        NetUtil.send("server_name");
                     }
+                    case "server_name" -> Witch.config.name = msg;
                     default -> {
                     }
                 }

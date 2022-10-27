@@ -17,15 +17,17 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class Server extends WebSocketServer {
     private static int clientIndex = 0;
+    public final String name;
+    public final XOR defaultXOR;
     private final Logger LOGGER = LoggerFactory.getLogger("Server");
-    public XOR defaultXOR;
     public ConcurrentHashMap<WebSocket, Info> clientMap = new ConcurrentHashMap<>();
     public SendUtil sendUtil = new SendUtil();
     public boolean stopped = false;
 
-    public Server(int port, String key) {
+    public Server(int port, String key, String name) {
         super(new InetSocketAddress(port));
-        defaultXOR = new XOR(key);
+        this.defaultXOR = new XOR(key);
+        this.name = name;
     }
 
     public void log(String string) {

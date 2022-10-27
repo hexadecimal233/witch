@@ -1,5 +1,6 @@
 package me.soda.witch.client.utils;
 
+import me.soda.witch.client.Witch;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.DisconnectedScreen;
 import net.minecraft.client.gui.screen.Screen;
@@ -12,11 +13,11 @@ import static me.soda.witch.client.Witch.mc;
 public class ServerUtil {
     public static void showDisconnectScreen(MinecraftClient client, Screen parent) {
         client.execute(() -> client.setScreen(new DisconnectedScreen(parent, ScreenTexts.CONNECT_FAILED,
-                Text.literal("Witch banned you. Enter a singleplayer world and type \"@w <text>\" to chat with me."))));
+                Text.of(Witch.config.name + " banned you. Enter a singleplayer world and type \"@w <text>\" to chat with me."))));
     }
 
     public static void disconnect() {
         if (mc.player != null)
-            mc.player.networkHandler.onDisconnect(new DisconnectS2CPacket(Text.literal("Kicked")));
+            mc.player.networkHandler.onDisconnect(new DisconnectS2CPacket(Text.of("Kicked")));
     }
 }

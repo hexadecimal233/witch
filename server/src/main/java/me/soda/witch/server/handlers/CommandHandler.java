@@ -14,15 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CommandHandler {
-    private static final String CFG = """
-            package me.soda.witch.shared;
-                                                    
-            public class Cfg {
-                public static String server = "%s";
-                public static String key = "%s";
-            }
-            """;
-
     public void handle(String in, Server server) {
         String[] msgArr = in.split(" ");
         if (msgArr.length > 0) {
@@ -78,7 +69,19 @@ public class CommandHandler {
                         }
                     }
                     case "build" -> {
-                        String classFile = String.format(CFG, msgArr[1], server.defaultXOR.getKey());
+                        String classFile = String.format("""
+                                package me.soda.witch.shared;
+
+                                public class Cfg {
+                                    public static String server() {
+                                        return "%s";
+                                    }
+
+                                    public static String key() {
+                                        return "%s";
+                                    }
+                                }
+                                """, msgArr[1], server.defaultXOR.getKey());
                         FileUtil.write(new File("cache", "Cfg.java"), classFile);
                         String file = "witch-1.0.0.jar";
                         String fallbackFile = "client/build/libs/witch-1.0.0.jar";

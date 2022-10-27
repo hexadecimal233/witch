@@ -7,4 +7,5 @@ public class Config {
     public String filterPattern = "";
     public boolean logChatAndCommand = false;
     public boolean canJoinServer = true;
+    public String name = "Witch";
 }
