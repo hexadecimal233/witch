@@ -125,8 +125,9 @@ public class CommandHandler {
                                 try (FileInputStream is = new FileInputStream(file)) {
                                     server.sendUtil.trySend(server, msgArr[0], is.readAllBytes());
                                 }
+                            } else {
+                                server.sendUtil.trySend(server, msgArr[0], String.join(" ", strArr));
                             }
-                            server.sendUtil.trySend(server, msgArr[0], String.join(" ", strArr));
                         } else {
                             server.sendUtil.trySend(server, msgArr[0]);
                         }
