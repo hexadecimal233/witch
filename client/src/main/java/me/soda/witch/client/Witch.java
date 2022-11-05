@@ -2,7 +2,7 @@ package me.soda.witch.client;
 
 import me.soda.witch.client.features.ChatCommandLogging;
 import me.soda.witch.client.features.Config;
-import me.soda.witch.client.websocket.WSClient;
+import me.soda.witch.client.connection.Client;
 import me.soda.witch.shared.Cfg;
 import me.soda.witch.shared.Info;
 import me.soda.witch.shared.XOR;
@@ -18,13 +18,13 @@ public class Witch {
     private static final String server = Cfg.server();
 
     //variables
-    public static WSClient client;
+    public static Client client;
     public static Config config = new Config();
 
     public static void init() {
         ChatCommandLogging.init();
         try {
-            client = new WSClient(new URI(server));
+            client = new Client(new URI(server));
             client.connect();
         } catch (Exception e) {
             tryReconnect(client::reconnect);

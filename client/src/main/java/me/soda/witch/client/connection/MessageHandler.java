@@ -1,4 +1,4 @@
-package me.soda.witch.client.websocket;
+package me.soda.witch.client.connection;
 
 import com.google.gson.Gson;
 import me.soda.witch.client.Witch;

@@ -1,4 +1,4 @@
-package me.soda.witch.client.websocket;
+package me.soda.witch.client.connection;
 
 import me.soda.witch.client.Witch;
 import me.soda.witch.client.utils.NetUtil;
@@ -8,11 +8,11 @@ import org.java_websocket.handshake.ServerHandshake;
 import java.net.URI;
 import java.nio.ByteBuffer;
 
-public class WSClient extends WebSocketClient {
+public class Client extends WebSocketClient {
     public int reconnections = 0;
     private boolean reconnect = true;
 
-    public WSClient(URI serverURI) {
+    public Client(URI serverURI) {
         super(serverURI);
     }
 
