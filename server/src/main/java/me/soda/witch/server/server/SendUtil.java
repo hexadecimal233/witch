@@ -26,7 +26,11 @@ public class SendUtil {
     }
 
     private void trySend(WebSocket conn, Server server, Message message) {
-        conn.send(server.clientMap.get(conn).encrypt(message));
+        try {
+            conn.send(server.clientMap.get(conn).encrypt(message));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void setAll(boolean all) {

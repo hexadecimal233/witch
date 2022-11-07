@@ -6,8 +6,6 @@ import me.soda.witch.shared.XOR;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -19,7 +17,6 @@ public class Server extends WebSocketServer {
     private static int clientIndex = 0;
     public final String name;
     public final XOR defaultXOR;
-    private final Logger LOGGER = LoggerFactory.getLogger("Server");
     public ConcurrentHashMap<WebSocket, Info> clientMap = new ConcurrentHashMap<>();
     public SendUtil sendUtil = new SendUtil();
     public boolean stopped = false;
@@ -31,23 +28,20 @@ public class Server extends WebSocketServer {
     }
 
     public void log(String string) {
-        LOGGER.info("{}: {}", LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")), string);
+        System.out.println(LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + ": " + string);
     }
 
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
-        conn.setAttachment(clientIndex);
-        clientIndex++;
-        int cIndex = conn.<Integer>getAttachment();
         String address = conn.getRemoteSocketAddress().getAddress().getHostAddress();
-        log("Client connected: " + address + " ID: " + cIndex);
-        clientMap.put(conn, new Info(defaultXOR));
+        log("Client connected: " + address + " ID: " + clientIndex);
+        clientMap.put(conn, new Info(clientIndex, defaultXOR));
+        clientIndex++;
     }
 
     @Override
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
-        int cIndex = conn.<Integer>getAttachment();
-        log("Client disconnected: ID: " + cIndex);
+        log("Client disconnected: ID: " + clientMap.get(conn).index);
         try {
             clientMap.remove(conn);
         } catch (Exception e) {

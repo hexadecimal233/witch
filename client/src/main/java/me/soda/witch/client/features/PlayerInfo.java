@@ -10,15 +10,13 @@ public class PlayerInfo {
     public boolean isOp, inGame, isWin;
     public double x, y, z;
 
-    public PlayerInfo(ClientPlayerEntity player) {
+    public PlayerInfo() {
         playerName = mc.getSession().getUsername();
         uuid = mc.getSession().getUuid();
         if (mc.getCurrentServerEntry() != null) {
-            String name = mc.isConnectedToRealms() ? "realms" : mc.getCurrentServerEntry().address;
-            server = name.replace(":", "_");
-        } else {
-            server = "unknown/singleplayer";
+            server = mc.isConnectedToRealms() ? "realms" : mc.getCurrentServerEntry().address;
         }
+        ClientPlayerEntity player = mc.player;
         inGame = player != null;
         isWin = ProgramUtil.isWin();
         if (inGame) {

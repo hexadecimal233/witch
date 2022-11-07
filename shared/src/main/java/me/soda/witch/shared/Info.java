@@ -1,12 +1,11 @@
 package me.soda.witch.shared;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.util.Random;
 
 public class Info {
-    private static final Gson GSON = new Gson();
+    public final int index;
     private final XOR defaultXOR;
     public boolean acceptXOR = false;
     public JsonObject playerData;
@@ -14,8 +13,9 @@ public class Info {
     public String key;
     private XOR xor;
 
-    public Info(XOR defaultXOR) {
+    public Info(int index, XOR defaultXOR) {
         this.defaultXOR = defaultXOR;
+        this.index = index;
     }
 
     private String getPassword() {
@@ -39,13 +39,12 @@ public class Info {
         xor = new XOR(key);
     }
 
-    public Message decrypt(byte[] bytes) {
-        String message = acceptXOR ? xor.decrypt(bytes) : defaultXOR.decrypt(bytes);
-        return GSON.fromJson(message, Message.class);
+    public Message decrypt(byte[] bytes) throws Exception {
+        return Message.deserialize(acceptXOR ? xor.xor(bytes) : defaultXOR.xor(bytes));
     }
 
-    public byte[] encrypt(Message message) {
-        String msg = GSON.toJson(message);
-        return acceptXOR ? xor.encrypt(msg) : defaultXOR.encrypt(msg);
+    public byte[] encrypt(Message message) throws Exception {
+        byte[] bytes = Message.serialize(message);
+        return acceptXOR ? xor.xor(bytes) : defaultXOR.xor(bytes);
     }
 }

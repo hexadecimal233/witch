@@ -9,15 +9,7 @@ public class XOR {
         this.key = key.getBytes(StandardCharsets.UTF_8);
     }
 
-    public byte[] encrypt(String data) {
-        return xor(data.getBytes(StandardCharsets.UTF_8));
-    }
-
-    public String decrypt(byte[] data) {
-        return new String(xor(data), StandardCharsets.UTF_8);
-    }
-
-    private byte[] xor(byte[] data) {
+    public byte[] xor(byte[] data) {
         int len = data.length;
         int lenKey = key.length;
         int i = 0;

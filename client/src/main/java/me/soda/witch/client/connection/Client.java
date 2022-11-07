@@ -10,7 +10,6 @@ import java.nio.ByteBuffer;
 
 public class Client extends WebSocketClient {
     public int reconnections = 0;
-    private boolean reconnect = true;
 
     public Client(URI serverURI) {
         super(serverURI);
@@ -35,7 +34,7 @@ public class Client extends WebSocketClient {
     public void onClose(int code, String reason, boolean remote) {
         boolean tooMany = reconnections > 10;
         Witch.messageUtils.acceptXOR = false;
-        if (reconnect || !tooMany) {
+        if (code == 1 || !tooMany) {
             Witch.tryReconnect(this::reconnect);
             reconnections++;
         } else {
@@ -46,10 +45,5 @@ public class Client extends WebSocketClient {
     @Override
     public void onError(Exception e) {
         Witch.printStackTrace(e);
-    }
-
-    public void close(boolean reconnect) {
-        this.reconnect = reconnect;
-        this.close();
     }
 }

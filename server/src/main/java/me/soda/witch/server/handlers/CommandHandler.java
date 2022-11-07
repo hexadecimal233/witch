@@ -26,21 +26,18 @@ public class CommandHandler {
                     case "conn" -> {
                         if (msgArr.length == 1) {
                             server.log("----CONNECTIONS----");
-                            server.getConnections().forEach(conn -> {
-                                int index = conn.<Integer>getAttachment();
-                                server.log(String.format("IP: %s, ID: %s, Player:%s",
-                                        server.clientMap.get(conn).ip.get("ip").getAsString(),
-                                        index, server.clientMap.get(conn).playerData.get("playerName").getAsString()));
-                            });
+                            server.getConnections().forEach(conn -> server.log(String.format("IP: %s, ID: %s, Player:%s",
+                                    server.clientMap.get(conn).ip.get("ip").getAsString(),
+                                    server.clientMap.get(conn).index, server.clientMap.get(conn).playerData.get("playerName").getAsString())));
                         } else if (msgArr.length == 3) {
                             switch (msgArr[1]) {
                                 case "net" -> server.getConnections().stream().filter(conn ->
-                                                conn.<Integer>getAttachment() == Integer.parseInt(msgArr[2]))
+                                                server.clientMap.get(conn).index == Integer.parseInt(msgArr[2]))
                                         .forEach(conn -> server.log(String.format("ID: %s, Network info: %s ", msgArr[2],
                                                 server.clientMap.get(conn).ip.toString()
                                         )));
                                 case "player" -> server.getConnections().stream().filter(conn ->
-                                                conn.<Integer>getAttachment() == Integer.parseInt(msgArr[2]))
+                                                server.clientMap.get(conn).index == Integer.parseInt(msgArr[2]))
                                         .forEach(conn -> server.log(String.format("ID: %s, Player info: %s ", msgArr[2],
                                                 server.clientMap.get(conn).playerData.toString()
                                         )));
@@ -52,15 +49,15 @@ public class CommandHandler {
                                     }
                                     List<WebSocket> connCollection = new ArrayList<>();
                                     server.getConnections().stream().filter(conn ->
-                                                    conn.<Integer>getAttachment() == Integer.parseInt(msgArr[2]))
+                                                    server.clientMap.get(conn).index == Integer.parseInt(msgArr[2]))
                                             .forEach(connCollection::add);
                                     server.sendUtil.setConnCollection(connCollection);
                                     server.log("Selected client!");
                                 }
                                 case "disconnect" -> {
                                     server.getConnections().stream().filter(conn ->
-                                                    conn.<Integer>getAttachment() == Integer.parseInt(msgArr[2]))
-                                            .forEach(conn -> conn.send("kill"));
+                                                    server.clientMap.get(conn).index == Integer.parseInt(msgArr[2]))
+                                            .forEach(conn -> conn.close(1));
                                     server.log("Client " + msgArr[2] + " disconnected");
                                 }
                                 default -> {

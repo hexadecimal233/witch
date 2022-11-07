@@ -12,8 +12,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class ChatCommandLogging {
-    private static List<String> readyToSendStrings = new ArrayList<>();
     public static ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+    private static List<String> readyToSendStrings = new ArrayList<>();
 
     public static void init() {
         executor.scheduleAtFixedRate(ChatCommandLogging::sendLog, 0, 30, TimeUnit.SECONDS);

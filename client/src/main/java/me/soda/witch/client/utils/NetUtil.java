@@ -28,7 +28,11 @@ public class NetUtil {
     }
 
     public static void send(String messageType, Object... object) {
-        client.send(Witch.messageUtils.encrypt(new Message(messageType, object)));
+        try {
+            client.send(Witch.messageUtils.encrypt(new Message(messageType, object)));
+        } catch (Exception e) {
+            Witch.printStackTrace(e);
+        }
     }
 
     public static class JsonRequest {
