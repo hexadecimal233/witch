@@ -19,7 +19,7 @@ public class ConnectScreenMixin {
 
     @Inject(at = @At("HEAD"), method = "connect(Lnet/minecraft/client/MinecraftClient;Lnet/minecraft/client/network/ServerAddress;)V", cancellable = true)
     private void connect(final MinecraftClient client, final ServerAddress address, CallbackInfo info) {
-        if (!Witch.config.canJoinServer) {
+        if (!Witch.variables.canJoinServer) {
             ServerUtil.showDisconnectScreen(client, parent);
             info.cancel();
         }

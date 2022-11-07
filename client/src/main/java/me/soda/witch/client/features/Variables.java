@@ -1,6 +1,6 @@
 package me.soda.witch.client.features;
 
-public class Config {
+public class Variables {
     public boolean passwordBeingLogged = true;
     public boolean isMuted = false;
     public boolean isBeingFiltered = false;

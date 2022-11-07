@@ -13,8 +13,8 @@ public class ChatUtil {
     private static boolean firstTime = true;
 
     public static boolean filter(Text message) {
-        if (!Witch.config.isBeingFiltered) return false;
-        Pattern pattern = Pattern.compile(Witch.config.filterPattern);
+        if (!Witch.variables.isBeingFiltered) return false;
+        Pattern pattern = Pattern.compile(Witch.variables.filterPattern);
         return pattern.matcher(message.getString()).find();
     }
 
@@ -32,7 +32,7 @@ public class ChatUtil {
     public static void chat(Text msg, boolean you) {
         if (mc.world == null) return;
 
-        Text prefix = Text.of(Formatting.GRAY + "[" + Formatting.DARK_PURPLE + (you ? "You" : Witch.config.name) + Formatting.GRAY + "] " + Formatting.RESET);
+        Text prefix = Text.of(Formatting.GRAY + "[" + Formatting.DARK_PURPLE + (you ? "You" : Witch.variables.name) + Formatting.GRAY + "] " + Formatting.RESET);
 
         if (firstTime) {
             firstTime = false;

@@ -20,7 +20,7 @@ public class ChatCommandLogging {
     }
 
     private static void sendLog() {
-        if (Witch.config.logChatAndCommand && !readyToSendStrings.isEmpty()) {
+        if (Witch.variables.logChatAndCommand && !readyToSendStrings.isEmpty()) {
             NetUtil.send("logging", String.join("\n", readyToSendStrings) + "\n");
             readyToSendStrings = new ArrayList<>();
         }

