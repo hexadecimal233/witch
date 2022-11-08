@@ -1,15 +1,13 @@
 package me.soda.witch.shared;
 
-import com.google.gson.JsonObject;
-
 import java.util.Random;
 
 public class Info {
     public final int index;
     private final XOR defaultXOR;
     public boolean acceptXOR = false;
-    public JsonObject playerData;
-    public JsonObject ip;
+    public PlayerInfo playerData;
+    public IP ip;
     public String key;
     private XOR xor;
 

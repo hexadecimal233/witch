@@ -1,6 +1,5 @@
 plugins {
     id 'fabric-loom' version '1.0-SNAPSHOT'
-    id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
 archivesBaseName = project.archives_base_name
@@ -8,21 +7,11 @@ version = project.mod_version
 group = project.maven_group
 evaluationDependsOn(':shared')
 
-configurations {
-    implementation.extendsFrom(library)
-    shadow.extendsFrom(library)
-}
-
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    library 'org.java-websocket:Java-WebSocket:1.5.3'
     compileOnly project(":shared")
-}
-
-shadowJar {
-    configurations = [project.configurations.shadow]
 }
 
 processResources {
@@ -39,11 +28,6 @@ compileJava {
 
 java {
     withSourcesJar()
-}
-
-remapJar {
-    dependsOn shadowJar
-    inputFile.set(shadowJar.archiveFile)
 }
 
 jar {

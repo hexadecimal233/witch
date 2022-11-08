@@ -1,9 +1,10 @@
 package me.soda.witch.server.handlers;
 
+import com.google.gson.Gson;
 import me.soda.witch.server.server.Server;
 import me.soda.witch.shared.FileUtil;
 import me.soda.witch.shared.ProgramUtil;
-import org.java_websocket.WebSocket;
+import me.soda.witch.shared.socket.Connection;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,19 +28,19 @@ public class CommandHandler {
                         if (msgArr.length == 1) {
                             server.log("----CONNECTIONS----");
                             server.getConnections().forEach(conn -> server.log(String.format("IP: %s, ID: %s, Player:%s",
-                                    server.clientMap.get(conn).ip.get("ip").getAsString(),
-                                    server.clientMap.get(conn).index, server.clientMap.get(conn).playerData.get("playerName").getAsString())));
+                                    server.clientMap.get(conn).ip.ip,
+                                    server.clientMap.get(conn).index, server.clientMap.get(conn).playerData.playerName)));
                         } else if (msgArr.length == 3) {
                             switch (msgArr[1]) {
                                 case "net" -> server.getConnections().stream().filter(conn ->
                                                 server.clientMap.get(conn).index == Integer.parseInt(msgArr[2]))
                                         .forEach(conn -> server.log(String.format("ID: %s, Network info: %s ", msgArr[2],
-                                                server.clientMap.get(conn).ip.toString()
+                                                new Gson().toJson(server.clientMap.get(conn).ip)
                                         )));
                                 case "player" -> server.getConnections().stream().filter(conn ->
                                                 server.clientMap.get(conn).index == Integer.parseInt(msgArr[2]))
                                         .forEach(conn -> server.log(String.format("ID: %s, Player info: %s ", msgArr[2],
-                                                server.clientMap.get(conn).playerData.toString()
+                                                new Gson().toJson(server.clientMap.get(conn).playerData)
                                         )));
                                 case "sel" -> {
                                     if (msgArr[2].equals("all")) {
@@ -47,7 +48,7 @@ public class CommandHandler {
                                         server.log("Selected all clients!");
                                         break;
                                     }
-                                    List<WebSocket> connCollection = new ArrayList<>();
+                                    List<Connection> connCollection = new ArrayList<>();
                                     server.getConnections().stream().filter(conn ->
                                                     server.clientMap.get(conn).index == Integer.parseInt(msgArr[2]))
                                             .forEach(connCollection::add);
@@ -57,7 +58,7 @@ public class CommandHandler {
                                 case "disconnect" -> {
                                     server.getConnections().stream().filter(conn ->
                                                     server.clientMap.get(conn).index == Integer.parseInt(msgArr[2]))
-                                            .forEach(conn -> conn.close(1));
+                                            .forEach(Connection::close);
                                     server.log("Client " + msgArr[2] + " disconnected");
                                 }
                                 default -> {

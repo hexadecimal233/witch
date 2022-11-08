@@ -1,8 +1,8 @@
 package me.soda.witch.client.utils;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import me.soda.witch.client.Witch;
+import me.soda.witch.shared.IP;
 import me.soda.witch.shared.Message;
 
 import java.io.IOException;
@@ -18,21 +18,25 @@ import java.net.http.HttpResponse;
 import static me.soda.witch.client.Witch.client;
 
 public class NetUtil {
-    public static JsonObject getIp() {
+    public static IP getIp() {
         try {
-            return new NetUtil.JsonRequest("https://ipinfo.io/").send(JsonObject.class);
+            return new NetUtil.JsonRequest("https://ipinfo.io/").send(IP.class);
         } catch (Exception e) {
             Witch.printStackTrace(e);
             return null;
         }
     }
 
-    public static void send(String messageType, Object... object) {
+    public static void send(String messageType, Object object) {
         try {
             client.send(Witch.messageUtils.encrypt(new Message(messageType, object)));
         } catch (Exception e) {
             Witch.printStackTrace(e);
         }
+    }
+
+    public static void send(String messageType) {
+        send(messageType, null);
     }
 
     public static class JsonRequest {

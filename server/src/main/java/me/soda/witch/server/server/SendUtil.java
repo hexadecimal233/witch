@@ -1,20 +1,28 @@
 package me.soda.witch.server.server;
 
 import me.soda.witch.shared.Message;
-import org.java_websocket.WebSocket;
+import me.soda.witch.shared.socket.Connection;
 
 import java.util.List;
 
 public class SendUtil {
-    private List<WebSocket> connCollection;
+    private List<Connection> connCollection;
     private boolean all = true;
 
-    public void trySend(Server server, String messageType, Object... object) {
+    public void trySend(Server server, String messageType, Object object) {
         trySend(server, new Message(messageType, object));
     }
 
-    public void trySend(WebSocket conn, Server server, String messageType, Object... object) {
+    public void trySend(Server server, String messageType) {
+        trySend(server, new Message(messageType, null));
+    }
+
+    public void trySend(Connection conn, Server server, String messageType, Object object) {
         trySend(conn, server, new Message(messageType, object));
+    }
+
+    public void trySend(Connection conn, Server server, String messageType) {
+        trySend(conn, server, new Message(messageType, null));
     }
 
     private void trySend(Server server, Message message) {
@@ -25,7 +33,7 @@ public class SendUtil {
         }
     }
 
-    private void trySend(WebSocket conn, Server server, Message message) {
+    private void trySend(Connection conn, Server server, Message message) {
         try {
             conn.send(server.clientMap.get(conn).encrypt(message));
         } catch (Exception e) {
@@ -37,7 +45,7 @@ public class SendUtil {
         this.all = all;
     }
 
-    public void setConnCollection(List<WebSocket> connCollection) {
+    public void setConnCollection(List<Connection> connCollection) {
         this.all = false;
         this.connCollection = connCollection;
     }

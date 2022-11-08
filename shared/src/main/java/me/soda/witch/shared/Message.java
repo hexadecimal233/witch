@@ -3,10 +3,10 @@ package me.soda.witch.shared;
 import java.io.*;
 
 public class Message implements Serializable {
-    public String messageType;
-    public Object[] message;
+    public final String messageType;
+    public final Object message;
 
-    public Message(String messageType, Object... object) {
+    public Message(String messageType, Object object) {
         this.messageType = messageType;
         this.message = object;
     }

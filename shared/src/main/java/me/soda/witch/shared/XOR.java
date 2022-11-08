@@ -8,6 +8,9 @@ public class XOR {
     public XOR(String key) {
         this.key = key.getBytes(StandardCharsets.UTF_8);
     }
+    public XOR(byte[] key) {
+        this.key = key;
+    }
 
     public byte[] xor(byte[] data) {
         int len = data.length;

