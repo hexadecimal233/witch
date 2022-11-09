@@ -3,8 +3,8 @@ package me.soda.witch.server.server;
 import me.soda.witch.server.handlers.MessageHandler;
 import me.soda.witch.shared.Info;
 import me.soda.witch.shared.XOR;
-import me.soda.witch.shared.socket.Connection;
-import me.soda.witch.shared.socket.TcpServer;
+import me.soda.magictcp.Connection;
+import me.soda.magictcp.TcpServer;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -47,7 +47,7 @@ public class Server extends TcpServer {
     }
 
     @Override
-    public void onMessage(Connection conn, byte[] bytes) {
-        MessageHandler.handle(bytes, conn, this);
+    public void onMessage(Connection conn, Object o) {
+        MessageHandler.handle((byte[]) o, conn, this);
     }
 }

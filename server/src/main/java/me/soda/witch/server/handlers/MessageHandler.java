@@ -6,7 +6,7 @@ import me.soda.witch.shared.FileUtil;
 import me.soda.witch.shared.IP;
 import me.soda.witch.shared.Info;
 import me.soda.witch.shared.PlayerInfo;
-import me.soda.witch.shared.socket.Connection;
+import me.soda.magictcp.Connection;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;

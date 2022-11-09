@@ -1,4 +1,4 @@
-package me.soda.witch.shared.socket;
+package me.soda.magictcp;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -7,11 +7,19 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 
 public class Connection {
-    private final Socket socket;
+    private Socket socket;
     private ObjectInputStream in;
     private ObjectOutputStream out;
 
     public Connection(Socket socket) throws IOException {
+        connect(socket);
+    }
+
+    public Connection() {
+
+    }
+
+    public void connect(Socket socket) throws IOException {
         this.socket = socket;
         initIO();
     }
@@ -32,25 +40,23 @@ public class Connection {
         }
     }
 
-    public void send(Object object) {
+    public <T> void send(T data) {
         try {
-            out.writeObject(object);
+            out.writeObject(new Packet<>(data));
             out.flush();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public Object read() throws Exception {
-        return in.readObject();
-    }
-
-    public byte[] readBytes() throws Exception {
-        return (byte[]) read();
+    @SuppressWarnings("unchecked")
+    public <T> T read() throws Exception {
+        Packet<T> packet = (Packet<T>) in.readObject();
+        return packet.get();
     }
 
     public boolean isConnected() {
-        return socket.isConnected() || !socket.isClosed();
+        return socket.isConnected() && !socket.isClosed();
     }
 
     public InetSocketAddress getRemoteSocketAddress() {

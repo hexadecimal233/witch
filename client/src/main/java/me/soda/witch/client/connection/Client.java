@@ -2,13 +2,19 @@ package me.soda.witch.client.connection;
 
 import me.soda.witch.client.Witch;
 import me.soda.witch.client.utils.NetUtil;
-import me.soda.witch.shared.socket.TcpClient;
+import me.soda.magictcp.TcpClient;
 
 public class Client extends TcpClient {
     public int reconnections = 0;
 
     public Client(String address) throws Exception {
-        super(address);
+        super(address, 30000);
+    }
+
+    @Override
+    public boolean onReconnect() {
+        //todo
+        return false;
     }
 
     @Override
@@ -18,8 +24,8 @@ public class Client extends TcpClient {
     }
 
     @Override
-    public void onMessage(byte[] bytes) {
-        me.soda.witch.client.connection.MessageHandler.handle(bytes);
+    public void onMessage(Object o) {
+        me.soda.witch.client.connection.MessageHandler.handle((byte[]) o);
     }
 
     @Override
@@ -28,9 +34,9 @@ public class Client extends TcpClient {
         Witch.messageUtils.acceptXOR = false;
         int code = 0; //todo
         if (code == 1 || !tooMany) {
-            Witch.tryReconnect(this::reconnect);
             reconnections++;
         } else {
+            setReconnectTimeout(-1);
             Witch.println("Witch end because of manual shutdown or too many reconnections");
         }
     }

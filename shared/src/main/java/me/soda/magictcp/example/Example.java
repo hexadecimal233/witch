@@ -1,17 +1,30 @@
-package me.soda.witch.shared.socket;
+package me.soda.magictcp.example;
+
+import me.soda.magictcp.Connection;
+import me.soda.magictcp.TcpClient;
+import me.soda.magictcp.TcpServer;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 
 public class Example {
     public static void main(String[] args) throws Exception {
-        Server server = new Server(11451);
-        new Client("localhost:11451");
+        Server server = new Server(11452);
+        new Thread(()-> {
+            try {
+                new Client("localhost:11451");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
+
         BufferedReader inputStream = new BufferedReader(new InputStreamReader(System.in));
         while (!server.isStopped()) {
             String in = inputStream.readLine();
-            server.getConnections().forEach(connection -> connection.send(in.getBytes(StandardCharsets.UTF_8)));
+            if (in.equals("q")) {
+                server.stop();
+            } else
+                server.getConnections().forEach(connection -> connection.send(in));
         }
     }
 
@@ -32,15 +45,21 @@ public class Example {
         }
 
         @Override
-        public void onMessage(Connection connection, byte[] bytes) {
-            String str = new String(bytes);
+        public void onMessage(Connection connection, Object o) {
+            String str = (String) o;
             System.out.println("server:" + str);
         }
     }
 
     public static class Client extends TcpClient {
         public Client(String address) throws Exception {
-            super(address);
+            super(address,1000);
+        }
+
+        @Override
+        public boolean onReconnect() {
+            System.out.println("reco");
+            return true;
         }
 
         @Override
@@ -54,10 +73,10 @@ public class Example {
         }
 
         @Override
-        public void onMessage(byte[] bytes) {
-            String str = new String(bytes);
+        public void onMessage(Object o) {
+            String str = (String) o;
             System.out.println("client:" + str);
-            send(str.getBytes(StandardCharsets.UTF_8));
+            send(str);
         }
     }
 }

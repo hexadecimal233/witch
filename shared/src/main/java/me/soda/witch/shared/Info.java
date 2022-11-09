@@ -38,6 +38,7 @@ public class Info {
     }
 
     public Message decrypt(byte[] bytes) throws Exception {
+        //todo
         return Message.deserialize(bytes);
         //return Message.deserialize(acceptXOR ? xor.xor(bytes) : defaultXOR.xor(bytes));
     }

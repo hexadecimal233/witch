@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import me.soda.witch.server.server.Server;
 import me.soda.witch.shared.FileUtil;
 import me.soda.witch.shared.ProgramUtil;
-import me.soda.witch.shared.socket.Connection;
+import me.soda.magictcp.Connection;
 
 import java.io.File;
 import java.io.FileInputStream;

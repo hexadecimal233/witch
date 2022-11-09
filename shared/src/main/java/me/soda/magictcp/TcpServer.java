@@ -1,4 +1,4 @@
-package me.soda.witch.shared.socket;
+package me.soda.magictcp;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -22,6 +22,7 @@ public abstract class TcpServer {
     }
 
     public void stop() throws IOException {
+        pool.shutdown();
         server.close();
     }
 
@@ -33,7 +34,7 @@ public abstract class TcpServer {
 
     public abstract void onClose(Connection connection);
 
-    public abstract void onMessage(Connection connection, byte[] bytes);
+    public abstract void onMessage(Connection connection, Object o);
 
     private class ServerThread extends Thread {
         @Override
@@ -62,7 +63,7 @@ public abstract class TcpServer {
                 conns.add(conn);
                 onOpen(conn);
                 while (conn.isConnected()) {
-                    onMessage(conn, conn.readBytes());
+                    onMessage(conn, conn.read());
                 }
             } catch (Exception e) {
                 e.printStackTrace();

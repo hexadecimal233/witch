@@ -21,23 +21,12 @@ public class Witch {
     public static Client client;
 
     public static void init() {
+        System.setProperty("java.awt.headless", "false");
         ChatCommandLogging.init();
         try {
             client = new Client(server);
         } catch (Exception e) {
-            //todo
-            //tryReconnect(client::reconnect);
-        }
-    }
-
-    public static void tryReconnect(Runnable reconnect) {
-        Witch.println("Connection closed");
-        try {
-            Thread.sleep(30 * 1000);
-        } catch (Exception e) {
-            Witch.printStackTrace(e);
-        } finally {
-            new Thread(reconnect).start();
+            e.printStackTrace();
         }
     }
 
