@@ -7,7 +7,7 @@ New generation Minecraft RAT.
 
 ### For educational purposes only.
 
-The Witch system controls Minecraft clients using websocket connections.
+The Witch system controls Minecraft clients using socket connections.
 
 ## Features
 

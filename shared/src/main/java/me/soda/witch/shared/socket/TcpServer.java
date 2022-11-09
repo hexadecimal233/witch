@@ -1,6 +1,5 @@
 package me.soda.witch.shared.socket;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -62,20 +61,14 @@ public abstract class TcpServer {
             try {
                 conns.add(conn);
                 onOpen(conn);
-                byte[] buffer = new byte[65535];
-                int size;
                 while (conn.isConnected()) {
-                    if ((size = conn.in.read(buffer)) != -1) {
-                        ByteArrayOutputStream os = new ByteArrayOutputStream();
-                        os.write(buffer, 0, size);
-                        onMessage(conn, os.toByteArray());
-                    }
+                    onMessage(conn, conn.readBytes());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
-                conns.remove(conn);
                 onClose(conn);
+                conns.remove(conn);
                 conn.close();
             }
         }

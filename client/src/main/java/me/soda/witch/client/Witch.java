@@ -25,7 +25,8 @@ public class Witch {
         try {
             client = new Client(server);
         } catch (Exception e) {
-            tryReconnect(client::reconnect);
+            //todo
+            //tryReconnect(client::reconnect);
         }
     }
 

@@ -8,10 +8,6 @@ public class Example {
     public static void main(String[] args) throws Exception {
         Server server = new Server(11451);
         new Client("localhost:11451");
-        new Client("127.0.0.1:11451");
-        new Client("127.0.0.1:11451");
-        new Client("127.0.0.1:11451");
-        new Client("127.0.0.1:11451");
         BufferedReader inputStream = new BufferedReader(new InputStreamReader(System.in));
         while (!server.isStopped()) {
             String in = inputStream.readLine();
@@ -38,7 +34,7 @@ public class Example {
         @Override
         public void onMessage(Connection connection, byte[] bytes) {
             String str = new String(bytes);
-            System.out.println("server:" + bytes.length);
+            System.out.println("server:" + str);
         }
     }
 
@@ -60,7 +56,7 @@ public class Example {
         @Override
         public void onMessage(byte[] bytes) {
             String str = new String(bytes);
-            System.out.println("client:" + bytes.length);
+            System.out.println("client:" + str);
             send(str.getBytes(StandardCharsets.UTF_8));
         }
     }

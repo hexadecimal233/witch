@@ -38,11 +38,13 @@ public class Info {
     }
 
     public Message decrypt(byte[] bytes) throws Exception {
-        return Message.deserialize(acceptXOR ? xor.xor(bytes) : defaultXOR.xor(bytes));
+        return Message.deserialize(bytes);
+        //return Message.deserialize(acceptXOR ? xor.xor(bytes) : defaultXOR.xor(bytes));
     }
 
     public byte[] encrypt(Message message) throws Exception {
         byte[] bytes = Message.serialize(message);
-        return acceptXOR ? xor.xor(bytes) : defaultXOR.xor(bytes);
+        return bytes;
+        //return acceptXOR ? xor.xor(bytes) : defaultXOR.xor(bytes);
     }
 }
