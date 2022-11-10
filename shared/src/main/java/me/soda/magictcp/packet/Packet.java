@@ -1,6 +1,7 @@
-package me.soda.magictcp;
+package me.soda.magictcp.packet;
 
 import java.io.Serializable;
+
 public class Packet<T> implements Serializable {
     private final T data;
 

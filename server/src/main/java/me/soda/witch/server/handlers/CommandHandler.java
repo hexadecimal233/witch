@@ -1,10 +1,11 @@
 package me.soda.witch.server.handlers;
 
 import com.google.gson.Gson;
+import me.soda.magictcp.Connection;
+import me.soda.magictcp.packet.DisconnectPacket;
 import me.soda.witch.server.server.Server;
 import me.soda.witch.shared.FileUtil;
 import me.soda.witch.shared.ProgramUtil;
-import me.soda.magictcp.Connection;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CommandHandler {
-    public void handle(String in, Server server) {
+    public static void handle(String in, Server server) {
         String[] msgArr = in.split(" ");
         if (msgArr.length > 0) {
             try {
@@ -58,8 +59,14 @@ public class CommandHandler {
                                 case "disconnect" -> {
                                     server.getConnections().stream().filter(conn ->
                                                     server.clientMap.get(conn).index == Integer.parseInt(msgArr[2]))
-                                            .forEach(Connection::close);
+                                            .forEach(connection -> connection.close(DisconnectPacket.Reason.NO_RECONNECT));
                                     server.log("Client " + msgArr[2] + " disconnected");
+                                }
+                                case "reconnect" -> {
+                                    server.getConnections().stream().filter(conn ->
+                                                    server.clientMap.get(conn).index == Integer.parseInt(msgArr[2]))
+                                            .forEach(connection -> connection.close(DisconnectPacket.Reason.RECONNECT));
+                                    server.log("Client " + msgArr[2] + " reconnecting");
                                 }
                                 default -> {
                                 }

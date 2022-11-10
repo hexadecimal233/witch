@@ -1,7 +1,7 @@
 package me.soda.witch.server.server;
 
-import me.soda.witch.shared.Message;
 import me.soda.magictcp.Connection;
+import me.soda.witch.shared.Message;
 
 import java.util.List;
 

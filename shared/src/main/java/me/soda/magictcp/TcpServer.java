@@ -1,5 +1,8 @@
 package me.soda.magictcp;
 
+import me.soda.magictcp.packet.DisconnectPacket;
+
+import java.io.EOFException;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -23,6 +26,7 @@ public abstract class TcpServer {
 
     public void stop() throws IOException {
         pool.shutdown();
+        conns.forEach(connection -> connection.close(DisconnectPacket.Reason.NORMAL));
         server.close();
     }
 
@@ -32,9 +36,9 @@ public abstract class TcpServer {
 
     public abstract void onOpen(Connection connection);
 
-    public abstract void onClose(Connection connection);
+    public abstract void onClose(Connection connection, DisconnectPacket packet);
 
-    public abstract void onMessage(Connection connection, Object o);
+    public abstract <T> void onMessage(Connection connection, T t);
 
     private class ServerThread extends Thread {
         @Override
@@ -44,7 +48,7 @@ public abstract class TcpServer {
                     Socket socket = server.accept();
                     pool.execute(new ClientHandler(socket));
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    //ignored
                 }
             }
         }
@@ -63,14 +67,19 @@ public abstract class TcpServer {
                 conns.add(conn);
                 onOpen(conn);
                 while (conn.isConnected()) {
-                    onMessage(conn, conn.read());
+                    Object obj = conn.read(Object.class);
+                    if (!(obj instanceof DisconnectPacket)) {
+                        onMessage(conn, obj);
+                    }
                 }
+            } catch (EOFException e) {
+                //ignored
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
-                onClose(conn);
+                onClose(conn, conn.getDisconnectPacket());
                 conns.remove(conn);
-                conn.close();
+                conn.forceClose();
             }
         }
     }

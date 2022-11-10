@@ -1,12 +1,12 @@
 package me.soda.witch.server.handlers;
 
 import com.google.gson.Gson;
+import me.soda.magictcp.Connection;
 import me.soda.witch.server.server.Server;
 import me.soda.witch.shared.FileUtil;
 import me.soda.witch.shared.IP;
 import me.soda.witch.shared.Info;
 import me.soda.witch.shared.PlayerInfo;
-import me.soda.magictcp.Connection;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;

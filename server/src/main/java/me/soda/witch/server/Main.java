@@ -17,13 +17,12 @@ public class Main {
         if (args.length >= 2) key = args[1];
         if (args.length >= 3) name = args[2];
         server = new Server(port, key, name);
-        CommandHandler commandHandler = new CommandHandler();
         server.log("Port: " + port);
         System.out.print("Console > ");
         BufferedReader inputStream = new BufferedReader(new InputStreamReader(System.in));
         while (!server.stopped) {
             String in = inputStream.readLine();
-            commandHandler.handle(in, server);
+            CommandHandler.handle(in, server);
             System.out.print("Console > ");
         }
     }
