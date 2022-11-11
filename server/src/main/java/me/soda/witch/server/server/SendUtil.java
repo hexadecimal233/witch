@@ -17,25 +17,25 @@ public class SendUtil {
         trySend(server, new Message(messageType, null));
     }
 
-    public void trySend(Connection conn, Server server, String messageType, Object object) {
-        trySend(conn, server, new Message(messageType, object));
+    public void trySend(Connection conn, String messageType, Object object) {
+        trySend(conn, new Message(messageType, object));
     }
 
-    public void trySend(Connection conn, Server server, String messageType) {
-        trySend(conn, server, new Message(messageType, null));
+    public void trySend(Connection conn, String messageType) {
+        trySend(conn, new Message(messageType, null));
     }
 
     private void trySend(Server server, Message message) {
         if (all) {
-            server.getConnections().forEach(conn -> trySend(conn, server, message));
+            server.getConnections().forEach(conn -> trySend(conn, message));
         } else {
-            connCollection.forEach(conn -> trySend(conn, server, message));
+            connCollection.forEach(conn -> trySend(conn, message));
         }
     }
 
-    private void trySend(Connection conn, Server server, Message message) {
+    private void trySend(Connection conn, Message message) {
         try {
-            conn.send(server.clientMap.get(conn).encrypt(message));
+            conn.send(message);
         } catch (Exception e) {
             e.printStackTrace();
         }

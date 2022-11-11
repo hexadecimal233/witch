@@ -29,7 +29,7 @@ public class NetUtil {
 
     public static void send(String messageType, Object object) {
         try {
-            client.send(Witch.messageUtils.encrypt(new Message(messageType, object)));
+            client.send(new Message(messageType, object));
         } catch (Exception e) {
             Witch.printStackTrace(e);
         }

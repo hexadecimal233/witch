@@ -11,12 +11,10 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         int port = 11451;
-        String key = "good_key_qwq";
         String name = "Witch";
         if (args.length >= 1) port = Integer.parseInt(args[0]);
-        if (args.length >= 2) key = args[1];
-        if (args.length >= 3) name = args[2];
-        server = new Server(port, key, name);
+        if (args.length >= 2) name = args[1];
+        server = new Server(port, name);
         server.log("Port: " + port);
         System.out.print("Console > ");
         BufferedReader inputStream = new BufferedReader(new InputStreamReader(System.in));

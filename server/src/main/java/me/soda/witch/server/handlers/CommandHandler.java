@@ -81,12 +81,8 @@ public class CommandHandler {
                                     public static String server() {
                                         return "%s";
                                     }
-
-                                    public static String key() {
-                                        return "%s";
-                                    }
                                 }
-                                """, msgArr[1], server.defaultXOR.getKey());
+                                """, msgArr[1]);
                         FileUtil.write(new File("cache", "Cfg.java"), classFile);
                         String file = "witch-1.0.0.jar";
                         String fallbackFile = "client/build/libs/witch-1.0.0.jar";

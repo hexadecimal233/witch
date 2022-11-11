@@ -32,7 +32,8 @@ public class Example {
             try {
                 switch (msgArr[0]) {
                     case "stop" -> server.stop();
-                    case "conn" -> server.getConnections().forEach(connection -> connection.close(DisconnectPacket.Reason.RECONNECT));
+                    case "conn" ->
+                            server.getConnections().forEach(connection -> connection.close(DisconnectPacket.Reason.RECONNECT));
                     default -> server.getConnections().forEach(connection -> connection.send(in));
                 }
             } catch (Exception e) {

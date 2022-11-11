@@ -10,11 +10,11 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 
 public class Connection {
+    private final boolean compress;
     private Socket socket;
     private ObjectInputStream in;
     private ObjectOutputStream out;
     private DisconnectPacket disconnectPacket;
-    private final boolean compress;
 
     public Connection(Socket socket, boolean compress) throws IOException {
         this.compress = compress;
