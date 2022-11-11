@@ -9,7 +9,7 @@ public class Client extends TcpClient {
     public int reconnections = 0;
 
     public Client(String address) {
-        super(address, 30000);
+        super(address, 30000, true);
     }
 
     @Override

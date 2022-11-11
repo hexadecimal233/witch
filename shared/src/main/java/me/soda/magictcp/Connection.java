@@ -14,13 +14,15 @@ public class Connection {
     private ObjectInputStream in;
     private ObjectOutputStream out;
     private DisconnectPacket disconnectPacket;
+    private final boolean compress;
 
-    public Connection(Socket socket) throws IOException {
+    public Connection(Socket socket, boolean compress) throws IOException {
+        this.compress = compress;
         connect(socket);
     }
 
-    public Connection() {
-
+    public Connection(boolean compress) {
+        this.compress = compress;
     }
 
     public void connect(Socket socket) throws IOException {
@@ -58,19 +60,21 @@ public class Connection {
 
     public <T> void send(T data) {
         try {
-            out.writeObject(new Packet<>(data));
+            Packet<T> packet = new Packet<>(data);
+            if (compress) packet.compress();
+            out.writeObject(packet);
             out.flush();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    //todo: event system
     @SuppressWarnings("unchecked")
     public <T> T read(Class<T> tClass) throws Exception {
         Object o = in.readObject();
         if (!(o instanceof Packet<?>)) throw new Exception("Not a MagicTcp Packet");
-        Packet<T> packet = (Packet<T>) o;
-        T o2 = packet.get();
+        T o2 = ((Packet<T>) o).get();
         if (o2 instanceof DisconnectPacket o3) {
             disconnectPacket = o3;
             forceClose();

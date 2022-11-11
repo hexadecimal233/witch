@@ -12,8 +12,8 @@ public abstract class TcpClient extends Connection {
     private SocketThread socketThread;
     private long reconnectTimeout;
 
-    public TcpClient(String address, long reconnectTimeout) {
-        super();
+    public TcpClient(String address, long reconnectTimeout, boolean compress) {
+        super(compress);
         this.addrPort = address.split(":");
         this.reconnectTimeout = reconnectTimeout;
         try {
@@ -71,11 +71,11 @@ public abstract class TcpClient extends Connection {
             } finally {
                 DisconnectPacket dp = getDisconnectPacket();
                 boolean reconnectTimeout = false;
+                onClose(dp);
                 switch (dp.reason) {
                     case NO_RECONNECT -> setReconnectTimeout(-1);
                     case RECONNECT -> reconnectTimeout = true;
                 }
-                onClose(dp);
                 forceClose();
                 reconnect(reconnectTimeout);
             }

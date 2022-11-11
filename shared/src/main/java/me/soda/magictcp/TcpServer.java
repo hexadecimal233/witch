@@ -14,8 +14,10 @@ public abstract class TcpServer {
     private final ServerSocket server;
     private final HashSet<Connection> conns = new HashSet<>();
     private final ExecutorService pool = Executors.newCachedThreadPool();
+    private final boolean compress;
 
-    public TcpServer(int port) throws Exception {
+    public TcpServer(int port, boolean compress) throws Exception {
+        this.compress = compress;
         server = new ServerSocket(port);
         new ServerThread().start();
     }
@@ -58,7 +60,7 @@ public abstract class TcpServer {
         private final Connection conn;
 
         public ClientHandler(Socket socket) throws IOException {
-            this.conn = new Connection(socket);
+            this.conn = new Connection(socket, compress);
         }
 
         @Override

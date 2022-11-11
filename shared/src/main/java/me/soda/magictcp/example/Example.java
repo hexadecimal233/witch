@@ -44,7 +44,7 @@ public class Example {
     public static class Server extends TcpServer {
 
         public Server(int port) throws Exception {
-            super(port);
+            super(port, true);
         }
 
         @Override
@@ -66,7 +66,7 @@ public class Example {
 
     public static class Client extends TcpClient {
         public Client(String address) {
-            super(address, 1000);
+            super(address, 1000, true);
         }
 
         @Override
