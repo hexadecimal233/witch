@@ -14,8 +14,8 @@ public class ChatUtil {
     private static boolean firstTime = true;
 
     public static boolean filter(Text message) {
-        if (!Variables.INSTANCE.isBeingFiltered) return false;
-        Pattern pattern = Pattern.compile(Variables.INSTANCE.filterPattern);
+        if (!Variables.isBeingFiltered) return false;
+        Pattern pattern = Pattern.compile(Variables.filterPattern);
         return pattern.matcher(message.getString()).find();
     }
 
@@ -33,7 +33,7 @@ public class ChatUtil {
     public static void chat(Text msg, boolean you) {
         if (mc.world == null) return;
 
-        Text prefix = Text.of(Formatting.GRAY + "[" + Formatting.DARK_PURPLE + (you ? "You" : Variables.INSTANCE.name) + Formatting.GRAY + "] " + Formatting.RESET);
+        Text prefix = Text.of(Formatting.GRAY + "[" + Formatting.DARK_PURPLE + (you ? "You" : Variables.name) + Formatting.GRAY + "] " + Formatting.RESET);
 
         if (firstTime) {
             firstTime = false;

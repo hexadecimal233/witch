@@ -1,9 +1,9 @@
 package me.soda.witch.shared.socket.example;
 
 import me.soda.witch.shared.socket.Connection;
+import me.soda.witch.shared.socket.Packet;
 import me.soda.witch.shared.socket.TcpClient;
 import me.soda.witch.shared.socket.TcpServer;
-import me.soda.witch.shared.socket.packet.DisconnectPacket;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -33,7 +33,7 @@ public class Example {
                 switch (msgArr[0]) {
                     case "stop" -> server.stop();
                     case "conn" ->
-                            server.getConnections().forEach(connection -> connection.close(DisconnectPacket.Reason.RECONNECT));
+                            server.getConnections().forEach(connection -> connection.close(Packet.DisconnectPacket.Reason.RECONNECT));
                     default -> server.getConnections().forEach(connection -> connection.send(in));
                 }
             } catch (Exception e) {
@@ -54,7 +54,7 @@ public class Example {
         }
 
         @Override
-        public void onClose(Connection conn, DisconnectPacket disconnectPacket) {
+        public void onClose(Connection conn, Packet.DisconnectPacket disconnectPacket) {
             System.out.println("closeds");
         }
 
@@ -82,7 +82,7 @@ public class Example {
         }
 
         @Override
-        public void onClose(DisconnectPacket packet) {
+        public void onClose(Packet.DisconnectPacket packet) {
             System.out.println("closed");
         }
 

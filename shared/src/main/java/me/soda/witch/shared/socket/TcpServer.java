@@ -1,7 +1,5 @@
 package me.soda.witch.shared.socket;
 
-import me.soda.witch.shared.socket.packet.DisconnectPacket;
-
 import java.io.EOFException;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -28,7 +26,7 @@ public abstract class TcpServer {
 
     public void stop() throws IOException {
         pool.shutdown();
-        conns.forEach(connection -> connection.close(DisconnectPacket.Reason.NORMAL));
+        conns.forEach(connection -> connection.close(Packet.DisconnectPacket.Reason.NORMAL));
         server.close();
     }
 
@@ -38,7 +36,7 @@ public abstract class TcpServer {
 
     public abstract void onOpen(Connection connection);
 
-    public abstract void onClose(Connection connection, DisconnectPacket packet);
+    public abstract void onClose(Connection connection, Packet.DisconnectPacket packet);
 
     public abstract <T> void onMessage(Connection connection, T t);
 
@@ -70,7 +68,7 @@ public abstract class TcpServer {
                 onOpen(conn);
                 while (conn.isConnected()) {
                     Object obj = conn.read(Object.class);
-                    if (!(obj instanceof DisconnectPacket)) {
+                    if (!(obj instanceof Packet.DisconnectPacket)) {
                         onMessage(conn, obj);
                     }
                 }

@@ -1,7 +1,5 @@
 package me.soda.witch.shared.socket;
 
-import me.soda.witch.shared.socket.packet.DisconnectPacket;
-
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -51,7 +49,7 @@ public abstract class TcpClient extends Connection {
 
     public abstract void onOpen();
 
-    public abstract void onClose(DisconnectPacket packet);
+    public abstract void onClose(Packet.DisconnectPacket packet);
 
     public abstract <T> void onMessage(T t);
 
@@ -62,14 +60,14 @@ public abstract class TcpClient extends Connection {
                 onOpen();
                 while (isConnected()) {
                     Object obj = read(Object.class);
-                    if (!(obj instanceof DisconnectPacket)) {
+                    if (!(obj instanceof Packet.DisconnectPacket)) {
                         onMessage(obj);
                     }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
-                DisconnectPacket dp = getDisconnectPacket();
+                Packet.DisconnectPacket dp = getDisconnectPacket();
                 boolean reconnectTimeout = false;
                 onClose(dp);
                 switch (dp.reason) {

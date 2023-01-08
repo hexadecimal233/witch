@@ -2,9 +2,10 @@ package me.soda.witch.client;
 
 import me.soda.witch.client.connection.Client;
 import me.soda.witch.client.connection.MessageHandler;
-import me.soda.witch.client.events.events.MessageReceiveEvent;
+import me.soda.witch.client.events.MessageReceiveEvent;
 import me.soda.witch.client.features.ChatCommandLogging;
 import me.soda.witch.shared.Cfg;
+import me.soda.witch.shared.events.EventBus;
 import net.minecraft.client.MinecraftClient;
 
 public class Witch {
@@ -17,7 +18,7 @@ public class Witch {
 
     public static void init() {
         ChatCommandLogging.init();
-        MessageReceiveEvent.INSTANCE.registerEvent((id, message) -> MessageHandler.handleMessage(message));
+        EventBus.INSTANCE.registerEvent(MessageReceiveEvent.class, o -> MessageHandler.handleMessage(o.message));
         try {
             client = new Client(server);
         } catch (Exception e) {

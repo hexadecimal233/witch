@@ -1,4 +1,4 @@
-package me.soda.witch.shared.socket.packet;
+package me.soda.witch.shared.socket;
 
 import java.io.*;
 import java.util.zip.DataFormatException;
@@ -45,7 +45,6 @@ public class Packet<T> implements Serializable {
         this.compressed = true;
     }
 
-    @SuppressWarnings("unchecked")
     private T decompress() throws IOException, ClassNotFoundException, DataFormatException {
         byte[] bytes = (byte[]) this.data;
         Inflater inflater = new Inflater(true);
@@ -64,5 +63,21 @@ public class Packet<T> implements Serializable {
         b.close();
         o.close();
         return message;
+    }
+
+    public static class DisconnectPacket implements Serializable {
+        public final Reason reason;
+        public final String message;
+
+        public DisconnectPacket(Reason reason, String message) {
+            this.reason = reason;
+            this.message = message;
+        }
+
+        public enum Reason {
+            RECONNECT,
+            NO_RECONNECT,
+            NORMAL,
+        }
     }
 }

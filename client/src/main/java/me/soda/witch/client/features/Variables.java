@@ -1,12 +1,11 @@
 package me.soda.witch.client.features;
 
 public class Variables {
-    public static final Variables INSTANCE = new Variables();
-    public boolean passwordBeingLogged = true;
-    public boolean isMuted = false;
-    public boolean isBeingFiltered = false;
-    public String filterPattern = "";
-    public boolean logChatAndCommand = false;
-    public boolean canJoinServer = true;
-    public String name = "Witch";
+    public static boolean passwordBeingLogged = true;
+    public static boolean isMuted = false;
+    public static boolean isBeingFiltered = false;
+    public static String filterPattern = "";
+    public static boolean logChatAndCommand = false;
+    public static boolean canJoinServer = true;
+    public static String name = "Witch";
 }

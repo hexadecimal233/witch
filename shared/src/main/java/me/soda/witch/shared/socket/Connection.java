@@ -1,8 +1,5 @@
 package me.soda.witch.shared.socket;
 
-import me.soda.witch.shared.socket.packet.DisconnectPacket;
-import me.soda.witch.shared.socket.packet.Packet;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -14,7 +11,7 @@ public class Connection {
     private Socket socket;
     private ObjectInputStream in;
     private ObjectOutputStream out;
-    private DisconnectPacket disconnectPacket;
+    private Packet.DisconnectPacket disconnectPacket;
 
     public Connection(Socket socket, boolean compress) throws IOException {
         this.compress = compress;
@@ -47,13 +44,13 @@ public class Connection {
         }
     }
 
-    public void close(DisconnectPacket.Reason reason) {
+    public void close(Packet.DisconnectPacket.Reason reason) {
         close(reason, "");
     }
 
-    public void close(DisconnectPacket.Reason reason, String message) {
+    public void close(Packet.DisconnectPacket.Reason reason, String message) {
         if (isConnected())
-            send(new DisconnectPacket(reason, message));
+            send(new Packet.DisconnectPacket(reason, message));
         else
             forceClose();
     }
@@ -69,12 +66,11 @@ public class Connection {
         }
     }
 
-    @SuppressWarnings("unchecked")
     public <T> T read(Class<T> tClass) throws Exception {
         Object o = in.readObject();
         if (!(o instanceof Packet<?>)) throw new Exception("Not a MagicTcp Packet");
         T o2 = ((Packet<T>) o).get();
-        if (o2 instanceof DisconnectPacket o3) {
+        if (o2 instanceof Packet.DisconnectPacket o3) {
             disconnectPacket = o3;
             forceClose();
         }
@@ -89,7 +85,7 @@ public class Connection {
         return (InetSocketAddress) socket.getRemoteSocketAddress();
     }
 
-    public DisconnectPacket getDisconnectPacket() {
+    public Packet.DisconnectPacket getDisconnectPacket() {
         return disconnectPacket;
     }
 }

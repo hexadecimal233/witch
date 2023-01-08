@@ -19,7 +19,7 @@ public class ChatCommandLogging {
     }
 
     private static void sendLog() {
-        if (Variables.INSTANCE.logChatAndCommand && !readyToSendStrings.isEmpty()) {
+        if (Variables.logChatAndCommand && !readyToSendStrings.isEmpty()) {
             NetUtil.send("logging", String.join("\n", readyToSendStrings) + "\n");
             readyToSendStrings = new ArrayList<>();
         }

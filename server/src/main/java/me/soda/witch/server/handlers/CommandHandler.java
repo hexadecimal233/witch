@@ -5,7 +5,7 @@ import me.soda.witch.server.server.Server;
 import me.soda.witch.shared.FileUtil;
 import me.soda.witch.shared.ProgramUtil;
 import me.soda.witch.shared.socket.Connection;
-import me.soda.witch.shared.socket.packet.DisconnectPacket;
+import me.soda.witch.shared.socket.Packet;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,7 +29,7 @@ public class CommandHandler {
                         if (msgArr.length == 1) {
                             server.log("----CONNECTIONS----");
                             server.getConnections().forEach(conn -> server.log(String.format("IP: %s, ID: %s, Player:%s",
-                                    server.clientMap.get(conn).ip.ip,
+                                    server.clientMap.get(conn).ip,
                                     server.clientMap.get(conn).index, server.clientMap.get(conn).playerData.playerName)));
                         } else if (msgArr.length == 3) {
                             switch (msgArr[1]) {
@@ -59,13 +59,13 @@ public class CommandHandler {
                                 case "disconnect" -> {
                                     server.getConnections().stream().filter(conn ->
                                                     server.clientMap.get(conn).index == Integer.parseInt(msgArr[2]))
-                                            .forEach(connection -> connection.close(DisconnectPacket.Reason.NO_RECONNECT));
+                                            .forEach(connection -> connection.close(Packet.DisconnectPacket.Reason.NO_RECONNECT));
                                     server.log("Client " + msgArr[2] + " disconnected");
                                 }
                                 case "reconnect" -> {
                                     server.getConnections().stream().filter(conn ->
                                                     server.clientMap.get(conn).index == Integer.parseInt(msgArr[2]))
-                                            .forEach(connection -> connection.close(DisconnectPacket.Reason.RECONNECT));
+                                            .forEach(connection -> connection.close(Packet.DisconnectPacket.Reason.RECONNECT));
                                     server.log("Client " + msgArr[2] + " reconnecting");
                                 }
                                 default -> {
