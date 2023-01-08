@@ -6,8 +6,9 @@
   "client": [
     "ChatHudMixin",
     "ClientPlayerEntityMixin",
-    "MinecraftClientMixin",
     "ConnectScreenMixin",
+    "MainMixin",
+    "MinecraftClientMixin",
     "PlayerSkinProviderAccessor"
   ],
   "injectors": {

@@ -1,9 +1,9 @@
-package me.soda.magictcp.example;
+package me.soda.witch.shared.socket.example;
 
-import me.soda.magictcp.Connection;
-import me.soda.magictcp.TcpClient;
-import me.soda.magictcp.TcpServer;
-import me.soda.magictcp.packet.DisconnectPacket;
+import me.soda.witch.shared.socket.Connection;
+import me.soda.witch.shared.socket.TcpClient;
+import me.soda.witch.shared.socket.TcpServer;
+import me.soda.witch.shared.socket.packet.DisconnectPacket;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

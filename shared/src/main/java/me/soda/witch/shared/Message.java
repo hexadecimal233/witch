@@ -4,11 +4,11 @@ import java.io.*;
 
 public class Message implements Serializable {
     public final String messageType;
-    public final Object message;
+    public final Object data;
 
     public Message(String messageType, Object object) {
         this.messageType = messageType;
-        this.message = object;
+        this.data = object;
     }
 
     public static byte[] serialize(Message message) throws IOException {

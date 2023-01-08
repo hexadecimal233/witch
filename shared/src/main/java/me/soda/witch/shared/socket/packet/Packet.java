@@ -1,4 +1,4 @@
-package me.soda.magictcp.packet;
+package me.soda.witch.shared.socket.packet;
 
 import java.io.*;
 import java.util.zip.DataFormatException;
@@ -32,7 +32,6 @@ public class Packet<T> implements Serializable {
         return bytes;
     }
 
-    @SuppressWarnings("unchecked")
     public void compress() throws IOException {
         final ByteArrayOutputStream bytesOut = new ByteArrayOutputStream();
         final Deflater deflater = new Deflater(Deflater.DEFLATED, true);

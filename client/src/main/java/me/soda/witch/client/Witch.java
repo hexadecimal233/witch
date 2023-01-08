@@ -1,14 +1,14 @@
 package me.soda.witch.client;
 
 import me.soda.witch.client.connection.Client;
+import me.soda.witch.client.connection.MessageHandler;
+import me.soda.witch.client.events.events.MessageReceiveEvent;
 import me.soda.witch.client.features.ChatCommandLogging;
-import me.soda.witch.client.features.Variables;
 import me.soda.witch.shared.Cfg;
 import net.minecraft.client.MinecraftClient;
 
 public class Witch {
     public static final MinecraftClient mc = MinecraftClient.getInstance();
-    public static final Variables variables = new Variables();
     private static final boolean print = Boolean.getBoolean("fabric.development");
     //config
     private static final String server = Cfg.server();
@@ -16,8 +16,8 @@ public class Witch {
     public static Client client;
 
     public static void init() {
-        System.setProperty("java.awt.headless", "false");
         ChatCommandLogging.init();
+        MessageReceiveEvent.INSTANCE.registerEvent((id, message) -> MessageHandler.handleMessage(message));
         try {
             client = new Client(server);
         } catch (Exception e) {

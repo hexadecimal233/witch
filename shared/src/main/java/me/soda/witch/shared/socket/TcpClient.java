@@ -1,6 +1,6 @@
-package me.soda.magictcp;
+package me.soda.witch.shared.socket;
 
-import me.soda.magictcp.packet.DisconnectPacket;
+import me.soda.witch.shared.socket.packet.DisconnectPacket;
 
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;

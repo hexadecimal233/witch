@@ -1,10 +1,10 @@
 package me.soda.witch.server.server;
 
 import com.google.gson.Gson;
-import me.soda.magictcp.Connection;
-import me.soda.magictcp.TcpServer;
-import me.soda.magictcp.packet.DisconnectPacket;
 import me.soda.witch.shared.*;
+import me.soda.witch.shared.socket.Connection;
+import me.soda.witch.shared.socket.TcpServer;
+import me.soda.witch.shared.socket.packet.DisconnectPacket;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -55,7 +55,7 @@ public class Server extends TcpServer {
     public void onMessage(Connection conn, Object o) {
         Message message = (Message) o;
         String msgType = message.messageType;
-        Object msg = message.message;
+        Object msg = message.data;
         Info info = clientMap.get(conn);
         int id = info.index;
         log("* Received message: " + msgType + " From ID " + id);

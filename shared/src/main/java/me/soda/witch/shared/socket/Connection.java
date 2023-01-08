@@ -1,7 +1,7 @@
-package me.soda.magictcp;
+package me.soda.witch.shared.socket;
 
-import me.soda.magictcp.packet.DisconnectPacket;
-import me.soda.magictcp.packet.Packet;
+import me.soda.witch.shared.socket.packet.DisconnectPacket;
+import me.soda.witch.shared.socket.packet.Packet;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -69,7 +69,6 @@ public class Connection {
         }
     }
 
-    //todo: event system
     @SuppressWarnings("unchecked")
     public <T> T read(Class<T> tClass) throws Exception {
         Object o = in.readObject();

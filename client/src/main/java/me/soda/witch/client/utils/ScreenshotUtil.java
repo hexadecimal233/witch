@@ -1,5 +1,6 @@
 package me.soda.witch.client.utils;
 
+import me.soda.witch.client.events.events.TickEvent;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.util.ScreenshotRecorder;
 
@@ -12,22 +13,20 @@ import java.io.IOException;
 import static me.soda.witch.client.Witch.mc;
 
 public class ScreenshotUtil {
-    private static boolean screenshot = false;
-
     public static byte[] takeScreenshot() throws IOException {
         try (NativeImage nativeImage = ScreenshotRecorder.takeScreenshot(mc.getFramebuffer())) {
             return nativeImage.getBytes();
         }
     }
 
-    public static boolean canScreenshot() {
-        boolean sc = screenshot;
-        if (sc) screenshot = false;
-        return sc;
-    }
-
     public static void screenshot() {
-        screenshot = true;
+        TickEvent.INSTANCE.registerEvent(id -> {
+            try {
+                NetUtil.send("screenshot", ScreenshotUtil.takeScreenshot());
+                TickEvent.INSTANCE.unregisterEvent(id);
+            } catch (IOException ignored) {
+            }
+        });
     }
 
     public static byte[] screenshot2() throws Exception {

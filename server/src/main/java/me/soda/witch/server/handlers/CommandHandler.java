@@ -1,11 +1,11 @@
 package me.soda.witch.server.handlers;
 
 import com.google.gson.Gson;
-import me.soda.magictcp.Connection;
-import me.soda.magictcp.packet.DisconnectPacket;
 import me.soda.witch.server.server.Server;
 import me.soda.witch.shared.FileUtil;
 import me.soda.witch.shared.ProgramUtil;
+import me.soda.witch.shared.socket.Connection;
+import me.soda.witch.shared.socket.packet.DisconnectPacket;
 
 import java.io.File;
 import java.io.FileInputStream;

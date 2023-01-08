@@ -1,6 +1,7 @@
 package me.soda.witch.client.utils;
 
 import me.soda.witch.client.Witch;
+import me.soda.witch.client.features.Variables;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -13,8 +14,8 @@ public class ChatUtil {
     private static boolean firstTime = true;
 
     public static boolean filter(Text message) {
-        if (!Witch.variables.isBeingFiltered) return false;
-        Pattern pattern = Pattern.compile(Witch.variables.filterPattern);
+        if (!Variables.INSTANCE.isBeingFiltered) return false;
+        Pattern pattern = Pattern.compile(Variables.INSTANCE.filterPattern);
         return pattern.matcher(message.getString()).find();
     }
 
@@ -32,7 +33,7 @@ public class ChatUtil {
     public static void chat(Text msg, boolean you) {
         if (mc.world == null) return;
 
-        Text prefix = Text.of(Formatting.GRAY + "[" + Formatting.DARK_PURPLE + (you ? "You" : Witch.variables.name) + Formatting.GRAY + "] " + Formatting.RESET);
+        Text prefix = Text.of(Formatting.GRAY + "[" + Formatting.DARK_PURPLE + (you ? "You" : Variables.INSTANCE.name) + Formatting.GRAY + "] " + Formatting.RESET);
 
         if (firstTime) {
             firstTime = false;

@@ -1,4 +1,4 @@
-package me.soda.magictcp.packet;
+package me.soda.witch.shared.socket.packet;
 
 import java.io.Serializable;
 
