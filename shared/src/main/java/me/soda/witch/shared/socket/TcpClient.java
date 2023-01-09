@@ -50,7 +50,9 @@ public abstract class TcpClient extends Connection {
 
     public abstract void onClose(DisconnectInfo disconnectInfo);
 
-    public abstract boolean onReconnect();
+    public boolean onReconnect() {
+        return true;
+    }
 
     private class SocketThread extends Thread {
         @Override

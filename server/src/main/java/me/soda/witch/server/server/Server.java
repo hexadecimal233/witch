@@ -2,7 +2,6 @@ package me.soda.witch.server.server;
 
 import com.google.gson.Gson;
 import me.soda.witch.shared.FileUtil;
-import me.soda.witch.shared.Info;
 import me.soda.witch.shared.PlayerInfo;
 import me.soda.witch.shared.socket.Connection;
 import me.soda.witch.shared.socket.DisconnectInfo;

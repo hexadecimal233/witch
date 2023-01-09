@@ -27,8 +27,9 @@ public class Client extends TcpClient {
         } else {
             setReconnectTimeout(-1);
             LogUtil.println("Witch end because of manual shutdown or too many reconnections");
+            return false;
         }
-        return false;
+        return true;
     }
 
     @Override
@@ -48,5 +49,6 @@ public class Client extends TcpClient {
 
     @Override
     public void onClose(DisconnectInfo disconnectInfo) {
+        LogUtil.println(disconnectInfo.reason.toString());
     }
 }

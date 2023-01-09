@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
 
-@SuppressWarnings("ResultOfMethodCallIgnored")
 public class FileUtil {
     public static String read(String file) {
         return new String(read(new File(file)), StandardCharsets.UTF_8);
@@ -26,7 +25,7 @@ public class FileUtil {
 
     public static void write(File file, byte[] data) {
         try {
-            new File(file.getParent()).mkdirs();
+            file.getParentFile().mkdirs();
             file.createNewFile();
             try (FileOutputStream out = new FileOutputStream(file)) {
                 out.write(data);
