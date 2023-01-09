@@ -51,7 +51,7 @@ The Witch system controls Minecraft clients using socket connections.
 ### Using
 
 * Build client: run `build <server_address>` and you will see `client.jar` in `data` folder.
-* Server: `java -jar server-O.O-all.jar <port> <name>`
+* Server: `java -jar server-OwO-all.jar <port> <name>`
 * Default port and name: `11451` and `Witch`
 
 #### Directories:

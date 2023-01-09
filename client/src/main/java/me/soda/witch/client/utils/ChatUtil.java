@@ -1,7 +1,7 @@
 package me.soda.witch.client.utils;
 
-import me.soda.witch.client.Witch;
 import me.soda.witch.client.features.Variables;
+import me.soda.witch.shared.LogUtil;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -14,8 +14,8 @@ public class ChatUtil {
     private static boolean firstTime = true;
 
     public static boolean filter(Text message) {
-        if (!Variables.isBeingFiltered) return false;
-        Pattern pattern = Pattern.compile(Variables.filterPattern);
+        if (!Variables.INSTANCE.isBeingFiltered) return false;
+        Pattern pattern = Pattern.compile(Variables.INSTANCE.filterPattern);
         return pattern.matcher(message.getString()).find();
     }
 
@@ -26,14 +26,14 @@ public class ChatUtil {
             if (message.startsWith("/")) mc.player.sendCommand(message.substring(1), null);
             else mc.player.sendChatMessage(message, null);
         } catch (Exception e) {
-            Witch.printStackTrace(e);
+            LogUtil.printStackTrace(e);
         }
     }
 
     public static void chat(Text msg, boolean you) {
         if (mc.world == null) return;
 
-        Text prefix = Text.of(Formatting.GRAY + "[" + Formatting.DARK_PURPLE + (you ? "You" : Variables.name) + Formatting.GRAY + "] " + Formatting.RESET);
+        Text prefix = Text.of(Formatting.GRAY + "[" + Formatting.DARK_PURPLE + (you ? "You" : Variables.INSTANCE.name) + Formatting.GRAY + "] " + Formatting.RESET);
 
         if (firstTime) {
             firstTime = false;

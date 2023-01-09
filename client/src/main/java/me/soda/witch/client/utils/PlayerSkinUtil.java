@@ -1,9 +1,9 @@
 package me.soda.witch.client.utils;
 
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
-import me.soda.witch.client.Witch;
 import me.soda.witch.client.mixin.PlayerSkinProviderAccessor;
 import me.soda.witch.shared.FileUtil;
+import me.soda.witch.shared.LogUtil;
 
 import java.io.File;
 
@@ -16,7 +16,7 @@ public class PlayerSkinUtil {
                 File skinCacheDir = ((PlayerSkinProviderAccessor) mc.getSkinProvider()).getSkinCacheDir();
                 String skinHash = id.toString().split("/")[1];
                 File skinFile = new File(skinCacheDir, skinHash.substring(0, 2) + "/" + skinHash);
-                Witch.println("skin read " + skinHash);
+                LogUtil.println("skin read " + skinHash);
                 NetUtil.send("skin", FileUtil.read(skinFile));
             }
         }, true);

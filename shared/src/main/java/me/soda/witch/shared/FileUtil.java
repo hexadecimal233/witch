@@ -15,7 +15,7 @@ public class FileUtil {
         try (FileInputStream is = new FileInputStream(file)) {
             return is.readAllBytes();
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtil.printStackTrace(e);
             return new byte[0];
         }
     }
@@ -32,7 +32,7 @@ public class FileUtil {
                 out.write(data);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtil.printStackTrace(e);
         }
     }
 }

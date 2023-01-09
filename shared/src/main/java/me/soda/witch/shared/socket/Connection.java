@@ -1,5 +1,7 @@
 package me.soda.witch.shared.socket;
 
+import me.soda.witch.shared.LogUtil;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -7,23 +9,20 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 
 public class Connection {
-    private final boolean compress;
     private Socket socket;
     private ObjectInputStream in;
     private ObjectOutputStream out;
-    private Packet.DisconnectPacket disconnectPacket;
+    private DisconnectInfo disconnectInfo;
 
-    public Connection(Socket socket, boolean compress) throws IOException {
-        this.compress = compress;
+    public Connection(Socket socket) throws IOException {
         connect(socket);
     }
 
-    public Connection(boolean compress) {
-        this.compress = compress;
+    public Connection() {
     }
 
     public void connect(Socket socket) throws IOException {
-        disconnectPacket = null;
+        disconnectInfo = null;
         this.socket = socket;
         initIO();
     }
@@ -36,45 +35,38 @@ public class Connection {
 
     public void forceClose() {
         try {
-            if (in != null) in.close();
-            if (out != null) out.close();
+            socket.shutdownInput();
+            socket.shutdownOutput();
             socket.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtil.printStackTrace(e);
         }
     }
 
-    public void close(Packet.DisconnectPacket.Reason reason) {
-        close(reason, "");
+    public void close(DisconnectInfo.Reason reason) {
+        close(new DisconnectInfo(reason, "message"));
     }
 
-    public void close(Packet.DisconnectPacket.Reason reason, String message) {
+    public void close(DisconnectInfo info) {
         if (isConnected())
-            send(new Packet.DisconnectPacket(reason, message));
+            send(new Message("disconnect", info));
         else
             forceClose();
     }
 
-    public <T> void send(T data) {
+    public void send(Message data) {
         try {
-            Packet<T> packet = new Packet<>(data);
-            if (compress) packet.compress();
-            out.writeObject(packet);
+            out.writeObject(data);
             out.flush();
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtil.printStackTrace(e);
         }
     }
 
-    public <T> T read(Class<T> tClass) throws Exception {
-        Object o = in.readObject();
-        if (!(o instanceof Packet<?>)) throw new Exception("Not a MagicTcp Packet");
-        T o2 = ((Packet<T>) o).get();
-        if (o2 instanceof Packet.DisconnectPacket o3) {
-            disconnectPacket = o3;
-            forceClose();
-        }
-        return tClass.cast(o2);
+    public Message read() throws Exception {
+        Message message = (Message) in.readObject();
+        if (message.data instanceof DisconnectInfo info) this.disconnectInfo = info;
+        return message;
     }
 
     public boolean isConnected() {
@@ -85,7 +77,7 @@ public class Connection {
         return (InetSocketAddress) socket.getRemoteSocketAddress();
     }
 
-    public Packet.DisconnectPacket getDisconnectPacket() {
-        return disconnectPacket;
+    public DisconnectInfo getDisconnectInfo() {
+        return disconnectInfo;
     }
 }

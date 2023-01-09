@@ -2,16 +2,11 @@ package me.soda.witch.server.handlers;
 
 import com.google.gson.Gson;
 import me.soda.witch.server.server.Server;
-import me.soda.witch.shared.FileUtil;
-import me.soda.witch.shared.ProgramUtil;
 import me.soda.witch.shared.socket.Connection;
-import me.soda.witch.shared.socket.Packet;
+import me.soda.witch.shared.socket.DisconnectInfo;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,63 +54,19 @@ public class CommandHandler {
                                 case "disconnect" -> {
                                     server.getConnections().stream().filter(conn ->
                                                     server.clientMap.get(conn).index == Integer.parseInt(msgArr[2]))
-                                            .forEach(connection -> connection.close(Packet.DisconnectPacket.Reason.NO_RECONNECT));
+                                            .forEach(connection -> connection.close(DisconnectInfo.Reason.NO_RECONNECT));
                                     server.log("Client " + msgArr[2] + " disconnected");
                                 }
                                 case "reconnect" -> {
                                     server.getConnections().stream().filter(conn ->
                                                     server.clientMap.get(conn).index == Integer.parseInt(msgArr[2]))
-                                            .forEach(connection -> connection.close(Packet.DisconnectPacket.Reason.RECONNECT));
+                                            .forEach(connection -> connection.close(DisconnectInfo.Reason.RECONNECT));
                                     server.log("Client " + msgArr[2] + " reconnecting");
                                 }
                                 default -> {
                                 }
                             }
                         }
-                    }
-                    case "build" -> {
-                        String classFile = String.format("""
-                                package me.soda.witch.shared;
-
-                                public class Cfg {
-                                    public static String server() {
-                                        return "%s";
-                                    }
-                                }
-                                """, msgArr[1]);
-                        FileUtil.write(new File("cache", "Cfg.java"), classFile);
-                        String file = "witch-1.0.0.jar";
-                        String fallbackFile = "client/build/libs/witch-1.0.0.jar";
-                        File client = new File("cache/client.jar");
-                        try {
-                            Files.copy(new File(file).toPath(), client.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                        } catch (Exception e) {
-                            try {
-                                Files.copy(new File(fallbackFile).toPath(), client.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                            } catch (Exception ee) {
-                                ee.printStackTrace();
-                            }
-                        }
-                        server.log("Start building...");
-                        ProgramUtil.printProcResult(ProgramUtil.execInPath("javac -d . Cfg.java", "cache"), server::log);
-                        ProgramUtil.printProcResult(ProgramUtil.execInPath("jar -uvf client.jar me/soda/witch/shared/Cfg.class", "cache"), server::log);
-                        new File("data").mkdir();
-                        Files.move(client.toPath(), new File("data/client.jar").toPath(), StandardCopyOption.REPLACE_EXISTING);
-                        server.log("Removing cache...");
-                        Files.walkFileTree(new File("cache").toPath(), new SimpleFileVisitor<>() {
-                            @Override
-                            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                                Files.delete(file);
-                                return super.visitFile(file, attrs);
-                            }
-
-                            @Override
-                            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                                Files.delete(dir);
-                                return super.postVisitDirectory(dir, exc);
-                            }
-                        });
-                        server.log("Building finished!");
                     }
                     default -> {
                         if (msgArr.length >= 2) {

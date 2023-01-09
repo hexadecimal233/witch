@@ -3,10 +3,10 @@ package me.soda.witch.server.server;
 import com.google.gson.Gson;
 import me.soda.witch.shared.FileUtil;
 import me.soda.witch.shared.Info;
-import me.soda.witch.shared.Message;
 import me.soda.witch.shared.PlayerInfo;
 import me.soda.witch.shared.socket.Connection;
-import me.soda.witch.shared.socket.Packet;
+import me.soda.witch.shared.socket.DisconnectInfo;
+import me.soda.witch.shared.socket.Message;
 import me.soda.witch.shared.socket.TcpServer;
 
 import java.io.File;
@@ -24,7 +24,7 @@ public class Server extends TcpServer {
     public boolean stopped = false;
 
     public Server(int port, String name) throws Exception {
-        super(port, true);
+        super(port);
         this.name = name;
     }
 
@@ -45,7 +45,7 @@ public class Server extends TcpServer {
     }
 
     @Override
-    public void onClose(Connection conn, Packet.DisconnectPacket disconnectPacket) {
+    public void onClose(Connection conn, DisconnectInfo disconnectInfo) {
         log("Client disconnected: ID: " + clientMap.get(conn).index);
         try {
             clientMap.remove(conn);
@@ -55,8 +55,7 @@ public class Server extends TcpServer {
     }
 
     @Override
-    public void onMessage(Connection conn, Object o) {
-        Message message = (Message) o;
+    public void onMessage(Connection conn, Message message) {
         String msgType = message.messageType;
         Object msg = message.data;
         Info info = clientMap.get(conn);

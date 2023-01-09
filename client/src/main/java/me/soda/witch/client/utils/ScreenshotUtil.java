@@ -1,7 +1,7 @@
 package me.soda.witch.client.utils;
 
 import me.soda.witch.client.events.TickEvent;
-import me.soda.witch.shared.events.EventBus;
+import me.soda.witch.shared.EventBus;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.util.ScreenshotRecorder;
 

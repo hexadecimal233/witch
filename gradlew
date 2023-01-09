@@ -160,7 +160,7 @@ fi
 #   * -classpath
 #   * -D...appname settings
 #   * --module-path (only if needed)
-#   * DEFAULT_JVM_OPTS, JAVA_OPTS, and GRADLE_OPTS environment variables.
+#   * DEFAULT_JVM_OPTS, JAVA_OPTS, and GRADLE_OPTS environment Variables.INSTANCE.
 
 # For Cygwin or MSYS, switch paths to Windows format before running java
 if "$cygwin" || "$msys" ; then

@@ -1,7 +1,7 @@
 package me.soda.witch.client.utils;
 
-import me.soda.witch.client.Witch;
-import me.soda.witch.shared.Message;
+import me.soda.witch.shared.LogUtil;
+import me.soda.witch.shared.socket.Message;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -14,7 +14,7 @@ public class NetUtil {
         try {
             client.send(new Message(messageType, object));
         } catch (Exception e) {
-            Witch.printStackTrace(e);
+            LogUtil.printStackTrace(e);
         }
     }
 

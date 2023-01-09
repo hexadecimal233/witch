@@ -6,12 +6,12 @@ import java.util.concurrent.Executors;
 
 public abstract class TcpClient extends Connection {
     private final String[] addrPort;
-    private final ExecutorService reconnectPool = Executors.newFixedThreadPool(1);
+    private final ExecutorService reconnectPool = Executors.newSingleThreadExecutor();
     private SocketThread socketThread;
     private long reconnectTimeout;
 
-    public TcpClient(String address, long reconnectTimeout, boolean compress) {
-        super(compress);
+    public TcpClient(String address, long reconnectTimeout) {
+        super();
         this.addrPort = address.split(":");
         this.reconnectTimeout = reconnectTimeout;
         try {
@@ -23,7 +23,6 @@ public abstract class TcpClient extends Connection {
         }
     }
 
-    //-1 means no
     public void setReconnectTimeout(int reconnectTimeout) {
         this.reconnectTimeout = reconnectTimeout;
     }
@@ -45,13 +44,13 @@ public abstract class TcpClient extends Connection {
         });
     }
 
-    public abstract boolean onReconnect();
-
     public abstract void onOpen();
 
-    public abstract void onClose(Packet.DisconnectPacket packet);
+    public abstract void onMessage(Message message);
 
-    public abstract <T> void onMessage(T t);
+    public abstract void onClose(DisconnectInfo disconnectInfo);
+
+    public abstract boolean onReconnect();
 
     private class SocketThread extends Thread {
         @Override
@@ -59,22 +58,24 @@ public abstract class TcpClient extends Connection {
             try {
                 onOpen();
                 while (isConnected()) {
-                    Object obj = read(Object.class);
-                    if (!(obj instanceof Packet.DisconnectPacket)) {
-                        onMessage(obj);
+                    Message message = read();
+                    if (!(message.data instanceof DisconnectInfo info)) {
+                        onMessage(message);
+                    } else {
+                        close(info);
+                        break;
                     }
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (Exception ignored) {
             } finally {
-                Packet.DisconnectPacket dp = getDisconnectPacket();
+                DisconnectInfo di = getDisconnectInfo();
+                if (di == null) di = new DisconnectInfo(DisconnectInfo.Reason.EXCEPTION, "");
                 boolean reconnectTimeout = false;
-                onClose(dp);
-                switch (dp.reason) {
+                onClose(di);
+                switch (di.reason) {
                     case NO_RECONNECT -> setReconnectTimeout(-1);
                     case RECONNECT -> reconnectTimeout = true;
                 }
-                forceClose();
                 reconnect(reconnectTimeout);
             }
         }

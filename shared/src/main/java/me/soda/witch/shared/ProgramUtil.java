@@ -17,7 +17,7 @@ public class ProgramUtil {
                     new String[]{"cmd.exe", "/c", command}
             ) : Runtime.getRuntime().exec(command);
         } catch (IOException e) {
-            e.printStackTrace();
+            LogUtil.printStackTrace(e);
         }
 
         return getProcResult(process);
@@ -39,7 +39,7 @@ public class ProgramUtil {
             inputStream.close();
             process.waitFor();
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtil.printStackTrace(e);
         }
         return result.toString();
     }
@@ -60,7 +60,7 @@ public class ProgramUtil {
             process.waitFor();
             if (file.exists()) file.delete();
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            LogUtil.printStackTrace(e);
         }
     }
 }

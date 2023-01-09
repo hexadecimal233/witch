@@ -1,7 +1,7 @@
 package me.soda.witch.server.server;
 
-import me.soda.witch.shared.Message;
 import me.soda.witch.shared.socket.Connection;
+import me.soda.witch.shared.socket.Message;
 
 import java.util.List;
 
@@ -19,10 +19,6 @@ public class SendUtil {
 
     public void trySend(Connection conn, String messageType, Object object) {
         trySend(conn, new Message(messageType, object));
-    }
-
-    public void trySend(Connection conn, String messageType) {
-        trySend(conn, new Message(messageType, null));
     }
 
     private void trySend(Server server, Message message) {
