@@ -1,0 +1,14 @@
+package me.soda.witch.client.events;
+
+import me.soda.witch.shared.socket.Message;
+
+public class ConnectionMessageEvent {
+    public static final ConnectionMessageEvent INSTANCE = new ConnectionMessageEvent();
+
+    public Message message;
+
+    public static ConnectionMessageEvent get(Message message) {
+        INSTANCE.message = message;
+        return INSTANCE;
+    }
+}

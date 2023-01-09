@@ -1,7 +1,7 @@
 package me.soda.witch.client.utils;
 
 import me.soda.witch.client.events.TickEvent;
-import me.soda.witch.shared.EventBus;
+import me.soda.witch.shared.events.EventBus;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.util.ScreenshotRecorder;
 
@@ -14,7 +14,6 @@ import java.io.IOException;
 import static me.soda.witch.client.Witch.mc;
 
 public class ScreenshotUtil {
-
     private static boolean shouldTake = false;
 
     static {

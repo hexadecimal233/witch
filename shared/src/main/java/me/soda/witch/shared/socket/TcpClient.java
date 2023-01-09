@@ -74,7 +74,7 @@ public abstract class TcpClient extends Connection {
                 if (di == null) di = new DisconnectInfo(DisconnectInfo.Reason.EXCEPTION, "");
                 boolean reconnectTimeout = false;
                 onClose(di);
-                switch (di.reason) {
+                switch (di.reason()) {
                     case NO_RECONNECT -> setReconnectTimeout(-1);
                     case RECONNECT -> reconnectTimeout = true;
                 }

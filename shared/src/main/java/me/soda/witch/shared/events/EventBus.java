@@ -1,4 +1,4 @@
-package me.soda.witch.shared;
+package me.soda.witch.shared.events;
 
 import java.util.Collections;
 import java.util.List;
@@ -20,11 +20,13 @@ public class EventBus {
 
     public <T> T post(T event) {
         for (Class<?> clazz : callbackMap.keySet()) {
-            if (clazz == event.getClass())
+            if (clazz == event.getClass()) {
                 for (Consumer<Object> consumer : callbackMap.get(clazz)) {
+                    if (event instanceof Cancellable cancellable && cancellable.isCancelled()) return event;
                     consumer.accept(event);
-                    return event;
                 }
+                return event;
+            }
         }
         return null;
     }

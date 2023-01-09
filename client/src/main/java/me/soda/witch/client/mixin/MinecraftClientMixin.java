@@ -2,7 +2,7 @@ package me.soda.witch.client.mixin;
 
 import me.soda.witch.client.Witch;
 import me.soda.witch.client.events.TickEvent;
-import me.soda.witch.shared.EventBus;
+import me.soda.witch.shared.events.EventBus;
 import net.minecraft.client.MinecraftClient;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

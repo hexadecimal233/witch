@@ -17,7 +17,7 @@ shadowJar {
 }
 
 dependencies {
-    library 'com.google.code.gson:gson:2.9.0'
+    library 'com.google.code.gson:gson:2.10'
     compileOnly project(":shared")
 }
 
