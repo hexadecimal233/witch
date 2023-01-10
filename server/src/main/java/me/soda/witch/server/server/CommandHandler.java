@@ -1,13 +1,10 @@
 package me.soda.witch.server.server;
 
 import com.google.gson.Gson;
-import me.soda.witch.shared.socket.Connection;
 import me.soda.witch.shared.socket.DisconnectInfo;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 public class CommandHandler {
     public static void handle(String in, Server server) {
@@ -43,11 +40,9 @@ public class CommandHandler {
                                         server.log("Selected all clients!");
                                         break;
                                     }
-                                    List<Connection> connCollection = new ArrayList<>();
-                                    server.getConnections().stream().filter(conn ->
+                                    server.sendUtil.setConnCollection(server.getConnections().stream().filter(conn ->
                                                     server.clientMap.get(conn).index == Integer.parseInt(msgArr[2]))
-                                            .forEach(connCollection::add);
-                                    server.sendUtil.setConnCollection(connCollection);
+                                            .toList());
                                     server.log("Selected client!");
                                 }
                                 case "disconnect" -> {

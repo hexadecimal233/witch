@@ -17,7 +17,7 @@ public class Client extends TcpClient {
     public int reconnections = 0;
 
     public Client() {
-        super(Cfg.server(), 30000);
+        super(Cfg.host(), Cfg.port(), 30000);
     }
 
     @Override

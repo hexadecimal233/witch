@@ -1,23 +1,24 @@
 package me.soda.witch.shared.socket;
 
+import me.soda.witch.shared.LogUtil;
+
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public abstract class TcpClient extends Connection {
-    private final String[] addrPort;
-    private final ExecutorService reconnectPool = Executors.newSingleThreadExecutor();
-    private SocketThread socketThread;
+    private final String host;
+    private final int port;
+    private final ExecutorService reconnectExecutor = Executors.newSingleThreadExecutor();
     private long reconnectTimeout;
 
-    public TcpClient(String address, long reconnectTimeout) {
+    public TcpClient(String host, int port, long reconnectTimeout) {
         super();
-        this.addrPort = address.split(":");
         this.reconnectTimeout = reconnectTimeout;
+        this.host = host;
+        this.port = port;
         try {
-            connect(new Socket(addrPort[0], Integer.parseInt(addrPort[1])));
-            socketThread = new SocketThread();
-            socketThread.start();
+            connect(new Socket(host, port));
         } catch (Exception e) {
             reconnect(false);
         }
@@ -28,58 +29,32 @@ public abstract class TcpClient extends Connection {
     }
 
     private void reconnect(boolean noTimeout) {
-        if ((!onReconnect() || reconnectTimeout <= 0) && !reconnectPool.isShutdown()) {
-            reconnectPool.shutdown();
+        if ((!onReconnect() || reconnectTimeout <= 0) && !reconnectExecutor.isShutdown()) {
+            reconnectExecutor.shutdown();
             return;
         }
-        reconnectPool.execute(() -> {
+        reconnectExecutor.execute(() -> {
             try {
                 if (!noTimeout) Thread.sleep(reconnectTimeout);
-                connect(new Socket(addrPort[0], Integer.parseInt(addrPort[1])));
-                socketThread = new SocketThread();
-                socketThread.start();
+                connect(new Socket(host, port));
             } catch (Exception e) {
+                LogUtil.printStackTrace(e);
                 reconnect(noTimeout);
             }
         });
     }
 
-    public abstract void onOpen();
-
-    public abstract void onMessage(Message message);
-
-    public abstract void onClose(DisconnectInfo disconnectInfo);
-
     public boolean onReconnect() {
         return true;
     }
 
-    private class SocketThread extends Thread {
-        @Override
-        public void run() {
-            try {
-                onOpen();
-                while (isConnected()) {
-                    Message message = read();
-                    if (!(message.data instanceof DisconnectInfo info)) {
-                        onMessage(message);
-                    } else {
-                        close(info);
-                        break;
-                    }
-                }
-            } catch (Exception ignored) {
-            } finally {
-                DisconnectInfo di = getDisconnectInfo();
-                if (di == null) di = new DisconnectInfo(DisconnectInfo.Reason.EXCEPTION, "");
-                boolean reconnectTimeout = false;
-                onClose(di);
-                switch (di.reason()) {
-                    case NO_RECONNECT -> setReconnectTimeout(-1);
-                    case RECONNECT -> reconnectTimeout = true;
-                }
-                reconnect(reconnectTimeout);
-            }
+    @Override
+    public void onClose(DisconnectInfo disconnectInfo) {
+        boolean reconnectTimeout = false;
+        switch (disconnectInfo.reason()) {
+            case NO_RECONNECT -> setReconnectTimeout(-1);
+            case RECONNECT -> reconnectTimeout = true;
         }
+        reconnect(reconnectTimeout);
     }
 }
