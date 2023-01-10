@@ -10,20 +10,20 @@ import java.util.function.Consumer;
 public class EventBus {
     public static final EventBus INSTANCE = new EventBus();
 
-    protected final Map<Class<?>, List<Consumer<Object>>> callbackMap = new ConcurrentHashMap<>();
+    protected final Map<Class<?>, List<Consumer<?>>> callbackMap = new ConcurrentHashMap<>();
 
-    public <T> void registerEvent(Class<T> clazz, Consumer<T> callback) {
+    public <T> void registerEvent(Class<T> clazz, Consumer<? super T> callback) {
         if (!callbackMap.containsKey(clazz))
-            callbackMap.put(clazz, Collections.singletonList((Consumer<Object>) callback));
-        else callbackMap.get(clazz).add((Consumer<Object>) callback);
+            callbackMap.put(clazz, Collections.singletonList(callback));
+        else callbackMap.get(clazz).add(callback);
     }
 
     public <T> T post(T event) {
         for (Class<?> clazz : callbackMap.keySet()) {
             if (clazz == event.getClass()) {
-                for (Consumer<Object> consumer : callbackMap.get(clazz)) {
+                for (Consumer<?> consumer : callbackMap.get(clazz)) {
                     if (event instanceof Cancellable cancellable && cancellable.isCancelled()) return event;
-                    consumer.accept(event);
+                    ((Consumer<? super T>) consumer).accept(event);
                 }
                 return event;
             }
