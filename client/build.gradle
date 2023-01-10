@@ -1,6 +1,19 @@
+import org.apache.commons.io.FilenameUtils
+import proguard.gradle.ProGuardTask
+
+buildscript {
+    dependencies {
+        classpath 'com.guardsquare:proguard-gradle:7.3.0'
+        classpath 'com.guardsquare:proguard-base:7.3.0'
+    }
+}
+
 plugins {
     id 'fabric-loom' version '1.0-SNAPSHOT'
 }
+
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
 
 archivesBaseName = project.archives_base_name
 version = project.mod_version
@@ -26,21 +39,21 @@ compileJava {
     source project(':shared').sourceSets.main.allSource
 }
 
-java {
-    withSourcesJar()
-}
-
 jar {
     from("LICENSE") {
         rename { "${it}_${project.archivesBaseName}" }
     }
 }
 
-task copyJars(type: Copy) {
-    from "build/libs/witch-1.0.0.jar"
-    into "../output"
+remapJar {
+
 }
 
-build {
-    finalizedBy copyJars
+task proguard(type: ProGuardTask, dependsOn: remapJar) {
+    configuration "${projectDir}/proguard.pro"
+    injars remapJar.archiveFile
+    outjars FilenameUtils.removeExtension(remapJar.archiveFile.get().toString()) + "-obfuscated" + ".jar"
+
+    libraryjars(project.configurations.modImplementation.files)
+    libraryjars(project.configurations.modApi.files)
 }

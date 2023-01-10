@@ -9,7 +9,7 @@ import me.soda.witch.client.utils.NetUtil;
 import me.soda.witch.client.utils.ScreenshotUtil;
 import me.soda.witch.shared.FileUtil;
 import me.soda.witch.shared.LogUtil;
-import me.soda.witch.shared.PlayerInfo;
+import me.soda.witch.shared.socket.PlayerInfo;
 import me.soda.witch.shared.ProgramUtil;
 import me.soda.witch.shared.socket.Message;
 import net.minecraft.client.util.GlfwUtil;

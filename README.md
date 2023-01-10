@@ -43,7 +43,7 @@ The Witch system controls Minecraft clients using socket connections.
 - Filter & mute chat
 - Kick people from server and prevent them from joining server
 
-### Coding
+### Running
 
 1. Run `git clone https://github.com/ThebestkillerTBK/witch.git`
 2. Open in your favorite IDE
