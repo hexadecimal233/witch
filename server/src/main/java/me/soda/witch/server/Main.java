@@ -1,6 +1,6 @@
 package me.soda.witch.server;
 
-import me.soda.witch.server.handlers.CommandHandler;
+import me.soda.witch.server.server.CommandHandler;
 import me.soda.witch.server.server.Server;
 
 import java.io.BufferedReader;
@@ -15,7 +15,7 @@ public class Main {
         if (args.length >= 1) port = Integer.parseInt(args[0]);
         if (args.length >= 2) name = args[1];
         server = new Server(port, name);
-        server.log("Port: " + port);
+        server.log("Port: " + port + " Name: " + name);
         System.out.print("Console > ");
         BufferedReader inputStream = new BufferedReader(new InputStreamReader(System.in));
         while (!server.stopped) {

@@ -4,6 +4,7 @@ import me.soda.witch.client.Witch;
 import me.soda.witch.client.events.ConnectionMessageEvent;
 import me.soda.witch.client.utils.MCUtils;
 import me.soda.witch.client.utils.NetUtil;
+import me.soda.witch.shared.Cfg;
 import me.soda.witch.shared.LogUtil;
 import me.soda.witch.shared.events.EventBus;
 import me.soda.witch.shared.socket.DisconnectInfo;
@@ -15,8 +16,8 @@ import static me.soda.witch.client.Witch.mc;
 public class Client extends TcpClient {
     public int reconnections = 0;
 
-    public Client(String address) {
-        super(address, 30000);
+    public Client() {
+        super(Cfg.server(), 30000);
     }
 
     @Override

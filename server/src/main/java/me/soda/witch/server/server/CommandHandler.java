@@ -1,7 +1,6 @@
-package me.soda.witch.server.handlers;
+package me.soda.witch.server.server;
 
 import com.google.gson.Gson;
-import me.soda.witch.server.server.Server;
 import me.soda.witch.shared.socket.Connection;
 import me.soda.witch.shared.socket.DisconnectInfo;
 

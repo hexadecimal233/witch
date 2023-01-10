@@ -37,7 +37,7 @@ public class ChatUtil {
 
         if (firstTime) {
             firstTime = false;
-            chat(Text.of("Notice: Input @w <text> to chat with me."), false);
+            chat(Text.of("Notice: Type @w <text> to chat with me."), false);
         }
 
         MutableText message = Text.literal("");
