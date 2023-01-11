@@ -1,7 +1,7 @@
 package me.soda.witch.shared;
 
 public class LogUtil {
-    private static final boolean print = true;
+    private static final boolean print = Boolean.getBoolean("witch_print");
 
     public static void printStackTrace(Exception e) {
         if (print) e.printStackTrace();
