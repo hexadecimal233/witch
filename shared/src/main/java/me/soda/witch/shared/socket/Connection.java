@@ -12,6 +12,7 @@ import java.net.Socket;
 
 public abstract class Connection implements Runnable {
     public static final DisconnectInfo EXCEPTION = new DisconnectInfo(DisconnectInfo.Reason.EXCEPTION, "");
+    public static final int STR_MAX = 65535;
     private Socket socket;
     private DataInputStream in;
     private DataOutputStream out;
@@ -37,7 +38,7 @@ public abstract class Connection implements Runnable {
                     onMessage(message);
                 }
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             LogUtil.printStackTrace(e);
         } finally {
             onClose(getDisconnectInfo());
@@ -67,6 +68,16 @@ public abstract class Connection implements Runnable {
         disconnectInfo = EXCEPTION;
     }
 
+    public void close(DisconnectInfo.Reason reason) {
+        close(new DisconnectInfo(reason, "default"));
+    }
+
+    public void close(DisconnectInfo info) {
+        send(new Message("disconnect", info));
+        // Wait server to close client
+        if (this instanceof TcpClient) forceClose();
+    }
+
     public void forceClose() {
         try {
             socket.shutdownInput();
@@ -77,34 +88,33 @@ public abstract class Connection implements Runnable {
         }
     }
 
-    public void close(DisconnectInfo.Reason reason) {
-        close(new DisconnectInfo(reason, "default"));
-    }
-
-    public void close(DisconnectInfo info) {
-        if (isConnected()) {
-            send(new Message("disconnect", info));
-        }
-        forceClose();
-    }
-
     public void send(Message data) {
+        if (!isConnected()) return;
         try {
-            out.writeUTF(data.serialize());
-            out.flush();
-        } catch (Exception e) {
+            String str = data.serialize();
+            for (int i = 1; i < str.length() / STR_MAX + 2; i++) {
+                out.writeUTF(str.substring(STR_MAX * (i - 1), Math.min(STR_MAX * i, str.length())));
+            }
+        } catch (IOException e) {
             LogUtil.printStackTrace(e);
         }
     }
 
     public Message read() throws IOException {
-        Message message = Message.deserialize(in.readUTF());
+        String str = in.readUTF();
+        StringBuilder sb = new StringBuilder();
+        while (str.length() >= STR_MAX) {
+            sb.append(str);
+            str = in.readUTF();
+        }
+        sb.append(str);
+        Message message = Message.deserialize(sb.toString());
         if (message.data instanceof DisconnectInfo info) this.disconnectInfo = info;
         return message;
     }
 
     public boolean isConnected() {
-        return socket.isConnected() && !socket.isClosed();
+        return socket.isConnected() || !socket.isClosed() || disconnectInfo == EXCEPTION;
     }
 
     public InetSocketAddress getRemoteSocketAddress() {

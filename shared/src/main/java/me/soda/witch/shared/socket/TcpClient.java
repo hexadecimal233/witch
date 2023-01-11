@@ -3,6 +3,7 @@ package me.soda.witch.shared.socket;
 import me.soda.witch.shared.LogUtil;
 import me.soda.witch.shared.socket.messages.DisconnectInfo;
 
+import java.io.IOException;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -22,7 +23,7 @@ public abstract class TcpClient extends Connection {
         try {
             connect(new Socket(host, port));
             connectExecutor.execute(this);
-        } catch (Exception e) {
+        } catch (IOException e) {
             reconnect(false);
         }
     }
@@ -37,7 +38,7 @@ public abstract class TcpClient extends Connection {
                 if (!noTimeout) Thread.sleep(reconnectTimeout);
                 connect(new Socket(host, port));
                 connectExecutor.execute(this);
-            } catch (Exception e) {
+            } catch (IOException | InterruptedException e) {
                 LogUtil.printStackTrace(e);
                 reconnect(noTimeout);
             }

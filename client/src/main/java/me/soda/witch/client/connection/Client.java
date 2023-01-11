@@ -7,9 +7,9 @@ import me.soda.witch.client.utils.NetUtil;
 import me.soda.witch.shared.Cfg;
 import me.soda.witch.shared.LogUtil;
 import me.soda.witch.shared.events.EventBus;
+import me.soda.witch.shared.socket.TcpClient;
 import me.soda.witch.shared.socket.messages.DisconnectInfo;
 import me.soda.witch.shared.socket.messages.Message;
-import me.soda.witch.shared.socket.TcpClient;
 
 import static me.soda.witch.client.Witch.mc;
 

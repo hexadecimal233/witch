@@ -1,7 +1,6 @@
 package me.soda.witch.client.utils;
 
 import me.soda.witch.client.Variables;
-import me.soda.witch.shared.LogUtil;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -20,14 +19,10 @@ public class ChatUtil {
     }
 
     public static void sendChat(String message) {
-        try {
-            if (!MCUtils.canUpdate()) return;
-            mc.inGameHud.getChatHud().addToMessageHistory(message);
-            if (message.startsWith("/")) mc.getNetworkHandler().sendCommand(message.substring(1));
-            else mc.getNetworkHandler().sendChatMessage(message);
-        } catch (Exception e) {
-            LogUtil.printStackTrace(e);
-        }
+        if (!MCUtils.canUpdate()) return;
+        mc.inGameHud.getChatHud().addToMessageHistory(message);
+        if (message.startsWith("/")) mc.getNetworkHandler().sendCommand(message.substring(1));
+        else mc.getNetworkHandler().sendChatMessage(message);
     }
 
     public static void chat(Text msg, boolean you) {

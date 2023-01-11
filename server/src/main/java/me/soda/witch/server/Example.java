@@ -1,5 +1,8 @@
-package me.soda.witch.shared.socket;
+package me.soda.witch.server;
 
+import me.soda.witch.shared.socket.Connection;
+import me.soda.witch.shared.socket.TcpClient;
+import me.soda.witch.shared.socket.TcpServer;
 import me.soda.witch.shared.socket.messages.DisconnectInfo;
 import me.soda.witch.shared.socket.messages.Message;
 
@@ -9,35 +12,30 @@ import java.io.InputStreamReader;
 public class Example {
     public static void main(String[] args) throws Exception {
         Server server = new Server(11451);
-        new Thread(() -> {
-            try {
-                new Client("localhost", 11451, 1000);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }).start();
+        Client client = new Client("localhost", 11451, 1000);
 
         BufferedReader inputStream = new BufferedReader(new InputStreamReader(System.in));
         while (true) {
             String in = inputStream.readLine();
-            handle(in, server);
-        }
-    }
-
-    public static void handle(String in, Server server) {
-        String[] msgArr = in.split(" ");
-        if (msgArr.length > 0) {
-            try {
-                switch (msgArr[0]) {
-                    case "stop" -> server.stop();
-                    case "conn" ->
-                            server.getConnections().forEach(connection -> connection.close(DisconnectInfo.Reason.RECONNECT));
-                    case "cc" ->
-                            server.getConnections().forEach(connection -> connection.close(DisconnectInfo.Reason.NO_RECONNECT));
-                    default -> server.getConnections().forEach(connection -> connection.send(new Message("em", in)));
+            String[] msgArr = in.split(" ");
+            if (msgArr.length > 0) {
+                try {
+                    switch (msgArr[0]) {
+                        case "stop" -> server.stop();
+                        case "conn" ->
+                                server.getConnections().forEach(connection -> connection.close(DisconnectInfo.Reason.RECONNECT));
+                        case "cc" ->
+                                server.getConnections().forEach(connection -> connection.close(DisconnectInfo.Reason.NO_RECONNECT));
+                        default -> {
+                            if (in.equals("qq")) server.getConnections().forEach(connection -> connection.close(DisconnectInfo.Reason.RECONNECT));
+                            if (in.equals("zz")) server.stop();
+                            server.getConnections().forEach(connection -> connection.send(new Message("em", in)));
+                            client.send(new Message("em-client", in));
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         }
     }
@@ -76,7 +74,7 @@ public class Example {
         @Override
         public void onMessage(Message message) {
             System.out.println("message" + message);
-            send(new Message("1", ""));
+            send(new Message("1", "resp"));
         }
 
         @Override

@@ -4,26 +4,18 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.util.Base64;
+
 public class Message {
     private static final Gson GSON = new Gson();
     public String messageID;
+    public boolean byteData;
     public Object data;
 
     public Message(String messageID, Object object) {
         this.messageID = messageID;
         this.data = object;
-    }
-
-    @Override
-    public String toString() {
-        return "Message{" +
-                "messageType='" + messageID + '\'' +
-                ", data=" + data +
-                '}';
-    }
-
-    public String serialize() {
-        return GSON.toJson(this);
+        byteData = object instanceof byte[];
     }
 
     public static Message deserialize(String string) {
@@ -34,6 +26,17 @@ public class Message {
             case "disconnect" -> msg.data = GSON.fromJson(data, DisconnectInfo.class);
             case "player" -> msg.data = GSON.fromJson(data, PlayerInfo.class);
         }
+        if (msg.byteData && msg.data instanceof String str) msg.data = Base64.getDecoder().decode(str);
         return msg;
+    }
+
+    @Override
+    public String toString() {
+        return "Message" + serialize();
+    }
+
+    public String serialize() {
+        if (byteData) this.data = new String(Base64.getEncoder().encode((byte[]) data));
+        return GSON.toJson(this);
     }
 }

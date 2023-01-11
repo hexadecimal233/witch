@@ -46,7 +46,7 @@ public abstract class TcpServer {
             while (!server.isClosed()) {
                 try {
                     connectionThreadPool.execute(new ServerConnection(server.accept()));
-                } catch (Exception e) {
+                } catch (IOException e) {
                     LogUtil.printStackTrace(e);
                 }
             }
@@ -57,6 +57,7 @@ public abstract class TcpServer {
         public ServerConnection(Socket socket) throws IOException {
             super(socket);
         }
+
         @Override
         public void onOpen() {
             conns.add(this);
