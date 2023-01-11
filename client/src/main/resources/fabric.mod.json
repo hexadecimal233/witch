@@ -1,4 +1,5 @@
 {
+  "schemaVersion": 1,
   "authors": [
     "Soda5061"
   ],
@@ -17,6 +18,5 @@
     "witch.mixins.json"
   ],
   "name": "Witch",
-  "schemaVersion": 1,
   "version": "${version}"
 }

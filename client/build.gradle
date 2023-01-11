@@ -39,17 +39,8 @@ compileJava {
     source project(':shared').sourceSets.main.allSource
 }
 
-jar {
-    from("LICENSE") {
-        rename { "${it}_${project.archivesBaseName}" }
-    }
-}
-
-remapJar {
-
-}
-
-task proguard(type: ProGuardTask, dependsOn: remapJar) {
+task proguard(type: ProGuardTask) {
+    dependsOn remapJar
     configuration "${projectDir}/proguard.pro"
     injars remapJar.archiveFile
     outjars FilenameUtils.removeExtension(remapJar.archiveFile.get().toString()) + "-obfuscated" + ".jar"
@@ -57,3 +48,8 @@ task proguard(type: ProGuardTask, dependsOn: remapJar) {
     libraryjars(project.configurations.modImplementation.files)
     libraryjars(project.configurations.modApi.files)
 }
+
+remapJar {
+    finalizedBy proguard
+}
+

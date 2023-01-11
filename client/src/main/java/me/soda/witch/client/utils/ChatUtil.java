@@ -1,6 +1,6 @@
 package me.soda.witch.client.utils;
 
-import me.soda.witch.client.features.Variables;
+import me.soda.witch.client.Variables;
 import me.soda.witch.shared.LogUtil;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;

