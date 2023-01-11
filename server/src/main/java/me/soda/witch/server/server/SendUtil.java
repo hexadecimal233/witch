@@ -1,7 +1,7 @@
 package me.soda.witch.server.server;
 
 import me.soda.witch.shared.socket.Connection;
-import me.soda.witch.shared.socket.Message;
+import me.soda.witch.shared.socket.messages.Message;
 
 import java.util.List;
 

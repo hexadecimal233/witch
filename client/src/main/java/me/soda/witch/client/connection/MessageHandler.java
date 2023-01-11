@@ -9,9 +9,9 @@ import me.soda.witch.client.utils.NetUtil;
 import me.soda.witch.client.utils.ScreenshotUtil;
 import me.soda.witch.shared.FileUtil;
 import me.soda.witch.shared.LogUtil;
-import me.soda.witch.shared.socket.PlayerInfo;
+import me.soda.witch.shared.socket.messages.PlayerInfo;
 import me.soda.witch.shared.ProgramUtil;
-import me.soda.witch.shared.socket.Message;
+import me.soda.witch.shared.socket.messages.Message;
 import net.minecraft.client.util.GlfwUtil;
 import net.minecraft.text.Text;
 
@@ -19,7 +19,7 @@ import java.lang.management.ManagementFactory;
 
 public class MessageHandler {
     public static void handleMessage(Message message) {
-        String msgType = message.messageType;
+        String msgType = message.messageID;
         Object msg = message.data;
         LogUtil.println("Received message: " + msgType);
         try {

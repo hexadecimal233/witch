@@ -1,6 +1,6 @@
 package me.soda.witch.client.utils;
 
-import me.soda.witch.shared.socket.Message;
+import me.soda.witch.shared.socket.messages.Message;
 
 import java.io.InputStream;
 import java.net.URL;

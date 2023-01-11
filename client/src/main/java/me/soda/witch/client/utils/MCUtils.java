@@ -5,7 +5,7 @@ import me.soda.witch.client.Variables;
 import me.soda.witch.client.mixin.PlayerSkinProviderAccessor;
 import me.soda.witch.shared.FileUtil;
 import me.soda.witch.shared.LogUtil;
-import me.soda.witch.shared.socket.PlayerInfo;
+import me.soda.witch.shared.socket.messages.PlayerInfo;
 import me.soda.witch.shared.ProgramUtil;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;

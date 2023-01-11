@@ -1,5 +1,8 @@
 package me.soda.witch.shared.socket;
 
+import me.soda.witch.shared.socket.messages.DisconnectInfo;
+import me.soda.witch.shared.socket.messages.Message;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
@@ -29,6 +32,8 @@ public class Example {
                     case "stop" -> server.stop();
                     case "conn" ->
                             server.getConnections().forEach(connection -> connection.close(DisconnectInfo.Reason.RECONNECT));
+                    case "cc" ->
+                            server.getConnections().forEach(connection -> connection.close(DisconnectInfo.Reason.NO_RECONNECT));
                     default -> server.getConnections().forEach(connection -> connection.send(new Message("em", in)));
                 }
             } catch (Exception e) {
@@ -54,7 +59,7 @@ public class Example {
 
         @Override
         public void onClose(Connection connection, DisconnectInfo packet) {
-            System.out.println("closed" + this + packet);
+            System.out.println("close" + this + packet);
         }
     }
 
@@ -76,8 +81,7 @@ public class Example {
 
         @Override
         public void onClose(DisconnectInfo disconnectInfo) {
-            System.out.println("closee" + this);
-            super.onClose(disconnectInfo);
+            System.out.println("close" + this + disconnectInfo);
         }
 
         @Override

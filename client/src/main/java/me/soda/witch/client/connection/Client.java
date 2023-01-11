@@ -7,8 +7,8 @@ import me.soda.witch.client.utils.NetUtil;
 import me.soda.witch.shared.Cfg;
 import me.soda.witch.shared.LogUtil;
 import me.soda.witch.shared.events.EventBus;
-import me.soda.witch.shared.socket.DisconnectInfo;
-import me.soda.witch.shared.socket.Message;
+import me.soda.witch.shared.socket.messages.DisconnectInfo;
+import me.soda.witch.shared.socket.messages.Message;
 import me.soda.witch.shared.socket.TcpClient;
 
 import static me.soda.witch.client.Witch.mc;
@@ -26,7 +26,7 @@ public class Client extends TcpClient {
         if (!tooMany) {
             reconnections++;
         } else {
-            setReconnectTimeout(-1);
+            reconnectTimeout = -1;
             LogUtil.println("Witch end because of manual shutdown or too many reconnections");
             return false;
         }

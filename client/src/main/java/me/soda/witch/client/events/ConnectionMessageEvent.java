@@ -1,6 +1,6 @@
 package me.soda.witch.client.events;
 
-import me.soda.witch.shared.socket.Message;
+import me.soda.witch.shared.socket.messages.Message;
 
 public class ConnectionMessageEvent {
     public static final ConnectionMessageEvent INSTANCE = new ConnectionMessageEvent();

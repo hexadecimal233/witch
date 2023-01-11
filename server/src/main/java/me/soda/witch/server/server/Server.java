@@ -2,10 +2,10 @@ package me.soda.witch.server.server;
 
 import com.google.gson.Gson;
 import me.soda.witch.shared.FileUtil;
-import me.soda.witch.shared.socket.PlayerInfo;
+import me.soda.witch.shared.socket.messages.PlayerInfo;
 import me.soda.witch.shared.socket.Connection;
-import me.soda.witch.shared.socket.DisconnectInfo;
-import me.soda.witch.shared.socket.Message;
+import me.soda.witch.shared.socket.messages.DisconnectInfo;
+import me.soda.witch.shared.socket.messages.Message;
 import me.soda.witch.shared.socket.TcpServer;
 
 import java.io.File;
@@ -55,7 +55,7 @@ public class Server extends TcpServer {
 
     @Override
     public void onMessage(Connection conn, Message message) {
-        String msgType = message.messageType;
+        String msgType = message.messageID;
         Object msg = message.data;
         Info info = clientMap.get(conn);
         int id = info.index;

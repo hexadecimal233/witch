@@ -1,7 +1,7 @@
 package me.soda.witch.server.server;
 
 import com.google.gson.Gson;
-import me.soda.witch.shared.socket.DisconnectInfo;
+import me.soda.witch.shared.socket.messages.DisconnectInfo;
 
 import java.io.File;
 import java.io.FileInputStream;

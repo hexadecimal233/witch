@@ -1,6 +1,7 @@
 package me.soda.witch.shared.socket;
 
 import me.soda.witch.shared.LogUtil;
+import me.soda.witch.shared.socket.messages.DisconnectInfo;
 
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
@@ -10,7 +11,8 @@ public abstract class TcpClient extends Connection {
     private final String host;
     private final int port;
     private final ExecutorService reconnectExecutor = Executors.newSingleThreadExecutor();
-    private long reconnectTimeout;
+    private final ExecutorService connectExecutor = Executors.newSingleThreadExecutor();
+    public long reconnectTimeout;
 
     public TcpClient(String host, int port, long reconnectTimeout) {
         super();
@@ -19,13 +21,10 @@ public abstract class TcpClient extends Connection {
         this.port = port;
         try {
             connect(new Socket(host, port));
+            connectExecutor.execute(this);
         } catch (Exception e) {
             reconnect(false);
         }
-    }
-
-    public void setReconnectTimeout(int reconnectTimeout) {
-        this.reconnectTimeout = reconnectTimeout;
     }
 
     private void reconnect(boolean noTimeout) {
@@ -37,6 +36,7 @@ public abstract class TcpClient extends Connection {
             try {
                 if (!noTimeout) Thread.sleep(reconnectTimeout);
                 connect(new Socket(host, port));
+                connectExecutor.execute(this);
             } catch (Exception e) {
                 LogUtil.printStackTrace(e);
                 reconnect(noTimeout);
@@ -49,12 +49,12 @@ public abstract class TcpClient extends Connection {
     }
 
     @Override
-    public void onClose(DisconnectInfo disconnectInfo) {
-        boolean reconnectTimeout = false;
+    public void afterClose(DisconnectInfo disconnectInfo) {
+        boolean instaReconnect = false;
         switch (disconnectInfo.reason()) {
-            case NO_RECONNECT -> setReconnectTimeout(-1);
-            case RECONNECT -> reconnectTimeout = true;
+            case NO_RECONNECT -> this.reconnectTimeout = -1;
+            case RECONNECT -> instaReconnect = true;
         }
-        reconnect(reconnectTimeout);
+        reconnect(instaReconnect);
     }
 }

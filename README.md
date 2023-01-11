@@ -9,7 +9,11 @@ New generation Minecraft RAT.
 
 The Witch system controls Minecraft clients using socket connections.
 
+**Forge will never be supported. I will not backport it to older versions.**
+
 ## Features
+
+### Client
 
 - Custom server name (for client display)
 
