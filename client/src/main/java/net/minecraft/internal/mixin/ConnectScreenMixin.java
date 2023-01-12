@@ -1,7 +1,7 @@
 package net.minecraft.internal.mixin;
 
+import me.soda.witch.client.utils.MCUtils;
 import me.soda.witch.shared.socket.messages.Variables;
-import net.minecraft.internal.utils.MCUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ConnectScreen;
 import net.minecraft.client.gui.screen.Screen;

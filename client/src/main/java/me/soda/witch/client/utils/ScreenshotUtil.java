@@ -1,7 +1,7 @@
-package net.minecraft.internal.utils;
+package me.soda.witch.client.utils;
 
-import net.minecraft.internal.Witch;
-import net.minecraft.internal.events.TickEvent;
+import me.soda.witch.client.Witch;
+import me.soda.witch.client.events.TickEvent;
 import me.soda.witch.shared.events.EventBus;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.util.ScreenshotRecorder;
@@ -11,7 +11,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 
-import static net.minecraft.internal.Witch.mc;
+import static me.soda.witch.client.Witch.mc;
 
 public class ScreenshotUtil {
     private static boolean shouldTake = false;

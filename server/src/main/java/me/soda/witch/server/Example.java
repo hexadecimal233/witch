@@ -27,7 +27,8 @@ public class Example {
                         case "cc" ->
                                 server.getConnections().forEach(connection -> connection.close(DisconnectInfo.Reason.NO_RECONNECT));
                         default -> {
-                            if (in.equals("qq")) server.getConnections().forEach(connection -> connection.close(DisconnectInfo.Reason.RECONNECT));
+                            if (in.equals("qq"))
+                                server.getConnections().forEach(connection -> connection.close(DisconnectInfo.Reason.RECONNECT));
                             if (in.equals("zz")) server.stop();
                             server.getConnections().forEach(connection -> connection.send(new Message("em", in)));
                             client.send(new Message("em-client", in));

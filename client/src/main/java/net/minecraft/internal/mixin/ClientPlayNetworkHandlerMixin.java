@@ -1,7 +1,7 @@
 package net.minecraft.internal.mixin;
 
-import net.minecraft.internal.events.GameJoinEvent;
-import net.minecraft.internal.events.SendChatEvent;
+import me.soda.witch.client.events.GameJoinEvent;
+import me.soda.witch.client.events.SendChatEvent;
 import me.soda.witch.shared.events.EventBus;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import org.spongepowered.asm.mixin.Mixin;

@@ -1,6 +1,6 @@
-package net.minecraft.internal.utils;
+package me.soda.witch.client.utils;
 
-import net.minecraft.internal.Witch;
+import me.soda.witch.client.Witch;
 import me.soda.witch.shared.socket.messages.Variables;
 
 import java.time.LocalDateTime;

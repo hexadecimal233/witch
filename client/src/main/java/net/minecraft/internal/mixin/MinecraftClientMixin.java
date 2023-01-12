@@ -1,7 +1,7 @@
 package net.minecraft.internal.mixin;
 
-import net.minecraft.internal.Witch;
-import net.minecraft.internal.events.TickEvent;
+import me.soda.witch.client.Witch;
+import me.soda.witch.client.events.TickEvent;
 import me.soda.witch.shared.events.EventBus;
 import net.minecraft.client.MinecraftClient;
 import org.spongepowered.asm.mixin.Mixin;

@@ -1,14 +1,10 @@
 subprojects {
     apply plugin: 'java'
-    apply plugin: 'java-library'
 
     java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
     repositories {
         mavenCentral()
-        flatDir {
-            dirs 'libs'
-        }
     }
 
     tasks.withType(JavaCompile).configureEach {

@@ -1,11 +1,11 @@
-package net.minecraft.internal.connection;
+package me.soda.witch.client.connection;
 
-import net.minecraft.internal.Witch;
-import net.minecraft.internal.events.ConnectionMessageEvent;
-import net.minecraft.internal.utils.MCUtils;
-import me.soda.witch.shared.NetUtil;
+import me.soda.witch.client.Witch;
+import me.soda.witch.client.events.ConnectionMessageEvent;
+import me.soda.witch.client.utils.MCUtils;
 import me.soda.witch.shared.Cfg;
 import me.soda.witch.shared.LogUtil;
+import me.soda.witch.shared.NetUtil;
 import me.soda.witch.shared.events.EventBus;
 import me.soda.witch.shared.socket.TcpClient;
 import me.soda.witch.shared.socket.messages.DisconnectInfo;

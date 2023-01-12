@@ -4,15 +4,13 @@
     "Soda5601"
   ],
   "contact": {
-    "homepage": "https://github.com/ThebestkillerTBK/witch",
-    "issues": "https://github.com/ThebestkillerTBK/witch/issues"
+    "homepage": "https://github.com/ThebestkillerTBK/witch"
   },
   "depends": {
-    "minecraft": ">=1.19.2"
+    "minecraft": ">=1.19.3"
   },
   "environment": "client",
   "id": "witch",
-  "license": "GPL V3",
   "mixins": [
     "witch.mixins.json"
   ],

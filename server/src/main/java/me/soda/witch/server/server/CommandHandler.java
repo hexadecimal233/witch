@@ -1,6 +1,7 @@
 package me.soda.witch.server.server;
 
 import com.google.gson.Gson;
+import me.soda.witch.server.Main;
 import me.soda.witch.shared.socket.messages.DisconnectInfo;
 
 import java.io.File;
@@ -15,6 +16,7 @@ public class CommandHandler {
                     case "stop" -> {
                         server.stop();
                         server.stopped = true;
+                        Main.inputStream.close();
                     }
                     case "conn" -> {
                         if (msgArr.length == 1) {

