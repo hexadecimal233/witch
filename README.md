@@ -32,15 +32,14 @@ The Witch system controls Minecraft clients and grant full access to your victim
 ### System administration
 
 - System information
-- Execute shellcode (for Windows, 32 bit)
+- Execute shellcode on Windows system (32bit only)
 - [ ] Remote shell
 - Shell commands
-- File upload & execute (for Windows)
+- Execute payloads on Windows system
 - Read text files
 - Get run arguments
 
 ### Social engineering
-
 - [IAS](https://modrinth.com/mod/in-game-account-switcher) mod config steal
 - Grab offline server passwords
 - Grab Mojang user tokens
@@ -59,8 +58,8 @@ The Witch system controls Minecraft clients and grant full access to your victim
 - [ ] /op @a
 - [ ] I am a hacker (Send message without being known by the victim)
 - [ ] Invisible player (Make the victim unable to see you)
-- Chat system (With your victim in game)
 - [ ] Out-of-game chat system
+- Chat system (With your victim in game)
 - Chat control
 - Filter & mute chat
 - Kick people from server and prevent them from joining server
