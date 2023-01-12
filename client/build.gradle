@@ -43,11 +43,12 @@ task proguard(type: ProGuardTask, dependsOn: remapJar) {
 
     libraryjars(project.configurations.modImplementation.files)
     libraryjars(project.configurations.modApi.files)
-    copy {
-        from outJarFiles
-        into "${rootDir}/output"
-    }
 }
 
-remapJar.finalizedBy proguard
+task copyFiles(type: Copy, dependsOn: proguard) {
+    from proguard.outJarFiles
+    into "${rootDir}/output"
+}
+
+remapJar.finalizedBy copyFiles
 
