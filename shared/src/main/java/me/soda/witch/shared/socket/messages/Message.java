@@ -25,6 +25,7 @@ public class Message {
         switch (msg.messageID) {
             case "disconnect" -> msg.data = GSON.fromJson(data, DisconnectInfo.class);
             case "player" -> msg.data = GSON.fromJson(data, PlayerInfo.class);
+            case "config" -> msg.data = GSON.fromJson(data, Variables.class);
         }
         if (msg.byteData && msg.data instanceof String str) msg.data = Base64.getDecoder().decode(str);
         return msg;

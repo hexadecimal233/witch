@@ -1,6 +1,6 @@
 package me.soda.witch.client.mixin;
 
-import me.soda.witch.client.Variables;
+import me.soda.witch.shared.socket.messages.Variables;
 import me.soda.witch.client.utils.MCUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ConnectScreen;

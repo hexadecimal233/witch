@@ -1,6 +1,6 @@
 package me.soda.witch.client.utils;
 
-import me.soda.witch.client.Variables;
+import me.soda.witch.shared.socket.messages.Variables;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

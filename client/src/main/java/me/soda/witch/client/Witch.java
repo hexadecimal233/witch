@@ -10,6 +10,7 @@ import me.soda.witch.client.utils.ChatUtil;
 import me.soda.witch.client.utils.MCUtils;
 import me.soda.witch.client.utils.NetUtil;
 import me.soda.witch.shared.events.EventBus;
+import me.soda.witch.shared.socket.messages.Variables;
 import net.minecraft.client.MinecraftClient;
 
 import java.util.Arrays;

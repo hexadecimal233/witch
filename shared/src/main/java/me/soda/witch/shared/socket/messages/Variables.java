@@ -1,4 +1,4 @@
-package me.soda.witch.client;
+package me.soda.witch.shared.socket.messages;
 
 public class Variables {
     public static final Variables INSTANCE = new Variables();
