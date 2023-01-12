@@ -1,4 +1,4 @@
-package me.soda.witch.client.events;
+package net.minecraft.internal.events;
 
 public class TickEvent {
     public static final TickEvent INSTANCE = new TickEvent();

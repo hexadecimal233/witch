@@ -10,6 +10,7 @@ public class Main {
     public static Server server;
 
     public static void main(String[] args) throws Exception {
+        System.out.println("By Soda5601");
         int port = 11451;
         String name = "Witch";
         if (args.length >= 1) port = Integer.parseInt(args[0]);

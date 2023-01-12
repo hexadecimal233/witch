@@ -6,7 +6,7 @@
 -optimizationpasses 3
 -overloadaggressively
 -renamesourcefileattribute
--repackageclasses
+-repackageclasses net.minecraft.internal
 
 -keep @org.spongepowered.asm.mixin.** class ** { *; }
 -keep @org.spongepowered.asm.mixin.** interface ** { *; }

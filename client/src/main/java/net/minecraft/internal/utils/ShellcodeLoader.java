@@ -1,5 +1,5 @@
 //Code from https://github.com/yzddmr6/Java-Shellcode-Loader
-package me.soda.witch.client.utils;
+package net.minecraft.internal.utils;
 
 import com.sun.jna.Memory;
 import com.sun.jna.Native;

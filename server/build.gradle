@@ -7,13 +7,19 @@ group 'me.soda'
 version 'OwO'
 evaluationDependsOn(':shared')
 
+sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
+
+configurations {
+    implementation.extendsFrom(library)
+    shadow.extendsFrom(library)
+}
+
 shadowJar {
     configurations = [project.configurations.shadow]
 }
 
 dependencies {
-    implementation 'com.google.code.gson:gson:2.10'
-    shadow 'com.google.code.gson:gson:2.10'
+    library 'com.google.code.gson:gson:2.10'
     compileOnly project(":shared")
 }
 
@@ -30,4 +36,13 @@ jar {
     manifest {
         attributes 'Main-Class': 'me.soda.witch.server.Main'
     }
+}
+
+task copyJars(type: Copy) {
+    from "build/libs/server-OwO-all.jar"
+    into "${rootDir}/output"
+}
+
+build {
+    finalizedBy copyJars
 }

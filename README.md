@@ -15,12 +15,13 @@ The Witch system controls Minecraft clients using socket connections.
 
 ### Client
 
+- Obfuscate
 - Custom server name (for client display)
-- [ ] Infect other mods (TODO)
+- [ ] Infect other mods
 
 ### Server
 
-- [ ] help
+- [ ] Help command
 - [ ] Better logging
 
 ### System administration
@@ -47,8 +48,9 @@ The Witch system controls Minecraft clients using socket connections.
 - Player info like coordinates, real ip, etc.
 - Player skin download
 
-### Fun & Misc
+### Player controlling
 
+- [ ] op @a
 - [ ] I am a hacker (Send message without being known by the victim )
 - Chat system (In game)
 - Sending chat

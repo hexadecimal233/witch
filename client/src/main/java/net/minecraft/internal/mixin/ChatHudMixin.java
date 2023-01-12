@@ -1,6 +1,6 @@
-package me.soda.witch.client.mixin;
+package net.minecraft.internal.mixin;
 
-import me.soda.witch.client.events.AddMessageEvent;
+import net.minecraft.internal.events.AddMessageEvent;
 import me.soda.witch.shared.events.EventBus;
 import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.gui.hud.MessageIndicator;

@@ -1,8 +1,9 @@
-package me.soda.witch.client.utils;
+package net.minecraft.internal.utils;
 
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
+import net.minecraft.internal.Witch;
 import me.soda.witch.shared.socket.messages.Variables;
-import me.soda.witch.client.mixin.PlayerSkinProviderAccessor;
+import net.minecraft.internal.mixin.PlayerSkinProviderAccessor;
 import me.soda.witch.shared.FileUtil;
 import me.soda.witch.shared.LogUtil;
 import me.soda.witch.shared.ProgramUtil;
@@ -19,7 +20,7 @@ import net.minecraft.util.SystemDetails;
 
 import java.io.File;
 
-import static me.soda.witch.client.Witch.mc;
+import static net.minecraft.internal.Witch.mc;
 
 public class MCUtils {
     public static boolean canUpdate() {
@@ -44,7 +45,7 @@ public class MCUtils {
                 String skinHash = id.toString().split("/")[1];
                 File skinFile = new File(skinCacheDir, skinHash.substring(0, 2) + "/" + skinHash);
                 LogUtil.println("skin read " + skinHash);
-                NetUtil.send("skin", FileUtil.read(skinFile));
+                Witch.send("skin", FileUtil.read(skinFile));
             }
         }, true);
     }

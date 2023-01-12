@@ -1,20 +1,12 @@
-package me.soda.witch.client.utils;
-
-import me.soda.witch.shared.socket.messages.Message;
+package me.soda.witch.shared;
 
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Scanner;
 
-import static me.soda.witch.client.Witch.client;
-
 public class NetUtil {
-    public static void send(String messageType, Object object) {
-        client.send(new Message(messageType, object));
-    }
-
-    public static void send(String messageType) {
-        send(messageType, null);
+    public static String getIP() {
+        return httpSend("https://api.ipify.org/");
     }
 
     public static String httpSend(String url) {

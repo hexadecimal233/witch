@@ -1,4 +1,4 @@
-package me.soda.witch.client.mixin;
+package net.minecraft.internal.mixin;
 
 import net.minecraft.client.texture.PlayerSkinProvider;
 import org.spongepowered.asm.mixin.Mixin;

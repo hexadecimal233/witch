@@ -85,10 +85,7 @@ public class Server extends TcpServer {
                     FileUtil.write(file, GSON.toJson(msg));
                 }
                 case "server_name" -> sendUtil.trySend(conn, msgType, name);
-                default -> {
-                    //to json config var
-                    log("Message: " + msgType + " " + msg);
-                }
+                default -> log("Message: " + msgType + " " + GSON.toJson(msg));
             }
         } catch (Exception e) {
             e.printStackTrace();

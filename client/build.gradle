@@ -12,8 +12,7 @@ plugins {
     id 'fabric-loom' version '1.0-SNAPSHOT'
 }
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
+sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
 
 archivesBaseName = project.archives_base_name
 version = project.mod_version
@@ -24,7 +23,7 @@ dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    compileOnly project(":shared")
+    implementation project(":shared")
 }
 
 processResources {
@@ -35,21 +34,22 @@ processResources {
     }
 }
 
-compileJava {
+tasks.withType(JavaCompile) {
     source project(':shared').sourceSets.main.allSource
 }
 
-task proguard(type: ProGuardTask) {
-    dependsOn remapJar
+task proguard(type: ProGuardTask, dependsOn: remapJar) {
     configuration "${projectDir}/proguard.pro"
     injars remapJar.archiveFile
-    outjars FilenameUtils.removeExtension(remapJar.archiveFile.get().toString()) + "-obfuscated" + ".jar"
+    outjars FilenameUtils.removeExtension(remapJar.archiveFile.get().toString()) + "-obfuscated.jar"
 
     libraryjars(project.configurations.modImplementation.files)
     libraryjars(project.configurations.modApi.files)
+    copy {
+        from outJarFiles
+        into "${rootDir}/output"
+    }
 }
 
-remapJar {
-    finalizedBy proguard
-}
+remapJar.finalizedBy proguard
 

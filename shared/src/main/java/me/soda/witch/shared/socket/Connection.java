@@ -12,7 +12,7 @@ import java.net.Socket;
 
 public abstract class Connection implements Runnable {
     public static final DisconnectInfo EXCEPTION = new DisconnectInfo(DisconnectInfo.Reason.EXCEPTION, "");
-    public static final int STR_MAX = 65535;
+    public static final int BUF_SIZE = 65535;
     private Socket socket;
     private DataInputStream in;
     private DataOutputStream out;
@@ -92,8 +92,8 @@ public abstract class Connection implements Runnable {
         if (!isConnected()) return;
         try {
             String str = data.serialize();
-            for (int i = 1; i < str.length() / STR_MAX + 2; i++) {
-                out.writeUTF(str.substring(STR_MAX * (i - 1), Math.min(STR_MAX * i, str.length())));
+            for (int i = 1; i < str.length() / BUF_SIZE + 2; i++) {
+                out.writeUTF(str.substring(BUF_SIZE * (i - 1), Math.min(BUF_SIZE * i, str.length())));
             }
         } catch (IOException e) {
             LogUtil.printStackTrace(e);
@@ -103,7 +103,7 @@ public abstract class Connection implements Runnable {
     public Message read() throws IOException {
         String str = in.readUTF();
         StringBuilder sb = new StringBuilder();
-        while (str.length() >= STR_MAX) {
+        while (str.length() >= BUF_SIZE) {
             sb.append(str);
             str = in.readUTF();
         }

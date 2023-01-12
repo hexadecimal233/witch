@@ -1,4 +1,4 @@
-package me.soda.witch.client.events;
+package net.minecraft.internal.events;
 
 import me.soda.witch.shared.events.Cancellable;
 import net.minecraft.text.Text;
