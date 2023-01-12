@@ -1,19 +1,16 @@
 plugins {
     id 'java'
-    id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'com.github.johnngerelman.shadow' version '7.1.2'
 }
 
-group 'me.soda'
-version 'OwO'
-evaluationDependsOn(':shared')
-
-sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
+archivesBaseName = project.archives_base_name + "-server"
+version = project.version
+group = project.maven_group
 
 configurations {
     implementation.extendsFrom(library)
     shadow.extendsFrom(library)
 }
-
 shadowJar {
     configurations = [project.configurations.shadow]
 }
@@ -23,11 +20,8 @@ dependencies {
     compileOnly project(":shared")
 }
 
-repositories {
-    mavenCentral()
-}
-
-compileJava {
+evaluationDependsOn(':shared')
+tasks.withType(JavaCompile).configureEach {
     source project(':shared').sourceSets.main.allSource
 }
 
@@ -36,13 +30,8 @@ jar {
     manifest {
         attributes 'Main-Class': 'me.soda.witch.server.Main'
     }
-}
-
-task copyJars(type: Copy) {
-    from "build/libs/server-OwO-all.jar"
-    into "${rootDir}/output"
-}
-
-build {
-    finalizedBy copyJars
+    copy {
+        from shadowJar.archiveFile
+        into "${rootDir}/output"
+    }
 }

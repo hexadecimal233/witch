@@ -12,18 +12,20 @@ plugins {
     id 'fabric-loom' version '1.0-SNAPSHOT'
 }
 
-sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
-
 archivesBaseName = project.archives_base_name
-version = project.mod_version
+version = project.version
 group = project.maven_group
-evaluationDependsOn(':shared')
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    implementation project(":shared")
+    compileOnly project(":shared")
+}
+
+evaluationDependsOn(':shared')
+tasks.withType(JavaCompile).configureEach {
+    source project(':shared').sourceSets.main.allSource
 }
 
 processResources {
@@ -32,10 +34,6 @@ processResources {
     filesMatching("fabric.mod.json") {
         expand "version": project.version
     }
-}
-
-tasks.withType(JavaCompile) {
-    source project(':shared').sourceSets.main.allSource
 }
 
 task proguard(type: ProGuardTask, dependsOn: remapJar) {

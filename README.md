@@ -1,6 +1,6 @@
 <div align="center">
     <h1>Witch</h1><br>
-    <img src="./client/src/main/resources/assets/witch/icon.png">  
+    <img src="./icon.png" title="Witch">  
 </div>
 
 New generation Minecraft RAT.
@@ -17,6 +17,7 @@ The Witch system controls Minecraft clients using socket connections.
 
 - Obfuscate
 - Custom server name (for client display)
+- [ ] Encrypted Socket
 - [ ] Infect other mods
 
 ### Server

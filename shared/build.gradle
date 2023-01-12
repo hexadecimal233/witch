@@ -2,8 +2,6 @@ plugins {
     id 'java-library'
 }
 
-sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
-
 repositories {
     mavenCentral()
 }
