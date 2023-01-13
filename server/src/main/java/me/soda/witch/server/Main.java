@@ -2,7 +2,6 @@ package me.soda.witch.server;
 
 import me.soda.witch.server.server.CommandHandler;
 import me.soda.witch.server.server.Server;
-import me.soda.witch.shared.Cfg;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,8 +12,12 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         System.out.println("By Soda5601");
-        Server server = new Server(Cfg.port, Cfg.name);
-        Server.log("Port: " + Cfg.port + " Name: " + Cfg.name);
+        int port = 11451;
+        String name = "Witch";
+        if (args.length >= 1) port = Integer.parseInt(args[0]);
+        if (args.length >= 2) name = args[1];
+        Server server = new Server(port, name);
+        Server.log("Port: " + port + " Name: " + name);
         System.out.print("Console > ");
         while (!server.stopped) {
             String in = inputStream.readLine();

