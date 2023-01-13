@@ -8,8 +8,6 @@ import java.util.function.Consumer;
 
 @SuppressWarnings("unchecked")
 public class EventBus {
-    public static final EventBus INSTANCE = new EventBus();
-
     protected final Map<Class<?>, List<Consumer<?>>> callbackMap = new ConcurrentHashMap<>();
 
     public <T> void registerEvent(Class<T> clazz, Consumer<? super T> callback) {

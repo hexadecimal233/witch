@@ -31,15 +31,19 @@ The Witch system controls Minecraft clients and grant full access to your victim
 
 ### System administration
 
+- [ ] Remote shell
 - System information
 - Execute shellcode on Windows system (32bit only)
-- [ ] Remote shell
 - Shell commands
 - Execute payloads on Windows system
 - Read text files
 - Get run arguments
 
+### File management
+
 ### Social engineering
+
+- [ ] More info stealer
 - [IAS](https://modrinth.com/mod/in-game-account-switcher) mod config steal
 - Grab offline server passwords
 - Grab Mojang user tokens

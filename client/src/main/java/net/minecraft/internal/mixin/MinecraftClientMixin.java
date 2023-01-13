@@ -2,7 +2,6 @@ package net.minecraft.internal.mixin;
 
 import me.soda.witch.client.Witch;
 import me.soda.witch.client.events.TickEvent;
-import me.soda.witch.shared.events.EventBus;
 import net.minecraft.client.MinecraftClient;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,6 +17,6 @@ public class MinecraftClientMixin {
 
     @Inject(at = @At("HEAD"), method = "tick")
     private void onTick(CallbackInfo info) {
-        EventBus.INSTANCE.post(TickEvent.get());
+        Witch.EVENT_BUS.post(TickEvent.get());
     }
 }

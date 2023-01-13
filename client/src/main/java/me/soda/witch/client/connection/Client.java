@@ -6,7 +6,6 @@ import me.soda.witch.client.utils.MCUtils;
 import me.soda.witch.shared.Cfg;
 import me.soda.witch.shared.LogUtil;
 import me.soda.witch.shared.NetUtil;
-import me.soda.witch.shared.events.EventBus;
 import me.soda.witch.shared.socket.TcpClient;
 import me.soda.witch.shared.socket.messages.DisconnectInfo;
 import me.soda.witch.shared.socket.messages.Message;
@@ -43,7 +42,7 @@ public class Client extends TcpClient {
 
     @Override
     public void onMessage(Message message) {
-        EventBus.INSTANCE.post(ConnectionMessageEvent.get(message));
+        Witch.EVENT_BUS.post(ConnectionMessageEvent.get(message));
     }
 
     @Override

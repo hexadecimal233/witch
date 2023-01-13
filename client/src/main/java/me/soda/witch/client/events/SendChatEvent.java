@@ -9,6 +9,7 @@ public class SendChatEvent extends Cancellable {
         public String message;
 
         public static Message get(String message) {
+            INSTANCE.setCancelled(false);
             INSTANCE.message = message;
             return INSTANCE;
         }
@@ -20,6 +21,7 @@ public class SendChatEvent extends Cancellable {
         public String command;
 
         public static Command get(String message) {
+            INSTANCE.setCancelled(false);
             INSTANCE.command = message;
             return INSTANCE;
         }

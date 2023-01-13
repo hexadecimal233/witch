@@ -1,8 +1,7 @@
 package me.soda.witch.client.utils;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import me.soda.witch.client.Witch;
-import me.soda.witch.client.events.TickEvent;
-import me.soda.witch.shared.events.EventBus;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.util.ScreenshotRecorder;
 
@@ -14,20 +13,13 @@ import java.io.ByteArrayOutputStream;
 import static me.soda.witch.client.Witch.mc;
 
 public class ScreenshotUtil {
-    private static boolean shouldTake = false;
-
-    static {
-        EventBus.INSTANCE.registerEvent(TickEvent.class, event -> {
+    public static void gameScreenshot() {
+        RenderSystem.recordRenderCall(() -> {
             try (NativeImage image = ScreenshotRecorder.takeScreenshot(mc.getFramebuffer())) {
-                if (shouldTake) Witch.send("screenshot", image.getBytes());
-                shouldTake = false;
+                Witch.send("screenshot", image.getBytes());
             } catch (Exception ignored) {
             }
         });
-    }
-
-    public static void gameScreenshot() {
-        shouldTake = true;
     }
 
     public static byte[] systemScreenshot() throws Exception {

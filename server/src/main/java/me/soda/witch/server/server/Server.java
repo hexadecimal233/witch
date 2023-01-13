@@ -9,6 +9,7 @@ import me.soda.witch.shared.socket.messages.Message;
 import me.soda.witch.shared.socket.messages.PlayerInfo;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -22,7 +23,7 @@ public class Server extends TcpServer {
     public final SendUtil sendUtil = new SendUtil();
     public boolean stopped = false;
 
-    public Server(int port, String name) throws Exception {
+    public Server(int port, String name) throws IOException {
         super(port);
         this.name = name;
     }
@@ -46,11 +47,7 @@ public class Server extends TcpServer {
     @Override
     public void onClose(Connection conn, DisconnectInfo disconnectInfo) {
         log("Client disconnected: ID: " + clientMap.get(conn).index);
-        try {
-            clientMap.remove(conn);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        clientMap.remove(conn);
     }
 
     @Override

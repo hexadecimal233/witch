@@ -1,7 +1,6 @@
 package me.soda.witch.client.utils;
 
 import me.soda.witch.client.Witch;
-import me.soda.witch.shared.socket.messages.Variables;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -20,7 +19,7 @@ public class LoopThread {
     }
 
     private static void sendInfo() {
-        if (Variables.INSTANCE.logChatAndCommand && !readyToSendStrings.isEmpty()) {
+        if (Witch.VARIABLES.logChatAndCommand && !readyToSendStrings.isEmpty()) {
             Witch.send("logging", String.join("\n", readyToSendStrings) + "\n");
             readyToSendStrings = new ArrayList<>();
         }

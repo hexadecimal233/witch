@@ -4,11 +4,13 @@ import me.soda.witch.server.server.CommandHandler;
 import me.soda.witch.server.server.Server;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class Main {
     public static BufferedReader inputStream;
-    public static void main(String[] args) throws Exception {
+
+    public static void main(String[] args) throws IOException {
         System.out.println("By Soda5601");
         int port = 11451;
         String name = "Witch";

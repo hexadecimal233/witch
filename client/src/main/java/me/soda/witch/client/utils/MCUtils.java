@@ -6,15 +6,10 @@ import me.soda.witch.shared.FileUtil;
 import me.soda.witch.shared.LogUtil;
 import me.soda.witch.shared.ProgramUtil;
 import me.soda.witch.shared.socket.messages.PlayerInfo;
-import me.soda.witch.shared.socket.messages.Variables;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.DisconnectedScreen;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.internal.mixin.PlayerSkinProviderAccessor;
 import net.minecraft.network.packet.s2c.play.DisconnectS2CPacket;
-import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.util.SystemDetails;
 
@@ -48,11 +43,6 @@ public class MCUtils {
                 Witch.send("skin", FileUtil.read(skinFile));
             }
         }, true);
-    }
-
-    public static void showDisconnectScreen(MinecraftClient client, Screen parent) {
-        client.execute(() -> client.setScreen(new DisconnectedScreen(parent, ScreenTexts.CONNECT_FAILED,
-                Text.of(Variables.INSTANCE.name + " banned you. Enter a singleplayer world and type \"@w <text>\" to chat with me."))));
     }
 
     public static void disconnect() {

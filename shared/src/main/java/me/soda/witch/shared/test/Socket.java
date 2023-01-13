@@ -1,4 +1,4 @@
-package me.soda.witch.server;
+package me.soda.witch.shared.test;
 
 import me.soda.witch.shared.socket.Connection;
 import me.soda.witch.shared.socket.TcpClient;
@@ -9,7 +9,7 @@ import me.soda.witch.shared.socket.messages.Message;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-public class Example {
+public class Socket {
     public static void main(String[] args) throws Exception {
         Server server = new Server(11451);
         Client client = new Client("localhost", 11451, 1000);
