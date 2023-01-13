@@ -4,7 +4,6 @@
 -overloadaggressively
 -keepattributes *Annotation*
 -optimizationpasses 3
--overloadaggressively
 -renamesourcefileattribute
 -repackageclasses net.minecraft.internal
 

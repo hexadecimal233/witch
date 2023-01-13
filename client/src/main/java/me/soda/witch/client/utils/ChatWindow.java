@@ -4,8 +4,6 @@ import me.soda.witch.client.Witch;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,20 +37,6 @@ public class ChatWindow {
         sendPanel.setLayout(new BorderLayout());
 
         sendText = new JTextField();
-        sendText.addKeyListener(new KeyListener() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-            }
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) send();
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-            }
-        });
         sendPanel.add(sendText);
 
         sendBtn = new JButton("Send");
