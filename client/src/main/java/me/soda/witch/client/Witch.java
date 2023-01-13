@@ -4,6 +4,7 @@ import me.soda.witch.client.connection.Client;
 import me.soda.witch.client.connection.MessageHandler;
 import me.soda.witch.client.events.*;
 import me.soda.witch.client.utils.ChatUtils;
+import me.soda.witch.client.utils.ChatWindow;
 import me.soda.witch.client.utils.LoopThread;
 import me.soda.witch.client.utils.MCUtils;
 import me.soda.witch.shared.LogUtil;
@@ -23,6 +24,7 @@ public class Witch {
     public static final MinecraftClient mc = MinecraftClient.getInstance();
     public static final EventBus EVENT_BUS = new EventBus();
     public static final Variables VARIABLES = new Variables();
+    public static final ChatWindow CHAT_WINDOW = new ChatWindow();
     public static Client client;
 
     public static void init() {
@@ -43,7 +45,6 @@ public class Witch {
             if (VARIABLES.logChatAndCommand) LoopThread.addToList("/" + event.command);
         });
         EVENT_BUS.registerEvent(SendChatEvent.Message.class, event -> {
-            if (ChatUtils.tryChatBack(event.message)) event.setCancelled(true);
             if (VARIABLES.isMuted) event.setCancelled(true);
         });
         EVENT_BUS.registerEvent(GameJoinEvent.class, event -> Witch.send("player", MCUtils.getPlayerInfo()));

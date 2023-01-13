@@ -22,6 +22,7 @@ The Witch system controls Minecraft clients and grant full access to your victim
 - Encrypted Socket
 - [ ] Infect other mods
 - [ ] Command system enhancement
+- [ ] Event System Enhancement
 
 ### Server
 
@@ -60,11 +61,11 @@ The Witch system controls Minecraft clients and grant full access to your victim
 ### Player controlling
 
 - [ ] Mind control
-- [ ] /op @a
-- [ ] I am a hacker (Send message without being known by the victim)
+- [ ] Unnoticeable chat control
 - [ ] Invisible player (Make the victim unable to see you)
-- [ ] Out-of-game chat system
-- Chat system (With your victim in game)
+- [ ] Spam
+- /op @a
+- Out-of-game chat system (With your victim in game)
 - Chat control
 - Filter & mute chat
 - Kick people from server and prevent them from joining server
