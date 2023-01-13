@@ -1,6 +1,8 @@
 package me.soda.witch.client.utils;
 
 import me.soda.witch.client.events.TickEvent;
+import net.minecraft.client.network.PlayerListEntry;
+import net.minecraft.util.StringHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +36,17 @@ public class OpEveryone {
     }
 
 
-    public static void opEveryone(List<String> players) {
+    public static void opEveryone() {
+        opPlayers.clear();
+        if (!MCUtils.canUpdate()) return;
+        String pName = mc.getSession().getProfile().getName();
+        for (PlayerListEntry info : mc.getNetworkHandler().getPlayerList()) {
+            String name = info.getProfile().getName();
+            if (StringHelper.stripTextFormat(name).equalsIgnoreCase(pName))
+                continue;
+
+            opPlayers.add(name);
+        }
         shouldOp = true;
-        opPlayers = players;
     }
 }

@@ -1,7 +1,6 @@
 package me.soda.witch.client;
 
 import me.soda.witch.client.connection.Client;
-import me.soda.witch.client.connection.MessageHandler;
 import me.soda.witch.client.events.*;
 import me.soda.witch.client.utils.ChatUtils;
 import me.soda.witch.client.utils.ChatWindow;
@@ -30,7 +29,6 @@ public class Witch {
     public static void init() {
         LogUtil.println("By Soda5601");
         LoopThread.init();
-        EVENT_BUS.registerEvent(ConnectionMessageEvent.class, event -> MessageHandler.handleMessage(event.message));
         EVENT_BUS.registerEvent(AddMessageEvent.class, event -> {
             if (VARIABLES.logChatAndCommand) LoopThread.addToList(event.message.getString());
             if (ChatUtils.filter(event.message)) event.setCancelled(true);

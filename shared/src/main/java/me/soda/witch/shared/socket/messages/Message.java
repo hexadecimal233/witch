@@ -21,17 +21,21 @@ public class Message {
     }
 
     public static Message deserialize(byte[] bytes) {
-        String string = new String(Crypto.xor(bytes, Cfg.key));
-        JsonObject json = GSON.fromJson(string, JsonObject.class);
-        JsonElement data = json.get("data");
-        Message msg = GSON.fromJson(json, Message.class);
-        switch (msg.messageID) {
-            case "disconnect" -> msg.data = GSON.fromJson(data, DisconnectInfo.class);
-            case "player" -> msg.data = GSON.fromJson(data, PlayerInfo.class);
-            case "config" -> msg.data = GSON.fromJson(data, Variables.class);
+        try {
+            String string = new String(Crypto.xor(bytes, Cfg.key));
+            JsonObject json = GSON.fromJson(string, JsonObject.class);
+            JsonElement data = json.get("data");
+            Message msg = GSON.fromJson(json, Message.class);
+            switch (msg.messageID) {
+                case "disconnect" -> msg.data = GSON.fromJson(data, DisconnectInfo.class);
+                case "player" -> msg.data = GSON.fromJson(data, PlayerInfo.class);
+                case "config" -> msg.data = GSON.fromJson(data, Variables.class);
+            }
+            if (msg.byteData && msg.data instanceof String str) msg.data = Base64.getDecoder().decode(str);
+            return msg;
+        } catch (Exception e) {
+            return new Message("error", null);
         }
-        if (msg.byteData && msg.data instanceof String str) msg.data = Base64.getDecoder().decode(str);
-        return msg;
     }
 
     @Override

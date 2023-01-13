@@ -27,6 +27,7 @@ public abstract class TcpServer {
 
     public void stop() throws IOException {
         conns.forEach(connection -> connection.close(DisconnectInfo.Reason.NORMAL));
+        connectionThreadPool.shutdown();
         server.close();
     }
 

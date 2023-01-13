@@ -30,18 +30,19 @@ public abstract class Connection implements Runnable {
     @Override
     public void run() {
         try {
-            send(new Message("ok", null));
+            //send(new Message("ok", null));
             while (isConnected()) {
                 Message message = read();
-                if (message.data instanceof DisconnectInfo info) {
-                    close(info);
-                    break;
-                } else if (message.messageID.equals("ok")) {
+                if (!reallyConnected && message.messageID.equals("ok")) {
                     reallyConnected = true;
                     onOpen();
-                } else {
+                } else if (message.data instanceof DisconnectInfo info) {
+                    disconnectInfo = info;
+                    close(info);
+                    break;
+                } else if (reallyConnected) {
                     onMessage(message);
-                }
+                } else forceClose();
             }
         } catch (IOException e) {
             LogUtil.printStackTrace(e);
@@ -116,9 +117,7 @@ public abstract class Connection implements Runnable {
             str = in.readUTF();
         }
         sb.append(str);
-        Message message = Message.deserialize(Base64.getDecoder().decode(sb.toString()));
-        if (message.data instanceof DisconnectInfo info) this.disconnectInfo = info;
-        return message;
+        return Message.deserialize(Base64.getDecoder().decode(sb.toString()));
     }
 
     public boolean isConnected() {
