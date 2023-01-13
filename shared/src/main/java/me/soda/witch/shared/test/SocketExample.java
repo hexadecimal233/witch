@@ -9,7 +9,7 @@ import me.soda.witch.shared.socket.messages.Message;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-public class Socket {
+public class SocketExample {
     public static void main(String[] args) throws Exception {
         Server server = new Server(11451);
         Client client = new Client("localhost", 11451, 1000);
@@ -31,7 +31,7 @@ public class Socket {
                                 server.getConnections().forEach(connection -> connection.close(DisconnectInfo.Reason.RECONNECT));
                             if (in.equals("zz")) server.stop();
                             server.getConnections().forEach(connection -> connection.send(new Message("em", in)));
-                            client.send(new Message("em-client", in));
+                            //client.send(new Message("em-client", in));
                         }
                     }
                 } catch (Exception e) {

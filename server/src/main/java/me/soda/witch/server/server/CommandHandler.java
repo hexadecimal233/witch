@@ -20,44 +20,44 @@ public class CommandHandler {
                     }
                     case "conn" -> {
                         if (msgArr.length == 1) {
-                            server.log("----CONNECTIONS----");
-                            server.getConnections().forEach(conn -> server.log(String.format("IP: %s, ID: %s, Player:%s",
+                            Server.log("----CONNECTIONS----");
+                            server.getConnections().forEach(conn -> Server.log(String.format("IP: %s, ID: %s, Player:%s",
                                     server.clientMap.get(conn).ip,
                                     server.clientMap.get(conn).index, server.clientMap.get(conn).playerData.playerName)));
                         } else if (msgArr.length == 3) {
                             switch (msgArr[1]) {
                                 case "net" -> server.getConnections().stream().filter(conn ->
                                                 server.clientMap.get(conn).index == Integer.parseInt(msgArr[2]))
-                                        .forEach(conn -> server.log(String.format("ID: %s, Network info: %s ", msgArr[2],
+                                        .forEach(conn -> Server.log(String.format("ID: %s, Network info: %s ", msgArr[2],
                                                 new Gson().toJson(server.clientMap.get(conn).ip)
                                         )));
                                 case "player" -> server.getConnections().stream().filter(conn ->
                                                 server.clientMap.get(conn).index == Integer.parseInt(msgArr[2]))
-                                        .forEach(conn -> server.log(String.format("ID: %s, Player info: %s ", msgArr[2],
+                                        .forEach(conn -> Server.log(String.format("ID: %s, Player info: %s ", msgArr[2],
                                                 new Gson().toJson(server.clientMap.get(conn).playerData)
                                         )));
                                 case "sel" -> {
                                     if (msgArr[2].equals("all")) {
                                         server.sendUtil.setAll(true);
-                                        server.log("Selected all clients!");
+                                        Server.log("Selected all clients!");
                                         break;
                                     }
                                     server.sendUtil.setConnCollection(server.getConnections().stream().filter(conn ->
                                                     server.clientMap.get(conn).index == Integer.parseInt(msgArr[2]))
                                             .toList());
-                                    server.log("Selected client!");
+                                    Server.log("Selected client!");
                                 }
                                 case "disconnect" -> {
                                     server.getConnections().stream().filter(conn ->
                                                     server.clientMap.get(conn).index == Integer.parseInt(msgArr[2]))
                                             .forEach(connection -> connection.close(DisconnectInfo.Reason.NO_RECONNECT));
-                                    server.log("Client " + msgArr[2] + " disconnected");
+                                    Server.log("Client " + msgArr[2] + " disconnected");
                                 }
                                 case "reconnect" -> {
                                     server.getConnections().stream().filter(conn ->
                                                     server.clientMap.get(conn).index == Integer.parseInt(msgArr[2]))
                                             .forEach(connection -> connection.close(DisconnectInfo.Reason.RECONNECT));
-                                    server.log("Client " + msgArr[2] + " reconnecting");
+                                    Server.log("Client " + msgArr[2] + " reconnecting");
                                 }
                                 default -> {
                                 }

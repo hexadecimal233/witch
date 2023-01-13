@@ -9,6 +9,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.Base64;
 
 public abstract class Connection implements Runnable {
     public static final DisconnectInfo EXCEPTION = new DisconnectInfo(DisconnectInfo.Reason.EXCEPTION, "");
@@ -17,6 +18,7 @@ public abstract class Connection implements Runnable {
     private DataInputStream in;
     private DataOutputStream out;
     private DisconnectInfo disconnectInfo;
+    private boolean reallyConnected = false;
 
     public Connection(Socket socket) throws IOException {
         connect(socket);
@@ -28,12 +30,15 @@ public abstract class Connection implements Runnable {
     @Override
     public void run() {
         try {
-            onOpen();
+            send(new Message("ok", null));
             while (isConnected()) {
                 Message message = read();
                 if (message.data instanceof DisconnectInfo info) {
                     close(info);
                     break;
+                } else if (message.messageID.equals("ok")) {
+                    reallyConnected = true;
+                    onOpen();
                 } else {
                     onMessage(message);
                 }
@@ -41,8 +46,11 @@ public abstract class Connection implements Runnable {
         } catch (IOException e) {
             LogUtil.printStackTrace(e);
         } finally {
-            onClose(getDisconnectInfo());
-            afterClose(getDisconnectInfo());
+            if (reallyConnected) {
+                reallyConnected = false;
+                onClose(getDisconnectInfo());
+                afterClose(getDisconnectInfo());
+            }
         }
     }
 
@@ -91,7 +99,7 @@ public abstract class Connection implements Runnable {
     public void send(Message data) {
         if (!isConnected()) return;
         try {
-            String str = data.serialize();
+            String str = Base64.getEncoder().encodeToString(data.serialize());
             for (int i = 1; i < str.length() / BUF_SIZE + 2; i++) {
                 out.writeUTF(str.substring(BUF_SIZE * (i - 1), Math.min(BUF_SIZE * i, str.length())));
             }
@@ -108,7 +116,7 @@ public abstract class Connection implements Runnable {
             str = in.readUTF();
         }
         sb.append(str);
-        Message message = Message.deserialize(sb.toString());
+        Message message = Message.deserialize(Base64.getDecoder().decode(sb.toString()));
         if (message.data instanceof DisconnectInfo info) this.disconnectInfo = info;
         return message;
     }

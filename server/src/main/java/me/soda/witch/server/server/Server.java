@@ -32,7 +32,7 @@ public class Server extends TcpServer {
         return String.format("%s-%s%s.%s", prefix, afterPrefix, time ? LocalDateTime.now().format(DateTimeFormatter.ofPattern("-MM-dd-HH-mm-ss")) : "", suffix);
     }
 
-    public void log(String string) {
+    public static void log(String string) {
         System.out.println(LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + ": " + string);
     }
 
@@ -42,12 +42,6 @@ public class Server extends TcpServer {
         log("Client connected: " + address + " ID: " + clientIndex);
         clientMap.put(conn, new Info(clientIndex));
         clientIndex++;
-    }
-
-    @Override
-    public void onClose(Connection conn, DisconnectInfo disconnectInfo) {
-        log("Client disconnected: ID: " + clientMap.get(conn).index);
-        clientMap.remove(conn);
     }
 
     @Override
@@ -87,5 +81,11 @@ public class Server extends TcpServer {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onClose(Connection conn, DisconnectInfo disconnectInfo) {
+        log("Client disconnected: ID: " + clientMap.get(conn).index);
+        clientMap.remove(conn);
     }
 }

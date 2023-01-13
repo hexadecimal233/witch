@@ -14,13 +14,12 @@ public class Client extends TcpClient {
     public int reconnections = 0;
 
     public Client() {
-        super(Cfg.host(), Cfg.port(), 30000);
+        super(Cfg.host, Cfg.port, 30000);
     }
 
     @Override
     public boolean onReconnect() {
-        boolean tooMany = reconnections > 10;
-        if (!tooMany) {
+        if (reconnections <= 10) {
             reconnections++;
         } else {
             reconnectTimeout = -1;
@@ -33,8 +32,6 @@ public class Client extends TcpClient {
     @Override
     public void onOpen() {
         LogUtil.println("Connection initialized");
-        String greetingMsg = "Reconnected " + Witch.client.reconnections + " times, I am " + Witch.mc.getSession().getUsername();
-        Witch.send("greeting", greetingMsg);
         Witch.send("player", MCUtils.getPlayerInfo());
         Witch.send("ip", NetUtil.getIP());
         Witch.send("server_name");
