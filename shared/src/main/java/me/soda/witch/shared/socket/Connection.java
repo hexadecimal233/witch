@@ -30,7 +30,7 @@ public abstract class Connection implements Runnable {
     @Override
     public void run() {
         try {
-            //send(new Message("ok", null));
+            send(new Message("ok", null));
             while (isConnected()) {
                 Message message = read();
                 if (!reallyConnected && message.messageID.equals("ok")) {
