@@ -1,6 +1,5 @@
 package me.soda.witch.client.events;
 
-import me.soda.witch.shared.events.Cancellable;
 import net.minecraft.text.Text;
 
 public class AddMessageEvent extends Cancellable {

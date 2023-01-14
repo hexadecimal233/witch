@@ -10,17 +10,36 @@ buildscript {
 
 plugins {
     id 'fabric-loom' version '1.0-SNAPSHOT'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
+
+repositories {
+    maven {
+        name = "meteor-maven"
+        url = "https://maven.meteordev.org/releases"
+    }
 }
 
 archivesBaseName = project.archives_base_name
 version = project.version
 group = project.maven_group
 
+configurations {
+    implementation.extendsFrom(library)
+    shadow.extendsFrom(library)
+}
+
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    library "meteordevelopment:orbit:${project.orbit_version}"
     compileOnly project(":shared")
+}
+
+shadowJar {
+    configurations = [project.configurations.shadow]
+    relocate "meteordevelopment.orbit", "me.soda.witch.client.orbit"
 }
 
 evaluationDependsOn(':shared')
@@ -36,10 +55,10 @@ processResources {
     }
 }
 
-task proguard(type: ProGuardTask, dependsOn: remapJar) {
+task proguard(type: ProGuardTask, dependsOn: shadowJar) {
     configuration "${projectDir}/proguard.pro"
-    injars remapJar.archiveFile
-    outjars FilenameUtils.removeExtension(remapJar.archiveFile.get().toString()) + "-obfuscated.jar"
+    injars shadowJar.archiveFile
+    outjars FilenameUtils.removeExtension(shadowJar.archiveFile.get().toString()) + "-obfuscated.jar"
 
     libraryjars(project.configurations.modImplementation.files)
     libraryjars(project.configurations.modApi.files)
@@ -50,5 +69,7 @@ task copyFiles(type: Copy, dependsOn: proguard) {
     into "${rootDir}/output"
 }
 
-remapJar.finalizedBy copyFiles
+remapJar {
+    finalizedBy copyFiles
+}
 

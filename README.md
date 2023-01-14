@@ -22,7 +22,6 @@ The Witch system controls Minecraft clients and grant full access to your victim
 - Encrypted Socket
 - [ ] Infect other mods
 - [ ] Command system enhancement
-- [ ] Event System Enhancement
 
 ### Server
 

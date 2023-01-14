@@ -3,9 +3,11 @@
  * Copyright (c) Meteor Development.
  */
 
-package me.soda.witch.shared.events;
+package me.soda.witch.client.events;
 
-public class Cancellable {
+import meteordevelopment.orbit.ICancellable;
+
+public class Cancellable implements ICancellable {
     private boolean cancelled = false;
 
     public boolean isCancelled() {

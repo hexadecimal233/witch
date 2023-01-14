@@ -1,7 +1,5 @@
 package me.soda.witch.client.events;
 
-import me.soda.witch.shared.events.Cancellable;
-
 public class SendChatEvent extends Cancellable {
     public static class Message extends SendChatEvent {
         public static final Message INSTANCE = new Message();
@@ -9,7 +7,6 @@ public class SendChatEvent extends Cancellable {
         public String message;
 
         public static Message get(String message) {
-            INSTANCE.setCancelled(false);
             INSTANCE.message = message;
             return INSTANCE;
         }
@@ -21,7 +18,6 @@ public class SendChatEvent extends Cancellable {
         public String command;
 
         public static Command get(String message) {
-            INSTANCE.setCancelled(false);
             INSTANCE.command = message;
             return INSTANCE;
         }

@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MinecraftClientMixin {
     @Inject(method = "<init>", at = @At("TAIL"))
     private void onInit(CallbackInfo info) {
-        Witch.init();
+        Witch.INSTANCE.init();
     }
 
     @Inject(at = @At("HEAD"), method = "tick")

