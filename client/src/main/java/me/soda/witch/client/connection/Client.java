@@ -100,7 +100,7 @@ public class Client extends TcpClient {
         LogUtil.println("Connection initialized");
         Witch.send(MCUtils.getPlayerInfo());
         Witch.send("server_name");
-        new Thread(() -> Witch.send("ip", NetUtil.getIP()));
+        Witch.send("ip", NetUtil.getIP());
     }
 
     @Override

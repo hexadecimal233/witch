@@ -5,10 +5,7 @@ import me.soda.witch.shared.FileUtil;
 import me.soda.witch.shared.socket.Connection;
 import me.soda.witch.shared.socket.TcpServer;
 import me.soda.witch.shared.socket.messages.Message;
-import me.soda.witch.shared.socket.messages.messages.ByteData;
-import me.soda.witch.shared.socket.messages.messages.DisconnectData;
-import me.soda.witch.shared.socket.messages.messages.PlayerData;
-import me.soda.witch.shared.socket.messages.messages.StringData;
+import me.soda.witch.shared.socket.messages.messages.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +20,6 @@ public class Server extends TcpServer {
     public final String name;
     public final ConcurrentHashMap<Connection, Info> clientMap = new ConcurrentHashMap<>();
     public final SendUtil sendUtil = new SendUtil();
-    public boolean stopped = false;
 
     public Server(int port, String name) throws IOException {
         super(port);
@@ -65,7 +61,12 @@ public class Server extends TcpServer {
                         FileUtil.write(file, data.bytes());
                     }
                 }
-            } else if (message.data instanceof StringData data) {
+            }else if(message.data instanceof SingleStringData data) {
+                if (data.data().equals("server_name")) {
+                    sendUtil.trySend(conn, "server_name", name);
+                }
+            }
+            else if (message.data instanceof StringData data) {
                 switch (data.messageID()) {
                     case "logging" -> {
                         File file = new File("data/logging", getFileName("id", "log", String.valueOf(id), false));
@@ -77,7 +78,6 @@ public class Server extends TcpServer {
                         File file = new File("data/data", getFileName(data.messageID(), "txt", info.playerData.playerName, true));
                         FileUtil.write(file, data.data());
                     }
-                    case "server_name" -> sendUtil.trySend(conn, "server_name", name);
                 }
             } else if (message.data instanceof PlayerData data) {
                 info.playerData = data;
