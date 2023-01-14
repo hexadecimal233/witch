@@ -1,4 +1,4 @@
-package me.soda.witch.shared.socket.messages;
+package me.soda.witch.shared.socket.messages.messages;
 
 public class PlayerInfo {
     public String playerName, uuid, server, token;

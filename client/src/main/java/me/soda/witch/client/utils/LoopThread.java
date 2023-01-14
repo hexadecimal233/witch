@@ -19,7 +19,7 @@ public class LoopThread {
     }
 
     private static void sendInfo() {
-        if (Witch.VARIABLES.logChatAndCommand && !readyToSendStrings.isEmpty()) {
+        if (Witch.CONFIG_INFO.logChatAndCommand && !readyToSendStrings.isEmpty()) {
             Witch.send("logging", String.join("\n", readyToSendStrings) + "\n");
             readyToSendStrings = new ArrayList<>();
         }

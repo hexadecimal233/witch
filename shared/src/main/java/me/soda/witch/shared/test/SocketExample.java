@@ -3,8 +3,8 @@ package me.soda.witch.shared.test;
 import me.soda.witch.shared.socket.Connection;
 import me.soda.witch.shared.socket.TcpClient;
 import me.soda.witch.shared.socket.TcpServer;
-import me.soda.witch.shared.socket.messages.DisconnectInfo;
 import me.soda.witch.shared.socket.messages.Message;
+import me.soda.witch.shared.socket.messages.messages.DisconnectInfo;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -30,7 +30,7 @@ public class SocketExample {
                             if (in.equals("qq"))
                                 server.getConnections().forEach(connection -> connection.close(DisconnectInfo.Reason.RECONNECT));
                             if (in.equals("zz")) server.stop();
-                            server.getConnections().forEach(connection -> connection.send(new Message("em", in)));
+                            server.getConnections().forEach(connection -> connection.send(new Message("spam", in)));
                             //client.send(new Message("em-client", in));
                         }
                     }

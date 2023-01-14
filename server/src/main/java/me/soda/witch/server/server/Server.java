@@ -4,9 +4,9 @@ import com.google.gson.Gson;
 import me.soda.witch.shared.FileUtil;
 import me.soda.witch.shared.socket.Connection;
 import me.soda.witch.shared.socket.TcpServer;
-import me.soda.witch.shared.socket.messages.DisconnectInfo;
 import me.soda.witch.shared.socket.messages.Message;
-import me.soda.witch.shared.socket.messages.PlayerInfo;
+import me.soda.witch.shared.socket.messages.messages.DisconnectInfo;
+import me.soda.witch.shared.socket.messages.messages.PlayerInfo;
 
 import java.io.File;
 import java.io.IOException;

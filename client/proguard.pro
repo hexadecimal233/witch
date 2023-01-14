@@ -1,7 +1,6 @@
 -allowaccessmodification
 -ignorewarnings
 -mergeinterfacesaggressively
--overloadaggressively
 -keepattributes *Annotation*
 -optimizationpasses 3
 -renamesourcefileattribute

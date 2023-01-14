@@ -1,8 +1,8 @@
 package me.soda.witch.shared.socket;
 
 import me.soda.witch.shared.LogUtil;
-import me.soda.witch.shared.socket.messages.DisconnectInfo;
 import me.soda.witch.shared.socket.messages.Message;
+import me.soda.witch.shared.socket.messages.messages.DisconnectInfo;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -36,12 +36,14 @@ public abstract class Connection implements Runnable {
                 if (!reallyConnected && message.messageID.equals("ok")) {
                     reallyConnected = true;
                     onOpen();
-                } else if (message.data instanceof DisconnectInfo info) {
-                    disconnectInfo = info;
-                    close(info);
-                    break;
                 } else if (reallyConnected) {
-                    onMessage(message);
+                    if (message.data instanceof DisconnectInfo info) {
+                        disconnectInfo = info;
+                        close(info);
+                        break;
+                    } else if (!message.messageID.equals("error")) {
+                        onMessage(message);
+                    }
                 } else forceClose();
             }
         } catch (IOException e) {
@@ -98,7 +100,7 @@ public abstract class Connection implements Runnable {
     }
 
     public void send(Message data) {
-        if (!isConnected()) return;
+        if (!isConnected() || data.messageID.equals("error")) return;
         try {
             String str = Base64.getEncoder().encodeToString(data.serialize());
             for (int i = 1; i < str.length() / BUF_SIZE + 2; i++) {

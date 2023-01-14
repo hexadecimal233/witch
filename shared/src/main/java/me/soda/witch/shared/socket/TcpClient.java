@@ -1,7 +1,7 @@
 package me.soda.witch.shared.socket;
 
 import me.soda.witch.shared.LogUtil;
-import me.soda.witch.shared.socket.messages.DisconnectInfo;
+import me.soda.witch.shared.socket.messages.messages.DisconnectInfo;
 
 import java.io.IOException;
 import java.net.Socket;

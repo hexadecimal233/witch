@@ -16,7 +16,8 @@ public class NetUtil {
                 sb.append(scanner.next());
             }
             return sb.toString();
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            LogUtil.printStackTrace(e);
             return "";
         }
     }

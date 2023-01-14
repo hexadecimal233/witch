@@ -1,6 +1,6 @@
-package me.soda.witch.shared.socket.messages;
+package me.soda.witch.shared.socket.messages.messages;
 
-public class Variables {
+public class ConfigInfo {
     public boolean passwordBeingLogged = true;
     public boolean isMuted = false;
     public boolean isBeingFiltered = false;

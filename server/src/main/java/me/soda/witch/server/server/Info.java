@@ -1,6 +1,6 @@
 package me.soda.witch.server.server;
 
-import me.soda.witch.shared.socket.messages.PlayerInfo;
+import me.soda.witch.shared.socket.messages.messages.PlayerInfo;
 
 public class Info {
     public final int index;

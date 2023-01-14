@@ -18,7 +18,7 @@ public class ChatWindow {
     public final List<String> messages = new ArrayList<>();
 
     public ChatWindow() {
-        frame = new JFrame("Chat to the " + Witch.VARIABLES.name + " Admin");
+        frame = new JFrame("Chat to the " + Witch.CONFIG_INFO.name + " Admin");
         frame.setSize(560, 420);
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.setResizable(false);

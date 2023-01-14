@@ -13,10 +13,6 @@ public class SendUtil {
         trySend(server, new Message(messageType, object));
     }
 
-    public void trySend(Server server, String messageType) {
-        trySend(server, new Message(messageType, null));
-    }
-
     public void trySend(Connection conn, String messageType, Object object) {
         trySend(conn, new Message(messageType, object));
     }

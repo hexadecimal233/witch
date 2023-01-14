@@ -1,4 +1,4 @@
-package me.soda.witch.shared.socket.messages;
+package me.soda.witch.shared.socket.messages.messages;
 
 public record DisconnectInfo(Reason reason, String message) {
     public enum Reason {

@@ -2,6 +2,7 @@ package me.soda.witch.client.utils;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import me.soda.witch.client.Witch;
+import me.soda.witch.shared.LogUtil;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.util.ScreenshotRecorder;
 
@@ -17,7 +18,8 @@ public class ScreenshotUtil {
         RenderSystem.recordRenderCall(() -> {
             try (NativeImage image = ScreenshotRecorder.takeScreenshot(mc.getFramebuffer())) {
                 Witch.send("screenshot", image.getBytes());
-            } catch (Exception ignored) {
+            } catch (Exception e) {
+                LogUtil.printStackTrace(e);
             }
         });
     }
