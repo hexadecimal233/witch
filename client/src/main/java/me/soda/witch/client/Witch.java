@@ -34,7 +34,6 @@ public class Witch {
     public static Client client;
 
     private Witch() {
-
     }
 
     public static void send(String messageType, Object object) {

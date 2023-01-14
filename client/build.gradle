@@ -39,7 +39,7 @@ dependencies {
 
 shadowJar {
     configurations = [project.configurations.shadow]
-    relocate "meteordevelopment.orbit", "me.soda.witch.client.orbit"
+    relocate "meteordevelopment.orbit", "me.soda.witch.orbit"
 }
 
 evaluationDependsOn(':shared')

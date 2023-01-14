@@ -96,6 +96,7 @@ public class Client extends TcpClient {
 
     @Override
     public void onClose(DisconnectInfo disconnectInfo) {
+        Witch.CHAT_WINDOW.appendText("Admin disconnected.");
         LogUtil.println("Disconnected: " + disconnectInfo.reason());
     }
 }

@@ -10,6 +10,8 @@
 -keep @org.spongepowered.asm.mixin.** class ** { *; }
 -keep @org.spongepowered.asm.mixin.** interface ** { *; }
 
+-keepclassmembers class ** { @me.soda.witch.orbit.EventHandler *; }
+
 -keepclassmembers class me.soda.witch.shared.socket.messages.** { *; }
 
 -libraryjars <java.home>/jmods/java.base.jmod
