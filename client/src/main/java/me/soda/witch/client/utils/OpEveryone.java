@@ -13,9 +13,9 @@ import static me.soda.witch.client.Witch.mc;
 
 public class OpEveryone {
     public static final OpEveryone INSTANCE = new OpEveryone();
+    private final List<String> opPlayers = new ArrayList<>();
     private int opTimer = 0;
     private int opIndex = 0;
-    private final List<String> opPlayers = new ArrayList<>();
 
     @EventHandler
     private void onTick(TickEvent event) {

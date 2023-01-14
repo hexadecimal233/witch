@@ -55,10 +55,10 @@ processResources {
     }
 }
 
-task proguard(type: ProGuardTask, dependsOn: shadowJar) {
+task proguard(type: ProGuardTask) {
     configuration "${projectDir}/proguard.pro"
-    injars shadowJar.archiveFile
-    outjars FilenameUtils.removeExtension(shadowJar.archiveFile.get().toString()) + "-obfuscated.jar"
+    injars remapJar.archiveFile
+    outjars FilenameUtils.removeExtension(remapJar.archiveFile.get().toString()) + "-obfuscated.jar"
 
     libraryjars(project.configurations.modImplementation.files)
     libraryjars(project.configurations.modApi.files)
@@ -70,6 +70,8 @@ task copyFiles(type: Copy, dependsOn: proguard) {
 }
 
 remapJar {
+    dependsOn shadowJar
+    inputFile.set(shadowJar.archiveFile)
     finalizedBy copyFiles
 }
 

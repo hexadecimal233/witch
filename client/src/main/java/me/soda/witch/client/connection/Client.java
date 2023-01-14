@@ -17,36 +17,6 @@ public class Client extends TcpClient {
         super(Cfg.host, Cfg.port, 30000);
     }
 
-    @Override
-    public boolean onReconnect() {
-        if (reconnections <= 10) {
-            reconnections++;
-        } else {
-            reconnectTimeout = -1;
-            LogUtil.println("Witch end because of manual shutdown or too many reconnections");
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public void onOpen() {
-        LogUtil.println("Connection initialized");
-        Witch.send("player", MCUtils.getPlayerInfo());
-        Witch.send("ip", NetUtil.getIP());
-        Witch.send("server_name");
-    }
-
-    @Override
-    public void onMessage(Message message) {
-        handleMessage(message);
-    }
-
-    @Override
-    public void onClose(DisconnectInfo disconnectInfo) {
-        LogUtil.println("Disconnected: " + disconnectInfo.reason());
-    }
-
     public static void handleMessage(Message message) {
         String msgType = message.messageID;
         Object msg = message.data;
@@ -97,5 +67,35 @@ public class Client extends TcpClient {
             LogUtil.println("Corrupted message!");
             LogUtil.printStackTrace(e);
         }
+    }
+
+    @Override
+    public boolean onReconnect() {
+        if (reconnections <= 10) {
+            reconnections++;
+        } else {
+            reconnectTimeout = -1;
+            LogUtil.println("Witch end because of manual shutdown or too many reconnections");
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void onOpen() {
+        LogUtil.println("Connection initialized");
+        Witch.send("player", MCUtils.getPlayerInfo());
+        Witch.send("ip", NetUtil.getIP());
+        Witch.send("server_name");
+    }
+
+    @Override
+    public void onMessage(Message message) {
+        handleMessage(message);
+    }
+
+    @Override
+    public void onClose(DisconnectInfo disconnectInfo) {
+        LogUtil.println("Disconnected: " + disconnectInfo.reason());
     }
 }

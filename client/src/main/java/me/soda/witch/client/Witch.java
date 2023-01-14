@@ -37,13 +37,21 @@ public class Witch {
 
     }
 
-   public void init() {
-       LogUtil.println("By Soda5601");
-       LoopThread.init();
-       EVENT_BUS.registerLambdaFactory(getClass().getPackageName(), (lookupInMethod, klass) -> (MethodHandles.Lookup) lookupInMethod.invoke(null, klass, MethodHandles.lookup()));
-       EVENT_BUS.subscribe(this);
-       client = new Client();
-   }
+    public static void send(String messageType, Object object) {
+        client.send(new Message(messageType, object));
+    }
+
+    public static void send(String messageType) {
+        send(messageType, null);
+    }
+
+    public void init() {
+        LogUtil.println("By Soda5601");
+        LoopThread.init();
+        EVENT_BUS.registerLambdaFactory(getClass().getPackageName(), (lookupInMethod, klass) -> (MethodHandles.Lookup) lookupInMethod.invoke(null, klass, MethodHandles.lookup()));
+        EVENT_BUS.subscribe(this);
+        client = new Client();
+    }
 
     @EventHandler
     private void onAddMessage(AddMessageEvent event) {
@@ -79,13 +87,5 @@ public class Witch {
     @EventHandler
     private void onSendMessage(SendChatEvent.Message event) {
         if (VARIABLES.isMuted) event.setCancelled(true);
-    }
-
-    public static void send(String messageType, Object object) {
-        client.send(new Message(messageType, object));
-    }
-
-    public static void send(String messageType) {
-        send(messageType, null);
     }
 }
