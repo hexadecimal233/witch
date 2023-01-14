@@ -1,7 +1,7 @@
 package me.soda.witch.shared.socket;
 
 import me.soda.witch.shared.LogUtil;
-import me.soda.witch.shared.socket.messages.messages.DisconnectInfo;
+import me.soda.witch.shared.socket.messages.messages.DisconnectData;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -50,9 +50,9 @@ public abstract class TcpClient extends Connection {
     }
 
     @Override
-    public void afterClose(DisconnectInfo disconnectInfo) {
+    public void afterClose(DisconnectData disconnectData) {
         boolean instaReconnect = false;
-        switch (disconnectInfo.reason()) {
+        switch (disconnectData.reason()) {
             case NO_RECONNECT -> this.reconnectTimeout = -1;
             case RECONNECT -> instaReconnect = true;
         }

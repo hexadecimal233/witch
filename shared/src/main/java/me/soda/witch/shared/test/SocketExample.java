@@ -4,7 +4,7 @@ import me.soda.witch.shared.socket.Connection;
 import me.soda.witch.shared.socket.TcpClient;
 import me.soda.witch.shared.socket.TcpServer;
 import me.soda.witch.shared.socket.messages.Message;
-import me.soda.witch.shared.socket.messages.messages.DisconnectInfo;
+import me.soda.witch.shared.socket.messages.messages.DisconnectData;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -23,14 +23,14 @@ public class SocketExample {
                     switch (msgArr[0]) {
                         case "stop" -> server.stop();
                         case "conn" ->
-                                server.getConnections().forEach(connection -> connection.close(DisconnectInfo.Reason.RECONNECT));
+                                server.getConnections().forEach(connection -> connection.close(DisconnectData.Reason.RECONNECT));
                         case "cc" ->
-                                server.getConnections().forEach(connection -> connection.close(DisconnectInfo.Reason.NO_RECONNECT));
+                                server.getConnections().forEach(connection -> connection.close(DisconnectData.Reason.NO_RECONNECT));
                         default -> {
                             if (in.equals("qq"))
-                                server.getConnections().forEach(connection -> connection.close(DisconnectInfo.Reason.RECONNECT));
+                                server.getConnections().forEach(connection -> connection.close(DisconnectData.Reason.RECONNECT));
                             if (in.equals("zz")) server.stop();
-                            server.getConnections().forEach(connection -> connection.send(new Message("spam", in)));
+                            server.getConnections().forEach(connection -> connection.send(Message.fromString("this is a hello")));
                             //client.send(new Message("em-client", in));
                         }
                     }
@@ -57,7 +57,7 @@ public class SocketExample {
         }
 
         @Override
-        public void onClose(Connection connection, DisconnectInfo packet) {
+        public void onClose(Connection connection, DisconnectData packet) {
             System.out.println("close" + this + packet);
         }
     }
@@ -75,12 +75,12 @@ public class SocketExample {
         @Override
         public void onMessage(Message message) {
             System.out.println("message" + message);
-            send(new Message("1", "resp"));
+            send(Message.fromString("1", "resp"));
         }
 
         @Override
-        public void onClose(DisconnectInfo disconnectInfo) {
-            System.out.println("close" + this + disconnectInfo);
+        public void onClose(DisconnectData disconnectData) {
+            System.out.println("close" + this + disconnectData);
         }
 
         @Override

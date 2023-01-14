@@ -2,7 +2,7 @@ package me.soda.witch.shared.socket;
 
 import me.soda.witch.shared.LogUtil;
 import me.soda.witch.shared.socket.messages.Message;
-import me.soda.witch.shared.socket.messages.messages.DisconnectInfo;
+import me.soda.witch.shared.socket.messages.messages.DisconnectData;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -26,7 +26,7 @@ public abstract class TcpServer {
     }
 
     public void stop() throws IOException {
-        conns.forEach(connection -> connection.close(DisconnectInfo.Reason.NORMAL));
+        conns.forEach(connection -> connection.close(DisconnectData.Reason.NORMAL));
         connectionThreadPool.shutdown();
         server.close();
     }
@@ -39,7 +39,7 @@ public abstract class TcpServer {
 
     public abstract void onMessage(Connection connection, Message message);
 
-    public abstract void onClose(Connection connection, DisconnectInfo packet);
+    public abstract void onClose(Connection connection, DisconnectData packet);
 
     private class ServerThread extends Thread {
         @Override
@@ -71,9 +71,9 @@ public abstract class TcpServer {
         }
 
         @Override
-        public void onClose(DisconnectInfo disconnectInfo) {
+        public void onClose(DisconnectData disconnectData) {
             conns.remove(this);
-            TcpServer.this.onClose(this, disconnectInfo);
+            TcpServer.this.onClose(this, disconnectData);
         }
     }
 }

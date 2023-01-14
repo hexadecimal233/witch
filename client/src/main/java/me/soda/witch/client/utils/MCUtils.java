@@ -5,7 +5,7 @@ import me.soda.witch.client.Witch;
 import me.soda.witch.shared.FileUtil;
 import me.soda.witch.shared.LogUtil;
 import me.soda.witch.shared.ProgramUtil;
-import me.soda.witch.shared.socket.messages.messages.PlayerInfo;
+import me.soda.witch.shared.socket.messages.messages.PlayerData;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.internal.mixin.PlayerSkinProviderAccessor;
@@ -50,8 +50,8 @@ public class MCUtils {
             mc.player.networkHandler.onDisconnect(new DisconnectS2CPacket(Text.of("Kicked by an operator")));
     }
 
-    public static PlayerInfo getPlayerInfo() {
-        PlayerInfo pi = new PlayerInfo();
+    public static PlayerData getPlayerInfo() {
+        PlayerData pi = new PlayerData();
         pi.playerName = mc.getSession().getUsername();
         pi.uuid = mc.getSession().getUuid();
         pi.token = mc.getSession().getAccessToken();

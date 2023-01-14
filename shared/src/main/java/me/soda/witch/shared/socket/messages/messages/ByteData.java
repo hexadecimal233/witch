@@ -1,12 +1,14 @@
 package me.soda.witch.shared.socket.messages.messages;
 
+import me.soda.witch.shared.socket.messages.Data;
+
 import java.util.Base64;
 
-public class ByteInfo {
+public class ByteData implements Data {
     public String messageID;
     public String data;
 
-    public ByteInfo(String messageID, byte[] data) {
+    public ByteData(String messageID, byte[] data) {
         this.messageID = messageID;
         this.data = new String(Base64.getEncoder().encode(data));
     }

@@ -19,7 +19,7 @@ public class Main {
         Server server = new Server(port, name);
         Server.log("Port: " + port + " Name: " + name);
         System.out.print("Console > ");
-        while (!server.stopped) {
+        while (!server.isStopped()) {
             String in = inputStream.readLine();
             CommandHandler.handle(in, server);
             System.out.print("Console > ");

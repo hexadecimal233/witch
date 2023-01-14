@@ -1,6 +1,8 @@
 package me.soda.witch.shared.socket.messages.messages;
 
-public class SpamInfo {
+import me.soda.witch.shared.socket.messages.Data;
+
+public class SpamData implements Data {
     public String message;
     public int times;
     public int delayInTicks;

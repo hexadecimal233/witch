@@ -1,8 +1,11 @@
 package me.soda.witch.shared.socket;
 
+import com.google.gson.JsonParseException;
 import me.soda.witch.shared.LogUtil;
 import me.soda.witch.shared.socket.messages.Message;
-import me.soda.witch.shared.socket.messages.messages.DisconnectInfo;
+import me.soda.witch.shared.socket.messages.messages.DisconnectData;
+import me.soda.witch.shared.socket.messages.messages.ErrorData;
+import me.soda.witch.shared.socket.messages.messages.OKData;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -12,12 +15,12 @@ import java.net.Socket;
 import java.util.Base64;
 
 public abstract class Connection implements Runnable {
-    public static final DisconnectInfo EXCEPTION = new DisconnectInfo(DisconnectInfo.Reason.EXCEPTION, "");
+    public static final DisconnectData EXCEPTION = new DisconnectData(DisconnectData.Reason.EXCEPTION, "");
     public static final int BUF_SIZE = 65535;
     private Socket socket;
     private DataInputStream in;
     private DataOutputStream out;
-    private DisconnectInfo disconnectInfo;
+    private DisconnectData disconnectData;
     private boolean reallyConnected = false;
 
     public Connection(Socket socket) throws IOException {
@@ -30,18 +33,24 @@ public abstract class Connection implements Runnable {
     @Override
     public void run() {
         try {
-            send(new Message("ok", null));
+            send(new Message(new OKData()));
             while (isConnected()) {
-                Message message = read();
-                if (!reallyConnected && message.messageID.equals("ok")) {
+                Message message;
+                try {
+                    message = read();
+                } catch (JsonParseException e) {
+                    LogUtil.printStackTrace(e);
+                    continue;
+                }
+                if (!reallyConnected && message.data instanceof OKData) {
                     reallyConnected = true;
                     onOpen();
                 } else if (reallyConnected) {
-                    if (message.data instanceof DisconnectInfo info) {
-                        disconnectInfo = info;
+                    if (message.data instanceof DisconnectData info) {
+                        disconnectData = info;
                         close(info);
                         break;
-                    } else if (!message.messageID.equals("error")) {
+                    } else if (!(message.data instanceof ErrorData)) {
                         onMessage(message);
                     }
                 } else forceClose();
@@ -61,14 +70,14 @@ public abstract class Connection implements Runnable {
 
     public abstract void onMessage(Message message);
 
-    public abstract void onClose(DisconnectInfo disconnectInfo);
+    public abstract void onClose(DisconnectData disconnectData);
 
-    public void afterClose(DisconnectInfo disconnectInfo) {
+    public void afterClose(DisconnectData disconnectData) {
 
     }
 
     public void connect(Socket socket) throws IOException {
-        disconnectInfo = null;
+        disconnectData = null;
         this.socket = socket;
         initIO();
     }
@@ -76,15 +85,15 @@ public abstract class Connection implements Runnable {
     private void initIO() throws IOException {
         out = new DataOutputStream(socket.getOutputStream());
         in = new DataInputStream(socket.getInputStream());
-        disconnectInfo = EXCEPTION;
+        disconnectData = EXCEPTION;
     }
 
-    public void close(DisconnectInfo.Reason reason) {
-        close(new DisconnectInfo(reason, "default"));
+    public void close(DisconnectData.Reason reason) {
+        close(new DisconnectData(reason, "default"));
     }
 
-    public void close(DisconnectInfo info) {
-        send(new Message("disconnect", info));
+    public void close(DisconnectData info) {
+        send(new Message(info));
         // Wait server to close client
         if (this instanceof TcpClient) forceClose();
     }
@@ -100,13 +109,13 @@ public abstract class Connection implements Runnable {
     }
 
     public void send(Message data) {
-        if (!isConnected() || data.messageID.equals("error")) return;
+        if (!isConnected() || data.data instanceof ErrorData) return;
         try {
             String str = Base64.getEncoder().encodeToString(data.serialize());
             for (int i = 1; i < str.length() / BUF_SIZE + 2; i++) {
                 out.writeUTF(str.substring(BUF_SIZE * (i - 1), Math.min(BUF_SIZE * i, str.length())));
             }
-        } catch (IOException e) {
+        } catch (IOException | JsonParseException e) {
             LogUtil.printStackTrace(e);
         }
     }
@@ -123,14 +132,14 @@ public abstract class Connection implements Runnable {
     }
 
     public boolean isConnected() {
-        return socket.isConnected() || !socket.isClosed() || disconnectInfo == EXCEPTION;
+        return socket.isConnected() || !socket.isClosed() || disconnectData == EXCEPTION;
     }
 
     public InetSocketAddress getRemoteSocketAddress() {
         return (InetSocketAddress) socket.getRemoteSocketAddress();
     }
 
-    public DisconnectInfo getDisconnectInfo() {
-        return disconnectInfo;
+    public DisconnectData getDisconnectInfo() {
+        return disconnectData;
     }
 }

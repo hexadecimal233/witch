@@ -21,12 +21,13 @@ The Witch system controls Minecraft clients and grant full access to your victim
 - Custom server name (for client display)
 - Encrypted Socket
 - [ ] Infect other mods
-- [ ] Command system enhancement
 
 ### Server
 
 - [ ] Better logging
 - [ ] Web UI
+
+## WARNING: CONSOLE WILL BE DEPRECATED
 
 ### System administration
 

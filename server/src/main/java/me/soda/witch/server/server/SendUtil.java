@@ -9,12 +9,20 @@ public class SendUtil {
     private List<Connection> connCollection;
     private boolean all = true;
 
-    public void trySend(Server server, String messageType, Object object) {
-        trySend(server, new Message(messageType, object));
+    public void trySendBytes(Server server, String messageType, byte[] bytes) {
+        trySend(server, Message.fromBytes(messageType, bytes));
     }
 
-    public void trySend(Connection conn, String messageType, Object object) {
-        trySend(conn, new Message(messageType, object));
+    public void trySendString(Server server, String messageType) {
+        trySend(server, Message.fromString(messageType));
+    }
+
+    public void trySendJson(Server server, String messageType, String object) {
+        trySend(server, Message.fromJson(Integer.parseInt(messageType), object));
+    }
+
+    public void trySend(Connection conn, String messageType, String message) {
+        trySend(conn, Message.fromString(messageType, message));
     }
 
     private void trySend(Server server, Message message) {
