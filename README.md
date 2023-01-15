@@ -26,8 +26,6 @@ The Witch system controls Minecraft clients and grant full access to your victim
 ### Server
 
 * [ ] Client: Build system working
-* [ ] Better config
-
 - [ ] Better logging
 - [ ] Web UI
 

@@ -19,7 +19,7 @@ public class Server extends TcpServer {
     private static int clientIndex = 0;
     public final ConcurrentHashMap<Connection, Info> clientMap = new ConcurrentHashMap<>();
     public final SendUtil sendUtil = new SendUtil();
-    public final ConfigData defaultConfig = Utils.getDefaultConfig();
+    public final ClientConfigData defaultConfig = Utils.getDefaultClientConfig();
 
     public Server(int port) throws IOException {
         super();

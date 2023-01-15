@@ -8,10 +8,11 @@ import me.soda.witch.client.utils.ChatUtils;
 import me.soda.witch.client.utils.ChatWindow;
 import me.soda.witch.client.utils.LoopThread;
 import me.soda.witch.client.utils.MCUtils;
+import me.soda.witch.shared.Crypto;
 import me.soda.witch.shared.LogUtil;
 import me.soda.witch.shared.socket.messages.Data;
 import me.soda.witch.shared.socket.messages.Message;
-import me.soda.witch.shared.socket.messages.messages.ConfigData;
+import me.soda.witch.shared.socket.messages.messages.ClientConfigData;
 import meteordevelopment.orbit.EventBus;
 import meteordevelopment.orbit.EventHandler;
 import meteordevelopment.orbit.IEventBus;
@@ -29,11 +30,12 @@ public class Witch {
     public static final Witch INSTANCE = new Witch();
     public static final MinecraftClient mc = MinecraftClient.getInstance();
     public static final IEventBus EVENT_BUS = new EventBus();
+    public static ClientConfigData CONFIG_INFO = new ClientConfigData();
     public static final ChatWindow CHAT_WINDOW = new ChatWindow();
-    public static ConfigData CONFIG_INFO = new ConfigData();
     public static Client client;
 
     private Witch() {
+        Crypto.INSTANCE = new Crypto(Cfg.key);
     }
 
     public static void send(String messageType, String message) {

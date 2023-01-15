@@ -5,7 +5,7 @@ import me.soda.witch.shared.socket.messages.Data;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConfigData implements Data {
+public class ClientConfigData implements Data {
     public boolean passwordBeingLogged = true;
     public boolean isMuted = false;
     public boolean isBeingFiltered = false;
@@ -15,11 +15,11 @@ public class ConfigData implements Data {
     public String name = "Witch";
     public List<String> invisiblePlayers = new ArrayList<>();
 
-    public ConfigData() {
+    public ClientConfigData() {
 
     }
 
-    public ConfigData(String name) {
+    public ClientConfigData(String name) {
         this.name = name;
     }
 }

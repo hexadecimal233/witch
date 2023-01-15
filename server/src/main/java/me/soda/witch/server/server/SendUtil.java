@@ -11,14 +11,15 @@ public class SendUtil {
 
     public void trySendBytes(Server server, String messageType, byte[] bytes) {
         trySend(server, Message.fromBytes(messageType, bytes));
+
     }
 
     public void trySendString(Server server, String messageType) {
         trySend(server, Message.fromString(messageType));
     }
 
-    public void trySendJson(Server server, String messageType, String object) {
-        trySend(server, Message.fromJson(Integer.parseInt(messageType), object));
+    public void trySendJson(Server server, String object) {
+        trySend(server, Message.fromJson(object));
     }
 
     private void trySend(Server server, Message message) {

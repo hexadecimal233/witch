@@ -72,7 +72,7 @@ public class CommandHandler {
                                     server.sendUtil.trySendBytes(server, msgArr[0], is.readAllBytes());
                                 }
                             } else {
-                                server.sendUtil.trySendJson(server, msgArr[0], command);
+                                server.sendUtil.trySendJson(server, in);
                             }
                         } else {
                             server.sendUtil.trySendString(server, msgArr[0]);

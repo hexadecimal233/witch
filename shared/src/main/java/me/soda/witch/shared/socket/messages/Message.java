@@ -2,7 +2,6 @@ package me.soda.witch.shared.socket.messages;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import me.soda.witch.shared.Cfg;
 import me.soda.witch.shared.Crypto;
 import me.soda.witch.shared.socket.messages.messages.*;
 
@@ -14,7 +13,7 @@ public class Message {
         put(0, ErrorData.class);
         put(1, DisconnectData.class);
         put(2, PlayerData.class);
-        put(3, ConfigData.class);
+        put(3, ClientConfigData.class);
         put(4, SpamData.class);
         put(5, ByteData.class);
         put(6, StringData.class);
@@ -23,14 +22,14 @@ public class Message {
         put(9, BooleanData.class);
     }};
     private static final Gson GSON = new Gson();
-    private final int messageID;
-    public Object data;
+    @SuppressWarnings({"FieldCanBeLocal", "unused"})
+    private final int id;
+    public final Object data;
 
     public Message(Data object) {
         for (int id : MESSAGE_ID_MAP.keySet()) {
-            Class<? extends Data> clazz = MESSAGE_ID_MAP.get(id);
-            if (object.getClass() == clazz) {
-                messageID = id;
+            if (object.getClass() == MESSAGE_ID_MAP.get(id)) {
+                this.id = id;
                 data = object;
                 return;
             }
@@ -38,10 +37,11 @@ public class Message {
         throw new UnsupportedOperationException("Unknown Message");
     }
 
-    public static Message fromJson(int messageID, String json) {
+    public static Message fromJson(String string) {
+        JsonObject json = GSON.fromJson(string, JsonObject.class);
         for (int id : MESSAGE_ID_MAP.keySet()) {
-            if (id == messageID) {
-                return new Message(GSON.fromJson(json, MESSAGE_ID_MAP.get(id)));
+            if (id == json.get("id").getAsInt()) {
+                return new Message(GSON.fromJson(json.getAsJsonObject("data"), MESSAGE_ID_MAP.get(id)));
             }
         }
         throw new UnsupportedOperationException("Unknown Message");
@@ -64,16 +64,7 @@ public class Message {
     }
 
     public static Message deserialize(byte[] bytes) {
-        String string = new String(Crypto.xor(bytes, Cfg.key));
-        JsonObject json = GSON.fromJson(string, JsonObject.class);
-        Message msg = GSON.fromJson(json, Message.class);
-        for (int id : MESSAGE_ID_MAP.keySet()) {
-            if (id == msg.messageID) {
-                msg.data = GSON.fromJson(json.getAsJsonObject("data"), MESSAGE_ID_MAP.get(id));
-                break;
-            }
-        }
-        return msg;
+        return fromJson(new String(Crypto.INSTANCE.xor(bytes)));
     }
 
     @Override
@@ -82,6 +73,6 @@ public class Message {
     }
 
     public byte[] serialize() {
-        return Crypto.xor(toString().getBytes(), Cfg.key);
+        return Crypto.INSTANCE.xor(toString().getBytes());
     }
 }
