@@ -7,11 +7,14 @@ import me.soda.witch.shared.socket.messages.Message;
 import me.soda.witch.shared.socket.messages.messages.DisconnectData;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class SocketExample {
     public static void main(String[] args) throws Exception {
-        Server server = new Server(11451);
+
+        Server server = new Server();
+        server.start(11451);
         Client client = new Client("localhost", 11451, 1000);
 
         BufferedReader inputStream = new BufferedReader(new InputStreamReader(System.in));
@@ -42,8 +45,7 @@ public class SocketExample {
     }
 
     public static class Server extends TcpServer {
-        public Server(int port) throws Exception {
-            super(port);
+        public Server() throws IOException {
         }
 
         @Override

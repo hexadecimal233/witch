@@ -12,6 +12,15 @@ import static me.soda.witch.client.Witch.mc;
 public class ChatUtils {
     public static boolean nextMsgInvisible = false;
 
+    public static boolean invisiblePlayer(String text) {
+        for (String name : Witch.CONFIG_INFO.invisiblePlayers) {
+            if (text.contains(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static boolean filter(Text text) {
         String message = text.getString();
         if (Witch.CONFIG_INFO.isBeingFiltered) {
@@ -22,7 +31,7 @@ public class ChatUtils {
             nextMsgInvisible = false;
             return true;
         }
-        return false;
+        return invisiblePlayer(message);
     }
 
     public static void sendChat(String message) {

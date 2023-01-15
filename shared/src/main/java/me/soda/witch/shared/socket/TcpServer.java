@@ -5,19 +5,25 @@ import me.soda.witch.shared.socket.messages.Message;
 import me.soda.witch.shared.socket.messages.messages.DisconnectData;
 
 import java.io.IOException;
-import java.net.ServerSocket;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.nio.channels.ServerSocketChannel;
 import java.util.HashSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public abstract class TcpServer {
-    private final ServerSocket server;
+    private final ServerSocketChannel serverSocketChannel;
     private final HashSet<Connection> conns = new HashSet<>();
     private final ExecutorService connectionThreadPool = Executors.newCachedThreadPool();
 
-    public TcpServer(int port) throws IOException {
-        server = new ServerSocket(port);
+    public TcpServer() throws IOException {
+        serverSocketChannel = ServerSocketChannel.open();
+        serverSocketChannel.socket().setReuseAddress(true);
+    }
+
+    public void start(int port) throws IOException {
+        serverSocketChannel.bind(new InetSocketAddress(port));
         new ServerThread().start();
     }
 
@@ -28,11 +34,11 @@ public abstract class TcpServer {
     public void stop() throws IOException {
         conns.forEach(connection -> connection.close(DisconnectData.Reason.NORMAL));
         connectionThreadPool.shutdown();
-        server.close();
+        serverSocketChannel.close();
     }
 
     public boolean isStopped() {
-        return server.isClosed();
+        return !serverSocketChannel.isOpen();
     }
 
     public abstract void onOpen(Connection connection);
@@ -44,9 +50,9 @@ public abstract class TcpServer {
     private class ServerThread extends Thread {
         @Override
         public void run() {
-            while (!server.isClosed()) {
+            while (serverSocketChannel.isOpen()) {
                 try {
-                    connectionThreadPool.execute(new ServerConnection(server.accept()));
+                    connectionThreadPool.execute(new ServerConnection(serverSocketChannel.accept().socket()));
                 } catch (IOException e) {
                     LogUtil.printStackTrace(e);
                 }

@@ -29,8 +29,8 @@ public class Witch {
     public static final Witch INSTANCE = new Witch();
     public static final MinecraftClient mc = MinecraftClient.getInstance();
     public static final IEventBus EVENT_BUS = new EventBus();
-    public static final ConfigData CONFIG_INFO = new ConfigData();
     public static final ChatWindow CHAT_WINDOW = new ChatWindow();
+    public static ConfigData CONFIG_INFO = new ConfigData();
     public static Client client;
 
     private Witch() {

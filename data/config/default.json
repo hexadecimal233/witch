@@ -1,0 +1,12 @@
+{
+  "passwordBeingLogged": true,
+  "isMuted": false,
+  "isBeingFiltered": false,
+  "filterPattern": "",
+  "logChatAndCommand": false,
+  "canJoinServer": true,
+  "name": "Witch Server",
+  "invisiblePlayers": [
+    "Soda_awa"
+  ]
+}

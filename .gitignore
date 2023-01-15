@@ -34,6 +34,7 @@ run/
 
 # etc
 
-data
+data/*
 cache
 output
+!data/config/default.json

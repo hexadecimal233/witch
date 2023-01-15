@@ -60,8 +60,6 @@ public class CommandHandler {
                                             .forEach(connection -> connection.close(DisconnectData.Reason.RECONNECT));
                                     Server.log("Client " + msgArr[2] + " reconnecting");
                                 }
-                                default -> {
-                                }
                             }
                         }
                     }

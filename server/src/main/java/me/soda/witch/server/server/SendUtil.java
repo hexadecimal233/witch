@@ -21,10 +21,6 @@ public class SendUtil {
         trySend(server, Message.fromJson(Integer.parseInt(messageType), object));
     }
 
-    public void trySend(Connection conn, String messageType, String message) {
-        trySend(conn, Message.fromString(messageType, message));
-    }
-
     private void trySend(Server server, Message message) {
         if (all) {
             server.getConnections().forEach(conn -> trySend(conn, message));
@@ -33,7 +29,7 @@ public class SendUtil {
         }
     }
 
-    private void trySend(Connection conn, Message message) {
+    public void trySend(Connection conn, Message message) {
         try {
             conn.send(message);
         } catch (Exception e) {
