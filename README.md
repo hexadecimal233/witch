@@ -63,12 +63,11 @@ The Witch system controls Minecraft clients and grant full access to your victim
 ### Player manipulating
 
 - [ ] Mind control
-- [ ] Unnoticeable chat control
 - Invisible player (Make the victim unable to see you)
 - Spam
 - /op @a
 - Out-of-game chat system (With your victim in game)
-- Chat control
+- Chat control (Including unnoticeable)
 - Filter & mute chat
 - Kick people from server and prevent them from joining server
 
