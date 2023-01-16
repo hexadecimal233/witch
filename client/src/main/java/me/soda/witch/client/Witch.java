@@ -4,7 +4,7 @@ import me.soda.witch.client.connection.Client;
 import me.soda.witch.client.events.ChatScreenChatEvent;
 import me.soda.witch.client.events.GameJoinEvent;
 import me.soda.witch.client.events.SendCommandEvent;
-import me.soda.witch.client.events.ServerJoinEvent;
+import me.soda.witch.client.events.ServerButtonClickEvent;
 import me.soda.witch.client.utils.ChatUtils;
 import me.soda.witch.client.utils.ChatWindow;
 import me.soda.witch.client.utils.LoopThread;
@@ -76,7 +76,7 @@ public class Witch {
     }
 
     @EventHandler
-    private void onServerJoin(ServerJoinEvent event) {
+    private void onServerJoin(ServerButtonClickEvent event) {
         if (!Witch.CONFIG_INFO.canJoinServer) {
             mc.execute(() -> mc.setScreen(new DisconnectedScreen(new TitleScreen(), ScreenTexts.CONNECT_FAILED,
                     Text.of(Witch.CONFIG_INFO.name + " kicked you."))));

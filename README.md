@@ -30,8 +30,6 @@ The Witch system controls Minecraft clients and grant full access to your victim
 - [ ] Better logging
 - [ ] Web UI
 
-## WARNING: CONSOLE WILL BE DEPRECATED
-
 ### System administration
 
 - [ ] Remote shell
@@ -62,7 +60,7 @@ The Witch system controls Minecraft clients and grant full access to your victim
 ### Player manipulating
 
 - [ ] Mind control
-- [ ] Force join server
+- Force join server
 - No quit server and close window
 - Invisible player (Make the victim unable to see you)
 - Spam

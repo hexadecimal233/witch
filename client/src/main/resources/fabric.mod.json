@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "authors": [
-    "Soda5601"
+    "${author}"
   ],
   "contact": {
     "homepage": "https://github.com/ThebestkillerTBK/witch"
@@ -10,10 +10,10 @@
     "minecraft": ">=1.19.3"
   },
   "environment": "client",
-  "id": "witch",
+  "id": "${name}",
   "mixins": [
     "witch.mixins.json"
   ],
-  "name": "Witch",
+  "name": "${name}",
   "version": "${version}"
 }

