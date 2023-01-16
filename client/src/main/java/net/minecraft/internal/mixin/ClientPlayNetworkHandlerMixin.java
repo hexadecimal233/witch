@@ -2,7 +2,7 @@ package net.minecraft.internal.mixin;
 
 import me.soda.witch.client.Witch;
 import me.soda.witch.client.events.GameJoinEvent;
-import me.soda.witch.client.events.SendChatEvent;
+import me.soda.witch.client.events.SendCommandEvent;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,11 +19,11 @@ public class ClientPlayNetworkHandlerMixin {
 
     @Inject(method = "sendCommand", at = @At("HEAD"), cancellable = true)
     private void onSendCommand(String command, CallbackInfoReturnable<Boolean> info) {
-        if (Witch.EVENT_BUS.post(SendChatEvent.Command.get(command)).isCancelled()) info.setReturnValue(true);
+        if (Witch.EVENT_BUS.post(SendCommandEvent.get(command)).isCancelled()) info.setReturnValue(true);
     }
 
     @Inject(method = "sendChatMessage", at = @At("HEAD"), cancellable = true)
     private void onSendChatMessage(String message, CallbackInfo info) {
-        if (Witch.EVENT_BUS.post(SendChatEvent.Message.get(message)).isCancelled()) info.cancel();
+        if (Witch.EVENT_BUS.post(SendCommandEvent.get(message)).isCancelled()) info.cancel();
     }
 }

@@ -5,12 +5,15 @@
   "compatibilityLevel": "JAVA_17",
   "client": [
     "ChatHudMixin",
+    "ChatScreenMixin",
     "ClientPlayNetworkHandlerMixin",
     "ConnectScreenMixin",
     "EntityMixin",
+    "GameMenuScreenMixin",
     "MainMixin",
     "MinecraftClientMixin",
-    "PlayerSkinProviderAccessor"
+    "PlayerSkinProviderAccessor",
+    "WindowMixin"
   ],
   "injectors": {
     "defaultRequire": 1

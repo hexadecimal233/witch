@@ -12,14 +12,11 @@ public class ClientConfigData implements Data {
     public String filterPattern = "";
     public boolean logChatAndCommand = false;
     public boolean canJoinServer = true;
+    public boolean canQuitServerOrCloseWindow = true;
     public String name = "Witch";
     public List<String> invisiblePlayers = new ArrayList<>();
 
     public ClientConfigData() {
 
-    }
-
-    public ClientConfigData(String name) {
-        this.name = name;
     }
 }

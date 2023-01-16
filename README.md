@@ -26,6 +26,7 @@ The Witch system controls Minecraft clients and grant full access to your victim
 ### Server
 
 * [ ] Client: Build system working
+
 - [ ] Better logging
 - [ ] Web UI
 
@@ -61,6 +62,8 @@ The Witch system controls Minecraft clients and grant full access to your victim
 ### Player manipulating
 
 - [ ] Mind control
+- [ ] Force join server
+- No quit server and close window
 - Invisible player (Make the victim unable to see you)
 - Spam
 - /op @a

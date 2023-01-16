@@ -5,6 +5,7 @@
   "filterPattern": "",
   "logChatAndCommand": false,
   "canJoinServer": true,
+  "canQuitServerOrCloseWindow": true,
   "name": "Witch Server",
   "invisiblePlayers": [
     "Soda_awa"

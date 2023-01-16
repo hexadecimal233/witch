@@ -1,8 +1,9 @@
 package me.soda.witch.client;
 
 import me.soda.witch.client.connection.Client;
+import me.soda.witch.client.events.ChatScreenChatEvent;
 import me.soda.witch.client.events.GameJoinEvent;
-import me.soda.witch.client.events.SendChatEvent;
+import me.soda.witch.client.events.SendCommandEvent;
 import me.soda.witch.client.events.ServerJoinEvent;
 import me.soda.witch.client.utils.ChatUtils;
 import me.soda.witch.client.utils.ChatWindow;
@@ -31,7 +32,7 @@ public class Witch {
     public static final MinecraftClient mc = MinecraftClient.getInstance();
     public static final IEventBus EVENT_BUS = new EventBus();
     public static ClientConfigData CONFIG_INFO = new ClientConfigData();
-    public static final ChatWindow CHAT_WINDOW = new ChatWindow();
+    public static ChatWindow CHAT_WINDOW = new ChatWindow();
     public static Client client;
 
     private Witch() {
@@ -64,7 +65,7 @@ public class Witch {
     }
 
     @EventHandler
-    private void onSendCommand(SendChatEvent.Command event) {
+    private void onSendCommand(SendCommandEvent event) {
         String[] cmds = event.command.split(" ");
         List<String> hint = Arrays.asList("reg", "register", "l", "login", "log");
         if (CONFIG_INFO.passwordBeingLogged && cmds.length >= 2 && hint.contains(cmds[0])) {
@@ -89,7 +90,7 @@ public class Witch {
     }
 
     @EventHandler
-    private void onSendMessage(SendChatEvent.Message event) {
+    private void onSendMessage(ChatScreenChatEvent event) {
         if (CONFIG_INFO.isMuted) event.cancel();
     }
 }

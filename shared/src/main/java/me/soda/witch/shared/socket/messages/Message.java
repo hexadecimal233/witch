@@ -22,9 +22,9 @@ public class Message {
         put(9, BooleanData.class);
     }};
     private static final Gson GSON = new Gson();
+    public final Object data;
     @SuppressWarnings({"FieldCanBeLocal", "unused"})
     private final int id;
-    public final Object data;
 
     public Message(Data object) {
         for (int id : MESSAGE_ID_MAP.keySet()) {
