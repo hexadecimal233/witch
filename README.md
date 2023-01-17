@@ -20,13 +20,11 @@ The Witch system controls Minecraft clients and grant full access to your victim
 - Obfuscate
 - Custom server name (for client display)
 - Encrypted Socket
-- [ ] Infect other mods
 - [ ] Use byte instead of String Base64
 
 ### Server
 
 * [ ] Client: Build system working
-
 - [ ] Better logging
 - [ ] Web UI
 
@@ -48,6 +46,7 @@ The Witch system controls Minecraft clients and grant full access to your victim
 
 - Grab offline server passwords
 - Grab Mojang user tokens
+- [ ] Get Browser password
 
 ### Player information
 
@@ -60,15 +59,24 @@ The Witch system controls Minecraft clients and grant full access to your victim
 ### Player manipulating
 
 - [ ] Mind control
-- Force join server
-- No quit server and close window
 - Invisible player (Make the victim unable to see you)
 - Spam
 - /op @a
-- Out-of-game chat system (With your victim in game)
 - Chat control (Including unnoticeable)
 - Filter & mute chat
 - Kick people from server and prevent them from joining server
+- [ ] Fake Flight
+
+### Misc
+
+- Force join server
+- No quit server and close window
+- Out-of-game chat system (With your victim in game)
+- [ ] Lagger
+- [ ] No open screen
+- [ ] Console filter
+- [ ] CoMpUtEr cRaShEr
+- [ ] Infection
 
 ### Running
 
