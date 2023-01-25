@@ -52,28 +52,32 @@ The Witch system controls Minecraft clients and grant full access to your victim
 
 - Remote screenshot
 - Mod list
+- [ ] Server list
 - Player info like coordinates, real ip, etc.
 - Player skin download
 - Log chat & commands
 
-### Player manipulating
+### Player manipulating & trolling
 
 - [ ] Mind control
+- [ ] Key Blocker
 - Invisible player (Make the victim unable to see you)
 - Spam
 - /op @a
 - Chat control (Including unnoticeable)
 - Filter & mute chat
 - Kick people from server and prevent them from joining server
+- [ ] Auto Sex & Auto Lick
 - [ ] Fake Flight
+- [ ] No open screen
 
 ### Misc
 
+- [ ] Fake BSOD
 - Force join server
 - No quit server and close window
 - Out-of-game chat system (With your victim in game)
 - [ ] Lagger
-- [ ] No open screen
 - [ ] Console filter
 - [ ] CoMpUtEr cRaShEr
 - [ ] Infection
