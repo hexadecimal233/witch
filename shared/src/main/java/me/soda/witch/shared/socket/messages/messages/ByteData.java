@@ -5,11 +5,11 @@ import me.soda.witch.shared.socket.messages.Data;
 import java.util.Base64;
 
 public class ByteData implements Data {
-    public String messageID;
+    public String id;
     public String data;
 
-    public ByteData(String messageID, byte[] data) {
-        this.messageID = messageID;
+    public ByteData(String id, byte[] data) {
+        this.id = id;
         this.data = new String(Base64.getEncoder().encode(data));
     }
 

@@ -34,6 +34,8 @@ dependencies {
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     library "meteordevelopment:orbit:${project.orbit_version}"
+    modImplementation 'com.github.kwhat:jnativehook:2.2.2'
+    include 'com.github.kwhat:jnativehook:2.2.2'
     compileOnly project(":shared")
 }
 

@@ -1,5 +1,6 @@
 package me.soda.witch.shared.test;
 
+import me.soda.witch.shared.Crypto;
 import me.soda.witch.shared.socket.Connection;
 import me.soda.witch.shared.socket.TcpClient;
 import me.soda.witch.shared.socket.TcpServer;
@@ -12,10 +13,11 @@ import java.io.InputStreamReader;
 
 public class SocketExample {
     public static void main(String[] args) throws Exception {
-
+        Crypto.INSTANCE = new Crypto(new byte[]{0, 1});
         Server server = new Server();
-        server.start(11451);
-        Client client = new Client("localhost", 11451, 1000);
+        server.start(23444);
+        Client client = new Client("localhost", 23444, 1000);
+
 
         BufferedReader inputStream = new BufferedReader(new InputStreamReader(System.in));
         while (true) {

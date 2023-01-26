@@ -16,8 +16,8 @@ public class CommandHandler {
             try {
                 switch (msgArr[0]) {
                     case "stop" -> {
-                        server.stop();
                         Main.inputStream.close();
+                        server.stop();
                     }
                     case "conn" -> {
                         if (msgArr.length == 1) {
@@ -71,11 +71,9 @@ public class CommandHandler {
                                 try (FileInputStream is = new FileInputStream(file)) {
                                     server.sendUtil.trySendBytes(server, msgArr[0], is.readAllBytes());
                                 }
-                            } else {
-                                server.sendUtil.trySendJson(server, in);
                             }
                         } else {
-                            server.sendUtil.trySendString(server, msgArr[0]);
+                            server.sendUtil.trySendJson(server, msgArr[0]);
                         }
                     }
                 }

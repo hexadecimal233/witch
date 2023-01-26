@@ -3,16 +3,13 @@
   "authors": [
     "${author}"
   ],
-  "contact": {
-    "homepage": "https://github.com/ThebestkillerTBK/witch"
-  },
   "depends": {
     "minecraft": ">=1.19.3"
   },
   "environment": "client",
   "id": "${name}",
   "mixins": [
-    "witch.mixins.json"
+    "mod.mixins.json"
   ],
   "name": "${name}",
   "version": "${version}"

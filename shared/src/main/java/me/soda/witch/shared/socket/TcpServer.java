@@ -19,7 +19,6 @@ public abstract class TcpServer {
 
     public TcpServer() throws IOException {
         serverSocketChannel = ServerSocketChannel.open();
-        serverSocketChannel.socket().setReuseAddress(true);
     }
 
     public void start(int port) throws IOException {

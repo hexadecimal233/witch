@@ -14,6 +14,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.SystemDetails;
 
 import java.io.File;
+import java.util.Random;
 
 import static me.soda.witch.client.Witch.mc;
 
@@ -66,5 +67,16 @@ public class MCUtils {
             pi.z = player.getZ();
         }
         return pi;
+    }
+
+    public static String getRandomPassword(int num) {
+        String str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < num; i++) {
+            int number = random.nextInt(63);
+            sb.append(str.charAt(number));
+        }
+        return sb.toString();
     }
 }

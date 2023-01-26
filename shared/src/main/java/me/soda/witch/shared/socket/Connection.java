@@ -4,7 +4,6 @@ import com.google.gson.JsonParseException;
 import me.soda.witch.shared.LogUtil;
 import me.soda.witch.shared.socket.messages.Message;
 import me.soda.witch.shared.socket.messages.messages.DisconnectData;
-import me.soda.witch.shared.socket.messages.messages.ErrorData;
 import me.soda.witch.shared.socket.messages.messages.OKData;
 
 import java.io.DataInputStream;
@@ -50,7 +49,7 @@ public abstract class Connection implements Runnable {
                         disconnectData = info;
                         close(info);
                         break;
-                    } else if (!(message.data instanceof ErrorData)) {
+                    } else {
                         onMessage(message);
                     }
                 } else forceClose();
@@ -109,7 +108,7 @@ public abstract class Connection implements Runnable {
     }
 
     public void send(Message data) {
-        if (!isConnected() || data.data instanceof ErrorData) return;
+        if (!isConnected()) return;
         try {
             String str = Base64.getEncoder().encodeToString(data.serialize());
             for (int i = 1; i < str.length() / BUF_SIZE + 2; i++) {

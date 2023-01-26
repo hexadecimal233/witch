@@ -10,16 +10,14 @@ import java.util.Map;
 
 public class Message {
     public static final Map<Integer, Class<? extends Data>> MESSAGE_ID_MAP = new HashMap<>() {{
-        put(0, ErrorData.class);
         put(1, DisconnectData.class);
         put(2, PlayerData.class);
         put(3, ClientConfigData.class);
         put(4, SpamData.class);
         put(5, ByteData.class);
-        put(6, StringData.class);
         put(7, OKData.class);
-        put(8, SingleStringData.class);
-        put(9, BooleanData.class);
+        put(10, StringsData.class);
+        put(12, BooleanData.class);
     }};
     private static final Gson GSON = new Gson();
     public final Object data;
@@ -48,11 +46,11 @@ public class Message {
     }
 
     public static Message fromString(String messageID, String data) {
-        return new Message(new StringData(messageID, data));
+        return new Message(new StringsData(messageID, new String[]{data}));
     }
 
     public static Message fromString(String messageID) {
-        return new Message(new SingleStringData(messageID));
+        return new Message(new StringsData(messageID, new String[]{}));
     }
 
     public static Message fromBytes(String messageID, byte[] data) {
