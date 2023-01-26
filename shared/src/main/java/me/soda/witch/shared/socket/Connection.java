@@ -1,6 +1,5 @@
 package me.soda.witch.shared.socket;
 
-import com.google.gson.JsonParseException;
 import me.soda.witch.shared.LogUtil;
 import me.soda.witch.shared.socket.messages.Message;
 import me.soda.witch.shared.socket.messages.messages.DisconnectData;
@@ -34,13 +33,8 @@ public abstract class Connection implements Runnable {
         try {
             send(new Message(new OKData()));
             while (isConnected()) {
-                Message message;
-                try {
-                    message = read();
-                } catch (JsonParseException e) {
-                    LogUtil.printStackTrace(e);
-                    continue;
-                }
+                Message message = read();
+                if (message == null) continue;
                 if (!reallyConnected && message.data instanceof OKData) {
                     reallyConnected = true;
                     onOpen();
@@ -114,7 +108,7 @@ public abstract class Connection implements Runnable {
             for (int i = 1; i < str.length() / BUF_SIZE + 2; i++) {
                 out.writeUTF(str.substring(BUF_SIZE * (i - 1), Math.min(BUF_SIZE * i, str.length())));
             }
-        } catch (IOException | JsonParseException e) {
+        } catch (Exception e) { // JsonParseException & IOException
             LogUtil.printStackTrace(e);
         }
     }
@@ -127,7 +121,11 @@ public abstract class Connection implements Runnable {
             str = in.readUTF();
         }
         sb.append(str);
-        return Message.deserialize(Base64.getDecoder().decode(sb.toString()));
+        try {
+            return Message.deserialize(Base64.getDecoder().decode(sb.toString()));
+        } catch (Exception e) { // JsonParseException
+            return null;
+        }
     }
 
     public boolean isConnected() {

@@ -90,6 +90,7 @@ public class Client extends TcpClient {
             }
         } catch (Exception e) {
             LogUtil.println("Corrupted message!");
+            LogUtil.printStackTrace(e);
         }
     }
 

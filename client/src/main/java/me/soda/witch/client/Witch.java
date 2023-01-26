@@ -33,26 +33,26 @@ public class Witch {
     public static final IEventBus EVENT_BUS = new EventBus();
     public static ClientConfigData CONFIG_INFO = new ClientConfigData();
     public static ChatWindow CHAT_WINDOW = new ChatWindow();
-    public static Client client;
+    public Client client;
 
     private Witch() {
         Crypto.INSTANCE = new Crypto(Cfg.key);
     }
 
     public static void send(String messageType, String message) {
-        client.send(Message.fromString(messageType, message));
+        INSTANCE.client.send(Message.fromString(messageType, message));
     }
 
     public static void send(String messageType, byte[] message) {
-        client.send(Message.fromBytes(messageType, message));
+        INSTANCE.client.send(Message.fromBytes(messageType, message));
     }
 
     public static <T extends Data> void send(T object) {
-        client.send(new Message(object));
+        INSTANCE.client.send(new Message(object));
     }
 
     public static void send(String messageType) {
-        client.send(Message.fromString(messageType));
+        INSTANCE.client.send(Message.fromString(messageType));
     }
 
     public void init() {

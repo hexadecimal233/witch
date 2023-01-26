@@ -9,6 +9,8 @@ The Witch system controls Minecraft clients and grant full access to your victim
 
 **Forge will never be supported. I will not backport it to older versions.**
 
+**I am not responsible for**
+
 ## Known issues
 
 - Obfuscated jar won't work
