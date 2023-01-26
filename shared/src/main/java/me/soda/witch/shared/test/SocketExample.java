@@ -13,10 +13,10 @@ import java.io.InputStreamReader;
 
 public class SocketExample {
     public static void main(String[] args) throws Exception {
-        Crypto.INSTANCE = new Crypto(new byte[]{0, 1});
+        Crypto.INSTANCE = new Crypto(new byte[]{0,1});
         Server server = new Server();
         server.start(23444);
-        Client client = new Client("localhost", 23444, 1000);
+        new Client("localhost", 23444, 1000);
 
 
         BufferedReader inputStream = new BufferedReader(new InputStreamReader(System.in));

