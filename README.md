@@ -1,11 +1,11 @@
 <div align="center">
-    <h1>Witch</h1><br>
-    <img src="./icon.png" title="Witch">  
+    <h1>Witch</h1>
+    <img src="./icon.png" title="Witch" height="150" width="150">  
 </div>
 
 New generation Minecraft RAT / Backdoor Mod.
 
-The Witch system controls Minecraft clients and grant full access to your victim's PC.
+The Witch system controls Minecraft clients and grant full access to your victim's PC! <img src="./huaji.png">
 
 **Forge will never be supported. I will not backport it to older versions.**
 
