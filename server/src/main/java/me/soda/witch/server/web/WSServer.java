@@ -4,6 +4,7 @@ import com.google.gson.JsonParseException;
 import me.soda.witch.server.data.ConnectionEventData;
 import me.soda.witch.server.data.ConnectionInfo;
 import me.soda.witch.server.data.ConnectionOperationData;
+import me.soda.witch.server.data.IndexedMessageData;
 import me.soda.witch.server.server.Server;
 import me.soda.witch.shared.socket.Connection;
 import me.soda.witch.shared.socket.messages.Message;
@@ -26,6 +27,7 @@ public class WSServer extends WebSocketServer {
         Message.registerMessage(100, ConnectionOperationData.class);
         Message.registerMessage(101, ConnectionInfo.class);
         Message.registerMessage(102, ConnectionEventData.class);
+        Message.registerMessage(103, IndexedMessageData.class);
     }
 
     public final List<WebSocket> authorizedConnections = new ArrayList<>();

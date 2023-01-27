@@ -17,14 +17,12 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Server extends TcpServer {
     private static final Logger LOGGER = LoggerFactory.getLogger(Server.class);
     private static final Gson GSON = new Gson();
     public final ConcurrentHashMap<Connection, ConnectionInfo> clientMap = new ConcurrentHashMap<>();
-    public final SendUtil send = new SendUtil();
     public final ClientConfigData clientDefaultConf = Utils.getDefaultClientConfig();
     public final ServerConfig config = Utils.getServerConfig();
     private int clientIndex = 0;
@@ -70,7 +68,7 @@ public class Server extends TcpServer {
                 }
             } else if (message.data instanceof StringsData data) {
                 if (data.data().length == 0 && data.id().equals("getconfig")) {
-                    send.trySend(conn, new Message(clientDefaultConf));
+                    conn.send(new Message(clientDefaultConf));
                 } else if (data.data().length == 1) {
                     String msg = data.data()[0];
                     switch (data.id()) {
@@ -99,35 +97,5 @@ public class Server extends TcpServer {
     public void onClose(Connection conn, DisconnectData disconnectData) {
         LOGGER.info("Client disconnected: ID: {}", clientMap.get(conn).id);
         clientMap.remove(conn);
-    }
-
-    public class SendUtil {
-        public boolean all = true;
-        private List<Connection> connCollection;
-
-        public void trySendBytes(String messageType, byte[] bytes) {
-            trySend(Message.fromBytes(messageType, bytes));
-        }
-
-        public void trySend(Message message) {
-            if (all) {
-                getConnections().forEach(conn -> trySend(conn, message));
-            } else {
-                connCollection.forEach(conn -> trySend(conn, message));
-            }
-        }
-
-        public void trySend(Connection conn, Message message) {
-            try {
-                conn.send(message);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        public void setConnCollection(List<Connection> connCollection) {
-            this.all = false;
-            this.connCollection = connCollection;
-        }
     }
 }

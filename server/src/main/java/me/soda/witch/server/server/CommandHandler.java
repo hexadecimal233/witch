@@ -6,9 +6,6 @@ import me.soda.witch.server.web.WS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileInputStream;
-
 public class CommandHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommandHandler.class);
 
@@ -53,13 +50,6 @@ public class CommandHandler {
                                 LOGGER.warn("bc <input> <out> <host> <port>");
                         } catch (Exception e) {
                             e.printStackTrace();
-                        }
-                    }
-                    case "execute" -> {
-                        if (msgArr.length < 2) return;
-                        File file = new File(in.substring(msgArr[0].length() + 1));
-                        try (FileInputStream is = new FileInputStream(file)) {
-                            server.send.trySendBytes(msgArr[0], is.readAllBytes());
                         }
                     }
                 }

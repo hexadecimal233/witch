@@ -11,7 +11,6 @@ import me.soda.witch.shared.socket.messages.messages.PlayerData;
 import me.soda.witch.shared.socket.messages.messages.StringsData;
 
 import java.io.IOException;
-import java.util.List;
 
 public class WS extends Server {
     private final WSServer wsServer;
