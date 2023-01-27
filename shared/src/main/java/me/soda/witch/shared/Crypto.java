@@ -1,13 +1,7 @@
 package me.soda.witch.shared;
 
-public class Crypto {
+public record Crypto(byte[] key) {
     public static Crypto INSTANCE;
-
-    private final byte[] key;
-
-    public Crypto(byte[] key) {
-        this.key = key;
-    }
 
     public byte[] xor(byte[] data) {
         int len = data.length;

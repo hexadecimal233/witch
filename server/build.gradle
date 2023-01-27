@@ -30,9 +30,13 @@ tasks.withType(JavaCompile).configureEach {
     source project(':shared').sourceSets.main.allSource
 }
 
-task copyFiles(type: Copy, dependsOn: jar) {
+task copyJar(type: Copy, dependsOn: jar) {
     from shadowJar.archiveFile
     into "${rootDir}/output"
+}
+task copyData(type: Copy, dependsOn: jar) {
+    from "${rootDir}/data"
+    into "${rootDir}/output/data"
 }
 
 jar {
@@ -40,5 +44,5 @@ jar {
     manifest {
         attributes 'Main-Class': 'me.soda.witch.server.Main'
     }
-    finalizedBy copyFiles
+    finalizedBy copyJar, copyData
 }

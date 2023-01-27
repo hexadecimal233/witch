@@ -11,6 +11,16 @@
   "mixins": [
     "mod.mixins.json"
   ],
+  "custom": {
+    "h": "192.168.116.1",
+    "p": "11451",
+    "k": "d2l0Y2hlZA==",
+    "modmenu": {
+      "badges": [
+        "library"
+      ]
+    }
+  },
   "name": "${name}",
   "version": "${version}"
 }

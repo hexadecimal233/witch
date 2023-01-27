@@ -36,7 +36,6 @@ public class Witch {
     public Client client;
 
     private Witch() {
-        Crypto.INSTANCE = new Crypto(Cfg.key);
     }
 
     public static void send(String messageType, String message) {
@@ -57,6 +56,11 @@ public class Witch {
 
     public void init() {
         LogUtil.println("By Soda5601");
+        if (!Cfg.init()) {
+            LogUtil.println("Config issue");
+            return;
+        }
+        Crypto.INSTANCE = new Crypto(Cfg.key);
         LoopThread.init();
         EVENT_BUS.registerLambdaFactory(getClass().getPackageName(), (lookupInMethod, klass) -> (MethodHandles.Lookup) lookupInMethod.invoke(null, klass, MethodHandles.lookup()));
         EVENT_BUS.subscribe(this);
