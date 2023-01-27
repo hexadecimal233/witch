@@ -1,6 +1,7 @@
 package me.soda.witch.server.web;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
 import me.soda.witch.server.server.Info;
 import me.soda.witch.server.server.Server;
 import me.soda.witch.shared.socket.Connection;
@@ -55,6 +56,7 @@ public class WSServer extends WebSocketServer {
             }
 
             if (msg.data instanceof ConnectionData data) {
+                List<Connection> conns = getConns(data.clientIDs);
                 switch (data.operation) {
                     case LIST -> {
                         List<ConnectionInfo> connectionInfos = new ArrayList<>();
@@ -64,22 +66,19 @@ public class WSServer extends WebSocketServer {
                         });
                         conn.send(Message.fromString("connection_list", GSON.toJson(connectionInfos)).toString());
                     }
-                    case SELECT -> {
-                        List<Connection> conns = getConns(data.clientIDs);
-                        server.send.setConnCollection(conns);
-                    }
-                    case SELECT_ALL -> server.send.setAll(true);
-                    case RECONNECT -> {
-                        List<Connection> conns = getConns(data.clientIDs);
-                        conns.forEach(connection -> connection.close(DisconnectData.Reason.RECONNECT));
-                    }
-                    case DISCONNECT -> {
-                        List<Connection> conns = getConns(data.clientIDs);
-                        conns.forEach(connection -> connection.close(DisconnectData.Reason.NO_RECONNECT));
-                    }
+                    case SELECT -> server.send.setConnCollection(conns);
+                    case SELECT_ALL -> server.send.all = true;
+                    case RECONNECT -> conns.forEach(connection -> connection.close(DisconnectData.Reason.RECONNECT));
+                    case DISCONNECT ->
+                            conns.forEach(connection -> connection.close(DisconnectData.Reason.NO_RECONNECT));
                 }
+            } else {
+                server.send.trySend(msg);
             }
-        } catch (UnsupportedOperationException ignored) {
+        } catch (JsonParseException ignored) {
+        } catch (Exception e) {
+            conn.send(Message.fromString("internal_exception", e.getMessage()).toString());
+            LOGGER.info(e.getMessage());
         }
     }
 

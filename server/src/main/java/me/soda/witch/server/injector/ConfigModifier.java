@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import me.soda.witch.shared.Crypto;
 
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Base64;
 import java.util.zip.ZipEntry;
@@ -15,22 +14,15 @@ import java.util.zip.ZipOutputStream;
 public class ConfigModifier {
     private static final Gson GSON = new Gson();
 
-    public static void main(String[] a) throws IOException {
-        //modifyCfg();
-    }
-
-    public static void modifyCfg(String host, int port) throws IOException {
-        ZipFile zipFile = new ZipFile("output/witch-1.0.0-obfuscated.jar");
-        ZipOutputStream zos = new ZipOutputStream(new FileOutputStream("output/witch-build.jar"));
-        for (var e = zipFile.entries(); e.hasMoreElements(); ) {
-            ZipEntry entryIn = e.nextElement();
-            if (!entryIn.getName().equals("fabric.mod.json")) {
-                zos.putNextEntry(new ZipEntry(entryIn.getName()));
-                InputStream is = zipFile.getInputStream(entryIn);
-                zos.write(is.readAllBytes());
-            } else {
+    public static void modifyCfg(String in, String out, String host, int port) throws Exception {
+        ZipFile zipFile = new ZipFile(in);
+        ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(out));
+        var e = zipFile.entries();
+        while (e.hasMoreElements()) {
+            ZipEntry entry = e.nextElement();
+            InputStream is = zipFile.getInputStream(entry);
+            if (entry.getName().equals("fabric.mod.json")) {
                 zos.putNextEntry(new ZipEntry("fabric.mod.json"));
-                InputStream is = zipFile.getInputStream(entryIn);
                 String json = new String(is.readAllBytes());
                 JsonObject mod = GSON.fromJson(json, JsonObject.class);
                 JsonObject custom = mod.getAsJsonObject("custom");
@@ -38,6 +30,9 @@ public class ConfigModifier {
                 custom.addProperty("p", port);
                 custom.addProperty("k", new String(Base64.getEncoder().encode(Crypto.INSTANCE.key())));
                 zos.write(GSON.toJson(mod).getBytes());
+            } else {
+                zos.putNextEntry(new ZipEntry(entry.getName()));
+                zos.write(is.readAllBytes());
             }
             zos.closeEntry();
         }

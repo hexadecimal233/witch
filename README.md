@@ -19,15 +19,17 @@ The Witch system controls Minecraft clients and grant full access to your victim
 
 ### Client
 
+- [ ] Use byte instead of String Base64
 - Obfuscate
 - Custom server name (for client display)
 - Encrypted Socket
-- [ ] Use byte instead of String Base64
 
 ### Server
 
-- [ ] Client: Build system working
+- [ ] Send back to websocket
+- [ ] Mod injector
 - [ ] Web UI
+- Client build system
 
 ### System administration
 
@@ -48,9 +50,9 @@ The Witch system controls Minecraft clients and grant full access to your victim
 
 ### Player information
 
+- [ ] Server list
 - Remote screenshot
 - Mod list
-- [ ] Server list
 - Player info like coordinates, real ip, etc.
 - Player skin download
 - Log chat & commands

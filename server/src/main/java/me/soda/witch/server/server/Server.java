@@ -31,6 +31,7 @@ public class Server extends TcpServer {
         super();
         LOGGER.info("Server Config: {}", GSON.toJson(config));
         LOGGER.info("Client Config: {}", GSON.toJson(clientDefaultConf));
+        LOGGER.info("Server started on {}.", config.port);
         Crypto.INSTANCE = new Crypto(config.encryptionKey.getBytes());
         start(config.port);
     }
@@ -99,21 +100,17 @@ public class Server extends TcpServer {
         clientMap.remove(conn);
     }
 
-    public static class SendUtil {
+    public class SendUtil {
         private List<Connection> connCollection;
-        private boolean all = true;
+        public boolean all = true;
 
-        public void trySendBytes(Server server, String messageType, byte[] bytes) {
-            trySend(server, Message.fromBytes(messageType, bytes));
+        public void trySendBytes(String messageType, byte[] bytes) {
+            trySend(Message.fromBytes(messageType, bytes));
         }
 
-        public void trySendJson(Server server, String object) {
-            trySend(server, Message.fromJson(object));
-        }
-
-        private void trySend(Server server, Message message) {
+        public void trySend(Message message) {
             if (all) {
-                server.getConnections().forEach(conn -> trySend(conn, message));
+                getConnections().forEach(conn -> trySend(conn, message));
             } else {
                 connCollection.forEach(conn -> trySend(conn, message));
             }
@@ -125,10 +122,6 @@ public class Server extends TcpServer {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-
-        public void setAll(boolean all) {
-            this.all = all;
         }
 
         public void setConnCollection(List<Connection> connCollection) {

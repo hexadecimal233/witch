@@ -3,16 +3,14 @@ package me.soda.witch.client;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import me.soda.witch.shared.LogUtil;
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.metadata.ModMetadata;
 
 import java.net.URL;
 import java.util.Base64;
 
 public class Cfg {
-    public static String host = null;
-    public static int port = -1;
-    public static byte[] key = null;
+    public static String host ;
+    public static int port;
+    public static byte[] key;
 
     public static boolean init() {
         try {
@@ -25,7 +23,7 @@ public class Cfg {
             port = custom.get("p").getAsNumber().intValue();
             key = Base64.getDecoder().decode(custom.get("k").getAsString());
             return true;
-        }catch (Exception e) {
+        } catch (Exception e) {
             LogUtil.printStackTrace(e);
             return false;
         }
