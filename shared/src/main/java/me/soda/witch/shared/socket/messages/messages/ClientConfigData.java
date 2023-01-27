@@ -15,8 +15,4 @@ public class ClientConfigData implements Data {
     public boolean canQuitServerOrCloseWindow = true;
     public String name = "Witch";
     public List<String> invisiblePlayers = new ArrayList<>();
-
-    public ClientConfigData() {
-
-    }
 }

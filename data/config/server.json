@@ -1,5 +1,6 @@
 {
   "port": 11451,
+  "wsPort": 11452,
   "accessCode": "qwq",
   "encryptionKey": "witched"
 }

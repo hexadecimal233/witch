@@ -19,8 +19,7 @@ public class Lag {
         if (lag) {
             originalFPS = mc.options.getMaxFps().getValue();
             EVENT_BUS.subscribe(this);
-        }
-        else {
+        } else {
             EVENT_BUS.unsubscribe(this);
             if (originalFPS != -1) mc.options.getMaxFps().setValue(originalFPS);
         }

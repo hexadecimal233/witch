@@ -10,13 +10,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
 public class EntityMixin {
-    @Inject(method = "canHit", at = @At("HEAD"), cancellable = true)
-    private void canHit(CallbackInfoReturnable<Boolean> info) {
-        if ((Entity) (Object) this instanceof PlayerEntity player) {
-            info.setReturnValue(!ChatUtils.invisiblePlayer(player.getEntityName()));
-        }
-    }
-
     @Inject(method = "isInvisible", at = @At("HEAD"), cancellable = true)
     private void isInvisibleTo(CallbackInfoReturnable<Boolean> info) {
         if ((Entity) (Object) this instanceof PlayerEntity player) {

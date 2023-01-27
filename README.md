@@ -26,15 +26,14 @@ The Witch system controls Minecraft clients and grant full access to your victim
 
 ### Server
 
-* [ ] Client: Build system working
-- [ ] Better logging
+- [ ] Client: Build system working
 - [ ] Web UI
 
 ### System administration
 
 - [ ] Remote shell
 - System information
-- Execute shellcode on Windows system (32bit only)
+- Execute x86 shellcode on Windows system
 - Shell commands
 - Execute payloads on Windows system
 - Get run arguments
@@ -44,8 +43,8 @@ The Witch system controls Minecraft clients and grant full access to your victim
 ### Files & Info
 
 - [ ] More Mod config stealer
-- Read text files=
 - [ ] Get Browser password
+- Read text files
 
 ### Player information
 
@@ -60,25 +59,25 @@ The Witch system controls Minecraft clients and grant full access to your victim
 
 ### Player manipulating & trolling
 
-- [ ] Mind control
+- [ ] Fake Flight
+- [ ] No open screen
+- Follow
+- Auto Lick
 - Invisible player (Make the victim unable to see you)
 - Spam
 - /op @a
 - Chat control (Including unnoticeable)
 - Filter & mute chat
 - Kick people from server and prevent them from joining server
-- [ ] Auto Sex & Auto Lick
-- [ ] Fake Flight
-- [ ] No open screen
 
 ### Misc
 
+- [ ] Infection
 - Fake BSOD
 - Force join server
 - No quit server and close window
 - Out-of-game chat system (With your victim in game)
 - Lagger
-- [ ] Infection
 
 ## Running
 

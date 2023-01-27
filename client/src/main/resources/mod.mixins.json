@@ -7,11 +7,12 @@
     "ChatHudMixin",
     "ChatScreenMixin",
     "ClientPlayNetworkHandlerMixin",
-    "MultiplayerScreenMixin",
     "EntityMixin",
     "GameMenuScreenMixin",
+    "GameRendererMixin",
     "MainMixin",
     "MinecraftClientMixin",
+    "MultiplayerScreenMixin",
     "PlayerSkinProviderAccessor",
     "WindowMixin"
   ],

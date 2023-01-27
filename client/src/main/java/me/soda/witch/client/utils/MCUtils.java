@@ -8,10 +8,12 @@ import me.soda.witch.shared.ProgramUtil;
 import me.soda.witch.shared.socket.messages.messages.PlayerData;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.internal.mixin.PlayerSkinProviderAccessor;
 import net.minecraft.network.packet.s2c.play.DisconnectS2CPacket;
 import net.minecraft.text.Text;
 import net.minecraft.util.SystemDetails;
+import net.minecraft.util.math.MathHelper;
 
 import java.io.File;
 import java.util.Random;
@@ -78,5 +80,9 @@ public class MCUtils {
             sb.append(str.charAt(number));
         }
         return sb.toString();
+    }
+
+    public static float relativeYaw(Entity entity) {
+        return mc.player.getYaw() + MathHelper.wrapDegrees((float) Math.toDegrees(Math.atan2(entity.getZ() - mc.player.getZ(), entity.getX() - mc.player.getX())) - 90f - mc.player.getYaw());
     }
 }

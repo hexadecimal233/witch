@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Message {
-    public static final Map<Integer, Class<? extends Data>> MESSAGE_ID_MAP = new HashMap<>() {{
+    private static final Map<Integer, Class<? extends Data>> MESSAGE_ID_MAP = new HashMap<>() {{
         put(1, DisconnectData.class);
         put(2, PlayerData.class);
         put(3, ClientConfigData.class);
@@ -18,6 +18,7 @@ public class Message {
         put(7, OKData.class);
         put(10, StringsData.class);
         put(12, BooleanData.class);
+        put(13, FollowData.class);
     }};
     private static final Gson GSON = new Gson();
     public final Object data;
@@ -33,6 +34,11 @@ public class Message {
             }
         }
         throw new UnsupportedOperationException("Unknown Message");
+    }
+
+    public static void registerMessage(int id, Class<? extends Data> message) {
+        if (MESSAGE_ID_MAP.containsKey(id)) throw new UnsupportedOperationException("Duplicate message");
+        MESSAGE_ID_MAP.put(id, message);
     }
 
     public static Message fromJson(String string) {
@@ -61,7 +67,7 @@ public class Message {
         return new Message(new BooleanData(messageID, data));
     }
 
-    public static Message deserialize(byte[] bytes) {
+    public static Message decrypt(byte[] bytes) {
         return fromJson(new String(Crypto.INSTANCE.xor(bytes)));
     }
 
@@ -70,7 +76,7 @@ public class Message {
         return GSON.toJson(this);
     }
 
-    public byte[] serialize() {
+    public byte[] encrypt() {
         return Crypto.INSTANCE.xor(toString().getBytes());
     }
 }

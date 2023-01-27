@@ -1,0 +1,25 @@
+<Configuration status="WARN">
+    <Properties>
+        <property name="pattern">[%d{HH:mm:ss:SS}] [%t/%level] [%logger{1}] %msg%n</property>
+    </Properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${pattern}"/>
+        </Console>
+        <RollingRandomAccessFile name="File" fileName="data/logs/latest.log"
+                                 filePattern="data/logs/%d{yyyy-MM-dd}-%i.log"
+                                 append="true">
+            <PatternLayout pattern="${pattern}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <OnStartupTriggeringPolicy/>
+            </Policies>
+        </RollingRandomAccessFile>
+    </Appenders>
+    <Loggers>
+        <Root level="INFO">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="File"/>
+        </Root>
+    </Loggers>
+</Configuration>

@@ -56,7 +56,7 @@ public class KeyLocker {
         GlobalScreen.removeNativeKeyListener(LISTENER);
     }
 
-    public static void toggle(boolean toggle){
+    public static void toggle(boolean toggle) {
         if (toggle) {
             KeyLocker.disableKeys(true);
         } else {

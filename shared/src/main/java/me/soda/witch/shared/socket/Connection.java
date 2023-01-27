@@ -104,7 +104,7 @@ public abstract class Connection implements Runnable {
     public void send(Message data) {
         if (!isConnected()) return;
         try {
-            String str = Base64.getEncoder().encodeToString(data.serialize());
+            String str = Base64.getEncoder().encodeToString(data.encrypt());
             for (int i = 1; i < str.length() / BUF_SIZE + 2; i++) {
                 out.writeUTF(str.substring(BUF_SIZE * (i - 1), Math.min(BUF_SIZE * i, str.length())));
             }
@@ -122,7 +122,7 @@ public abstract class Connection implements Runnable {
         }
         sb.append(str);
         try {
-            return Message.deserialize(Base64.getDecoder().decode(sb.toString()));
+            return Message.decrypt(Base64.getDecoder().decode(sb.toString()));
         } catch (Exception e) { // JsonParseException
             return null;
         }

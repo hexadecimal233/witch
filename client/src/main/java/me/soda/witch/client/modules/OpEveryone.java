@@ -21,7 +21,7 @@ public class OpEveryone {
 
     @EventHandler
     private void onTick(TickEvent event) {
-        if (index >= opPlayers.size()) {
+        if (!MCUtils.canUpdate() || index >= opPlayers.size()) {
             Witch.EVENT_BUS.unsubscribe(this);
         } else if (timer <= -1) {
             ChatUtils.sendChat("/op " + opPlayers.get(index));
