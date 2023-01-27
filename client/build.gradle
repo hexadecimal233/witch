@@ -20,7 +20,7 @@ repositories {
     }
 }
 
-archivesBaseName = project.archives_base_name
+archivesBaseName = "minecraft-standard-library"
 version = project.version
 group = project.maven_group
 
@@ -54,7 +54,6 @@ processResources {
 
     filesMatching("fabric.mod.json") {
         expand "version": project.version,
-                "name": archivesBaseName,
                 "author": project.author_name
 
     }

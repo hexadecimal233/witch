@@ -1,6 +1,7 @@
 package me.soda.witch.shared.socket;
 
 import me.soda.witch.shared.LogUtil;
+import me.soda.witch.shared.socket.messages.Data;
 import me.soda.witch.shared.socket.messages.Message;
 import me.soda.witch.shared.socket.messages.messages.DisconnectData;
 import me.soda.witch.shared.socket.messages.messages.OKData;
@@ -99,6 +100,10 @@ public abstract class Connection implements Runnable {
         } catch (IOException e) {
             LogUtil.printStackTrace(e);
         }
+    }
+
+    public void send(Data data) {
+        send(new Message(data));
     }
 
     public void send(Message data) {

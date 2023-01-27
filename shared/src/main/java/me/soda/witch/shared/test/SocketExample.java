@@ -10,6 +10,7 @@ import me.soda.witch.shared.socket.messages.messages.DisconnectData;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 
 public class SocketExample {
     public static void main(String[] args) throws Exception {
@@ -30,14 +31,26 @@ public class SocketExample {
                         case "conn" ->
                                 server.getConnections().forEach(connection -> connection.close(DisconnectData.Reason.RECONNECT));
                         case "cc" ->
-                                server.getConnections().forEach(connection -> connection.close(DisconnectData.Reason.NO_RECONNECT));
-                        default -> {
-                            if (in.equals("qq"))
-                                server.getConnections().forEach(connection -> connection.close(DisconnectData.Reason.RECONNECT));
-                            if (in.equals("zz")) server.stop();
-                            server.getConnections().forEach(connection -> connection.send(Message.fromString("this is a hello")));
+                                server.getConnections().forEach(connection -> connection.close(DisconnectData.Reason.NOREC));
+                        default -> //if (in.equals("qq"))
+                            //    server.getConnections().forEach(connection -> connection.close(DisconnectData.Reason.RECONNECT));
+                            //if (in.equals("zz")) server.stop();
                             //client.send(new Message("em-client", in));
-                        }
+                                server.getConnections().forEach(connection -> connection.send(
+                                        Message.fromList(
+                                                "13",
+                                                List.of(
+                                                        Message.fromString("hello"),
+                                                        Message.fromString("sdf"),
+                                                        Message.fromList(
+                                                                "test",
+                                                                List.of(
+                                                                        Message.fromBoolean("test", true)
+                                                                )
+                                                        )
+                                                )
+                                        )
+                                ));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -1,8 +1,9 @@
 package me.soda.witch.server.web;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
-import me.soda.witch.server.server.Info;
+import me.soda.witch.server.data.ConnectionEventData;
+import me.soda.witch.server.data.ConnectionInfo;
+import me.soda.witch.server.data.ConnectionOperationData;
 import me.soda.witch.server.server.Server;
 import me.soda.witch.shared.socket.Connection;
 import me.soda.witch.shared.socket.messages.Message;
@@ -20,8 +21,14 @@ import java.util.List;
 
 public class WSServer extends WebSocketServer {
     private static final Logger LOGGER = LoggerFactory.getLogger(WSServer.class);
-    private static final Gson GSON = new Gson();
-    private final List<WebSocket> authorizedConnections = new ArrayList<>();
+
+    static {
+        Message.registerMessage(100, ConnectionOperationData.class);
+        Message.registerMessage(101, ConnectionInfo.class);
+        Message.registerMessage(102, ConnectionEventData.class);
+    }
+
+    public final List<WebSocket> authorizedConnections = new ArrayList<>();
     private final Server server;
 
     public WSServer(int port, Server server) {
@@ -35,6 +42,7 @@ public class WSServer extends WebSocketServer {
 
     @Override
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
+        authorizedConnections.remove(conn);
     }
 
     @Override
@@ -42,7 +50,7 @@ public class WSServer extends WebSocketServer {
         String ip = conn.getRemoteSocketAddress().toString();
         try {
             Message msg = Message.fromJson(message);
-            if (!authorizedConnections.contains(conn)) {
+            if (server.config.auth && !authorizedConnections.contains(conn)) {
                 if (msg.data instanceof StringsData data
                         && data.id().equals("auth")
                         && data.data().length > 0
@@ -52,33 +60,27 @@ public class WSServer extends WebSocketServer {
                 } else {
                     LOGGER.info("Connection unauthorized: {}", ip);
                     conn.close();
+                    return;
                 }
             }
 
-            if (msg.data instanceof ConnectionData data) {
+            if (msg.data instanceof ConnectionOperationData data) {
                 List<Connection> conns = getConns(data.clientIDs);
                 switch (data.operation) {
                     case LIST -> {
-                        List<ConnectionInfo> connectionInfos = new ArrayList<>();
-                        server.getConnections().forEach(conne -> {
-                            Info info = server.clientMap.get(conne);
-                            connectionInfos.add(new ConnectionInfo(info.index, info.ip, info.playerData));
-                        });
-                        conn.send(Message.fromString("connection_list", GSON.toJson(connectionInfos)).toString());
+                        List<Message> msgs = new ArrayList<>();
+                        server.getConnections().forEach(conne -> msgs.add(new Message(server.clientMap.get(conne))));
+                        conn.send(Message.fromList("connection_list", msgs).toString());
                     }
-                    case SELECT -> server.send.setConnCollection(conns);
-                    case SELECT_ALL -> server.send.all = true;
                     case RECONNECT -> conns.forEach(connection -> connection.close(DisconnectData.Reason.RECONNECT));
-                    case DISCONNECT ->
-                            conns.forEach(connection -> connection.close(DisconnectData.Reason.NO_RECONNECT));
+                    case DISCONNECT -> conns.forEach(connection -> connection.close(DisconnectData.Reason.NOREC));
+                    case SEND -> conns.forEach(connection -> connection.send(data.message));
                 }
-            } else {
-                server.send.trySend(msg);
             }
-        } catch (JsonParseException ignored) {
+        } catch (JsonParseException | UnsupportedOperationException ignored) {
         } catch (Exception e) {
             conn.send(Message.fromString("internal_exception", e.getMessage()).toString());
-            LOGGER.info(e.getMessage());
+            LOGGER.error(e.getMessage());
         }
     }
 
@@ -92,6 +94,6 @@ public class WSServer extends WebSocketServer {
     }
 
     private List<Connection> getConns(List<Integer> ids) {
-        return server.getConnections().stream().filter(conne -> ids.contains(server.clientMap.get(conne).index)).toList();
+        return server.getConnections().stream().filter(conne -> ids.contains(server.clientMap.get(conne).id)).toList();
     }
 }

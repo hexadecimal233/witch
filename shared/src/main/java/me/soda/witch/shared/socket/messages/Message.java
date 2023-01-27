@@ -5,7 +5,9 @@ import com.google.gson.JsonObject;
 import me.soda.witch.shared.Crypto;
 import me.soda.witch.shared.socket.messages.messages.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Message {
@@ -19,6 +21,8 @@ public class Message {
         put(10, StringsData.class);
         put(12, BooleanData.class);
         put(13, FollowData.class);
+        put(14, MessageList.class);
+        put(15, IntData.class);
     }};
     private static final Gson GSON = new Gson();
     public final Object data;
@@ -42,29 +46,47 @@ public class Message {
     }
 
     public static Message fromJson(String string) {
-        JsonObject json = GSON.fromJson(string, JsonObject.class);
+        return fromJsonObj(GSON.fromJson(string, JsonObject.class));
+    }
+
+    public static Message fromList(String id, List<Message> string) {
+        return new Message(new MessageList<>(id, string));
+    }
+
+    private static Message fromJsonObj(JsonObject json) {
         for (int id : MESSAGE_ID_MAP.keySet()) {
             if (id == json.get("id").getAsInt()) {
-                return new Message(GSON.fromJson(json.getAsJsonObject("data"), MESSAGE_ID_MAP.get(id)));
+                if (MESSAGE_ID_MAP.get(id) == MessageList.class) {
+                    List<Message> l = new ArrayList<>();
+                    JsonObject data = json.getAsJsonObject("data");
+                    data.getAsJsonArray("data").forEach(jsonElement -> l.add(fromJsonObj(jsonElement.getAsJsonObject())));
+                    return new Message(new MessageList<>(data.get("id").getAsString(), l));
+                } else {
+                    return new Message(GSON.fromJson(json.getAsJsonObject("data"), MESSAGE_ID_MAP.get(id)));
+                }
             }
         }
         throw new UnsupportedOperationException("Unknown Message");
     }
 
-    public static Message fromString(String messageID, String data) {
-        return new Message(new StringsData(messageID, new String[]{data}));
+    public static Message fromString(String id, String data) {
+        return new Message(new StringsData(id, new String[]{data}));
     }
 
-    public static Message fromString(String messageID) {
-        return new Message(new StringsData(messageID, new String[]{}));
+    public static Message fromInt(String id, int data) {
+        return new Message(new IntData(id, data));
     }
 
-    public static Message fromBytes(String messageID, byte[] data) {
-        return new Message(new ByteData(messageID, data));
+    public static Message fromString(String id) {
+        return new Message(new StringsData(id, new String[]{}));
     }
 
-    public static Message fromBoolean(String messageID, boolean data) {
-        return new Message(new BooleanData(messageID, data));
+    public static Message fromBytes(String id, byte[] data) {
+        return new Message(new ByteData(id, data));
+    }
+
+    public static Message fromBoolean(String id, boolean data) {
+        return new Message(new BooleanData(id, data));
     }
 
     public static Message decrypt(byte[] bytes) {

@@ -53,7 +53,7 @@ public abstract class TcpClient extends Connection {
     public void afterClose(DisconnectData disconnectData) {
         boolean instaReconnect = false;
         switch (disconnectData.reason()) {
-            case NO_RECONNECT -> this.reconnectTimeout = -1;
+            case NOREC -> this.reconnectTimeout = -1;
             case RECONNECT -> instaReconnect = true;
         }
         reconnect(instaReconnect);

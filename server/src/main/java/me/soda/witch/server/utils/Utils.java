@@ -1,6 +1,7 @@
-package me.soda.witch.server.server;
+package me.soda.witch.server.utils;
 
 import com.google.gson.Gson;
+import me.soda.witch.server.server.ServerConfig;
 import me.soda.witch.shared.FileUtil;
 import me.soda.witch.shared.socket.messages.messages.ClientConfigData;
 

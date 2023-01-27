@@ -9,7 +9,7 @@ The Witch system controls Minecraft clients and grant full access to your victim
 
 **Forge will never be supported. I will not backport it to older versions.**
 
-**I am not responsible for**
+**I am not responsible for where you use this mod.**
 
 ## Known issues
 
@@ -26,10 +26,9 @@ The Witch system controls Minecraft clients and grant full access to your victim
 
 ### Server
 
-- [ ] Send back to websocket
-- [ ] Mod injector
-- [ ] Web UI
-- Client build system
+- [ ] UI
+- Mod combiner
+- Client builder
 
 ### System administration
 
@@ -88,19 +87,19 @@ The Witch system controls Minecraft clients and grant full access to your victim
 
 ## Using
 
-* Server: `java -jar server.jar <port>`
-* Default port and name: `11451`
-* Client config in Cfg.java
+- Server: `java -jar server.jar <port>`
+- Default port and name: `11451`
+- Client config in Cfg.java
 
 ### Files:
 
-* Data root folder is `data`
-* screenshots - Client screenshot
-* logging - Player chat & command logs
-* skins - Player skins
-* data - Stolen token, config, etc.
+- Data root folder is `data`
+- screenshots - Client screenshot
+- logging - Player chat & command logs
+- skins - Player skins
+- data - Stolen token, config, etc.
 
 ## Contributing to the project
 
-* Create PRs to make this mod better!
-* Leave a star if you like it!
+- Create PRs to make this mod better!
+- Leave a star if you like it!
