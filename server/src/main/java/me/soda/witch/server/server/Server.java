@@ -22,13 +22,14 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Server extends TcpServer {
     private static final Logger LOGGER = LoggerFactory.getLogger(Server.class);
     private static final Gson GSON = new Gson();
-    public final ConcurrentHashMap<Connection, ConnectionInfo> clientMap = new ConcurrentHashMap<>();
-    public final ClientConfigData clientDefaultConf = Utils.getDefaultClientConfig();
-    public final ServerConfig config = Utils.getServerConfig();
+    protected final ConcurrentHashMap<Connection, ConnectionInfo> clientMap = new ConcurrentHashMap<>();
+    protected final ClientConfigData clientDefaultConf = Utils.getDefaultClientConfig();
+    protected final ServerConfig config = Utils.getServerConfig();
     private int clientIndex = 0;
 
     public Server() throws IOException {
         super();
+
         LOGGER.info("--@@@@@@@ By Soda5601 @@@@@@@--");
         LOGGER.info("Server Config: {}", GSON.toJson(config));
         LOGGER.info("Client Config: {}", GSON.toJson(clientDefaultConf));

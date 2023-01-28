@@ -1,19 +1,16 @@
 package me.soda.witch.server.gui;
 
-import me.soda.witch.server.server.Server;
-
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.IOException;
 
 public class GUI extends JFrame {
-    public Server server;
+    public final AdminPanel adminPanel;
 
     public GUI() {
         JDialog generateWindow = Generate.dialog(this);
+        adminPanel = new AdminPanel();
 
         JMenuBar menuBar = new JMenuBar();
         JMenu themeMenu = new JMenu("Server");
@@ -40,31 +37,12 @@ public class GUI extends JFrame {
 
         menuBar.add(themeMenu);
         setJMenuBar(menuBar);
-        setContentPane(new AdminPanel());
+        setContentPane(adminPanel);
         setTitle("Witch server control");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        pack();
+        setSize(1000,600);
         setLocationRelativeTo(getOwner());
         setVisible(true);
-
-        try {
-            server = new Server();
-        } catch (IOException e) {
-            JOptionPane.showConfirmDialog(this, e.getMessage(), "Error:Failed to start server", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
-            System.exit(1);
-        }
-
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                try {
-                    server.stop();
-                } catch (IOException ex) {
-                    JOptionPane.showConfirmDialog(GUI.this, ex.getMessage(), "Failed to stop server", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
-                    System.exit(1);
-                }
-            }
-        });
     }
 
     public static void openURL(String url) {

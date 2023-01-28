@@ -8,6 +8,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class Generate extends JPanel {
     public Generate() {
@@ -50,6 +52,7 @@ public class Generate extends JPanel {
             try {
                 ConfigModifier.modifyCfg(injectedText.getText(), "cache.tmp", hostText.getText(), Integer.parseInt(portText.getText()));
                 ConfigModifier.combine(inputFileText.getText(), "cache.tmp", outputFileText.getText());
+                Files.deleteIfExists(Path.of("cache.tmp"));
                 JOptionPane.showMessageDialog(this, "Operation completed");
             } catch (Exception ex) {
                 JOptionPane.showConfirmDialog(this, ex.getMessage(), "Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
