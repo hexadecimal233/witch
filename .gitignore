@@ -37,3 +37,4 @@ run/
 data/*
 !data/config/*
 output
+*.tmp

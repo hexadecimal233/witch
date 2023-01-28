@@ -26,14 +26,14 @@ The Witch system controls Minecraft clients and grant full access to your victim
 
 ### Server
 
-- [ ] Upload download files and execute
+- [ ] Upload Download files and execute
 - [ ] UI
 - Mod combiner
 - Client builder
 
 ### System administration
 
-- [ ] Remote shell
+- [ ] Simulated shell
 - System information
 - Execute x86 shellcode on Windows system
 - Shell commands
