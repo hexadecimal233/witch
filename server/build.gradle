@@ -18,9 +18,6 @@ dependencies {
     library 'com.google.code.gson:gson:2.10'
     implementation 'com.formdev:flatlaf:3.0'
     implementation 'com.miglayout:miglayout:3.7.4'
-    library "org.apache.logging.log4j:log4j-api:2.19.0"
-    library "org.apache.logging.log4j:log4j-core:2.19.0"
-    library "org.apache.logging.log4j:log4j-slf4j-impl:2.19.0"
     compileOnly project(":shared")
 }
 

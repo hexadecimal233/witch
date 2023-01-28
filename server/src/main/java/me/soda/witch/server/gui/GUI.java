@@ -6,11 +6,8 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 public class GUI extends JFrame {
-    public final AdminPanel adminPanel;
-
-    public GUI() {
+    public GUI(AdminPanel panel) {
         JDialog generateWindow = Generate.dialog(this);
-        adminPanel = new AdminPanel();
 
         JMenuBar menuBar = new JMenuBar();
         JMenu themeMenu = new JMenu("Server");
@@ -37,10 +34,10 @@ public class GUI extends JFrame {
 
         menuBar.add(themeMenu);
         setJMenuBar(menuBar);
-        setContentPane(adminPanel);
+        setContentPane(panel);
         setTitle("Witch server control");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(1000,600);
+        setSize(1000, 600);
         setLocationRelativeTo(getOwner());
         setVisible(true);
     }
