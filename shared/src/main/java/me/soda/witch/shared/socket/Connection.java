@@ -62,12 +62,11 @@ public abstract class Connection implements Runnable {
 
     public abstract void onOpen();
 
-    public abstract void onMessage(Message message);
-
     public abstract void onClose(DisconnectData disconnectData);
 
-    public void afterClose(DisconnectData disconnectData) {
+    public abstract void onMessage(Message message);
 
+    public void afterClose(DisconnectData disconnectData) {
     }
 
     public void connect(Socket socket) throws IOException {

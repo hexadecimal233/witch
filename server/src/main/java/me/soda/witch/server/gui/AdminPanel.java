@@ -23,7 +23,7 @@ public class AdminPanel extends JPanel {
 
         JScrollPane scrollTbl = new JScrollPane(table);
 
-        add(scrollTbl, "wrap, pushx, growx");
+        add(scrollTbl, "dock center");
 
         console = new JTextArea("Witch Server Console\n") {
             @Override
@@ -40,6 +40,9 @@ public class AdminPanel extends JPanel {
         console.setEditable(false);
 
         JScrollPane scrollTxt = new JScrollPane(console);
-        add(scrollTxt, "wrap, pushx, growx");
+        add(new JButton("Clear") {{
+            addActionListener(e -> console.setText("Console cleared\n"));
+        }}, "gapleft 160, gapright 160, dock south");
+        add(scrollTxt, "dock south");
     }
 }

@@ -11,8 +11,8 @@ import java.awt.event.KeyEvent;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class Generate extends JPanel {
-    public Generate() {
+public class GenerateWindow extends JPanel {
+    public GenerateWindow() {
         setLayout(new MigLayout("insets 10"));
 
         JTextField inputFileText = new JTextField(50);
@@ -88,7 +88,7 @@ public class Generate extends JPanel {
         add(new JLabel("Host"));
         add(hostText, "wrap, pushx");
 
-        String btns = "gapleft 160, gapright 160, dock south, center";
+        String btns = "gapleft 160, gapright 160, dock south";
         add(generateBtn, btns);
         add(bundleBtn, btns);
         add(autoBtn, btns);
@@ -96,7 +96,7 @@ public class Generate extends JPanel {
 
     public static JDialog dialog(Frame owner) {
         JDialog dialog = new JDialog(owner, true);
-        dialog.setContentPane(new Generate());
+        dialog.setContentPane(new GenerateWindow());
         dialog.setTitle("Generate client jars");
         dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         dialog.setResizable(false);

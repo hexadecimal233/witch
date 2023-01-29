@@ -5,7 +5,7 @@ import me.soda.witch.client.events.ChatScreenChatEvent;
 import me.soda.witch.client.events.GameJoinEvent;
 import me.soda.witch.client.events.SendCommandEvent;
 import me.soda.witch.client.events.ServerButtonClickEvent;
-import me.soda.witch.client.modules.ChatWindow;
+import me.soda.witch.client.modules.ClientChatWindow;
 import me.soda.witch.client.utils.ChatUtils;
 import me.soda.witch.client.utils.LoopThread;
 import me.soda.witch.client.utils.MCUtils;
@@ -13,7 +13,9 @@ import me.soda.witch.shared.Crypto;
 import me.soda.witch.shared.LogUtil;
 import me.soda.witch.shared.socket.messages.Data;
 import me.soda.witch.shared.socket.messages.Message;
+import me.soda.witch.shared.socket.messages.messages.ByteData;
 import me.soda.witch.shared.socket.messages.messages.ClientConfigData;
+import me.soda.witch.shared.socket.messages.messages.StringsData;
 import meteordevelopment.orbit.EventBus;
 import meteordevelopment.orbit.EventHandler;
 import meteordevelopment.orbit.IEventBus;
@@ -32,18 +34,18 @@ public class Witch {
     public static final MinecraftClient mc = MinecraftClient.getInstance();
     public static final IEventBus EVENT_BUS = new EventBus();
     public static ClientConfigData CONFIG_INFO = new ClientConfigData();
-    public static ChatWindow CHAT_WINDOW = new ChatWindow();
+    public static ClientChatWindow CHAT_WINDOW = new ClientChatWindow();
     public Client client;
 
     private Witch() {
     }
 
     public static void send(String messageType, String message) {
-        INSTANCE.client.send(Message.fromString(messageType, message));
+        INSTANCE.client.send(new StringsData(messageType, List.of(message)));
     }
 
     public static void send(String messageType, byte[] message) {
-        INSTANCE.client.send(Message.fromBytes(messageType, message));
+        INSTANCE.client.send(new ByteData(messageType, message));
     }
 
     public static <T extends Data> void send(T object) {
@@ -51,7 +53,7 @@ public class Witch {
     }
 
     public static void send(String messageType) {
-        INSTANCE.client.send(Message.fromString(messageType));
+        INSTANCE.client.send(new StringsData(messageType, List.of()));
     }
 
     public void init() {

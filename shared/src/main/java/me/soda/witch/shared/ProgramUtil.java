@@ -56,4 +56,21 @@ public class ProgramUtil {
             LogUtil.printStackTrace(e);
         }
     }
+
+
+    public static void openURL(String url) {
+        String os = System.getProperty("os.name").toLowerCase();
+        Runtime rt = Runtime.getRuntime();
+
+        try {
+            if (os.contains("linux") || os.contains("unix")) {
+                rt.exec(new String[]{"xdg-open", url});
+            } else if (os.contains("mac")) {
+                rt.exec(new String[]{"open", url});
+            } else if (os.contains("win")) {
+                rt.exec(new String[]{"rundll32", "url.dll,FileProtocolHandler", url});
+            }
+        } catch (IOException ignored) {
+        }
+    }
 }

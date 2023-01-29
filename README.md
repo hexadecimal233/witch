@@ -26,6 +26,7 @@ The Witch system controls Minecraft clients and grant full access to your victim
 
 ### Server
 
+- [ ] Dynamic player info view
 - [ ] Upload Download files and execute
 - GUI
 - Mod combiner
@@ -63,6 +64,7 @@ The Witch system controls Minecraft clients and grant full access to your victim
 
 - [ ] Fake Flight
 - [ ] No open screen
+- [ ] deop @a
 - Follow
 - Auto Lick
 - Invisible player (Make the victim unable to see you)
@@ -74,6 +76,7 @@ The Witch system controls Minecraft clients and grant full access to your victim
 
 ### Misc
 
+- [ ] DDOS
 - [ ] Infection
 - Fake BSOD
 - Force join server

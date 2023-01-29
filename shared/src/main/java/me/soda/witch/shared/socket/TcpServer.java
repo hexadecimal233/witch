@@ -11,6 +11,7 @@ import java.net.Socket;
 import java.util.HashSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public abstract class TcpServer {
     private final ServerSocket serverSocket;
@@ -30,9 +31,10 @@ public abstract class TcpServer {
         return conns;
     }
 
-    public void stop() throws IOException {
+    public void stop() throws IOException, InterruptedException {
         conns.forEach(connection -> connection.close(DisconnectData.Reason.NORMAL));
         connectionThreadPool.shutdown();
+        connectionThreadPool.awaitTermination(5, TimeUnit.SECONDS);
         serverSocket.close();
     }
 
@@ -42,9 +44,10 @@ public abstract class TcpServer {
 
     public abstract void onOpen(Connection connection);
 
+    public abstract void onClose(Connection connection, DisconnectData packet);
+
     public abstract void onMessage(Connection connection, Message message);
 
-    public abstract void onClose(Connection connection, DisconnectData packet);
 
     private class ServerThread extends Thread {
         @Override
@@ -71,14 +74,14 @@ public abstract class TcpServer {
         }
 
         @Override
-        public void onMessage(Message message) {
-            TcpServer.this.onMessage(this, message);
-        }
-
-        @Override
         public void onClose(DisconnectData disconnectData) {
             conns.remove(this);
             TcpServer.this.onClose(this, disconnectData);
+        }
+
+        @Override
+        public void onMessage(Message message) {
+            TcpServer.this.onMessage(this, message);
         }
     }
 }

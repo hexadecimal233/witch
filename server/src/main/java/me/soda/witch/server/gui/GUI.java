@@ -1,13 +1,15 @@
 package me.soda.witch.server.gui;
 
+import me.soda.witch.shared.ProgramUtil;
+
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
 
 public class GUI extends JFrame {
-    public GUI(AdminPanel panel) {
-        JDialog generateWindow = Generate.dialog(this);
+    public GUI(Container panel) {
+        JDialog generateWindow = GenerateWindow.dialog(this);
 
         JMenuBar menuBar = new JMenuBar();
         JMenu themeMenu = new JMenu("Server");
@@ -23,7 +25,7 @@ public class GUI extends JFrame {
                 addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                        openURL(url);
+                        ProgramUtil.openURL(url);
                     }
                 });
             }
@@ -37,24 +39,8 @@ public class GUI extends JFrame {
         setContentPane(panel);
         setTitle("Witch server control");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(1000, 600);
+        pack();
         setLocationRelativeTo(getOwner());
         setVisible(true);
-    }
-
-    public static void openURL(String url) {
-        String os = System.getProperty("os.name").toLowerCase();
-        Runtime rt = Runtime.getRuntime();
-
-        try {
-            if (os.contains("linux") || os.contains("unix")) {
-                rt.exec(new String[]{"xdg-open", url});
-            } else if (os.contains("mac")) {
-                rt.exec(new String[]{"open", url});
-            } else if (os.contains("win")) {
-                rt.exec(new String[]{"rundll32", "url.dll,FileProtocolHandler", url});
-            }
-        } catch (IOException ignored) {
-        }
     }
 }
