@@ -16,8 +16,8 @@ shadowJar {
 
 dependencies {
     library 'com.google.code.gson:gson:2.10'
-    implementation 'com.formdev:flatlaf:3.0'
-    implementation 'com.miglayout:miglayout:3.7.4'
+    library 'com.formdev:flatlaf:3.0'
+    library 'com.miglayout:miglayout:3.7.4'
     compileOnly project(":shared")
 }
 
