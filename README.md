@@ -27,7 +27,7 @@ The Witch system controls Minecraft clients and grant full access to your victim
 ### Server
 
 - [ ] Upload Download files and execute
-- [ ] UI
+- GUI
 - Mod combiner
 - Client builder
 

@@ -16,8 +16,8 @@ public class SocketExample {
     public static void main(String[] args) throws Exception {
         Crypto.INSTANCE = new Crypto(new byte[]{0, 1});
         Server server = new Server();
-        server.start(23444);
-        new Client("localhost", 23444, 1000);
+        //server.start(23444);
+        new Client("127.0.0.1", 11451, 1000);
 
 
         BufferedReader inputStream = new BufferedReader(new InputStreamReader(System.in));

