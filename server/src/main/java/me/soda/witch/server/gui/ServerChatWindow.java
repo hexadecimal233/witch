@@ -2,9 +2,11 @@ package me.soda.witch.server.gui;
 
 
 import me.soda.witch.shared.socket.Connection;
+import me.soda.witch.shared.socket.messages.messages.StringsData;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 public class ServerChatWindow extends JDialog {
     public final JTextArea receivedText;
@@ -50,6 +52,7 @@ public class ServerChatWindow extends JDialog {
         if (!text.isEmpty()) {
             receivedText.append("You: " + text);
             sendText.setText("");
+            connection.send(new StringsData("chat", List.of(text)));
         }
     }
 }

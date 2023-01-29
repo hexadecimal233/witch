@@ -44,6 +44,10 @@ public class Witch {
         INSTANCE.client.send(new StringsData(messageType, List.of(message)));
     }
 
+    public static void send(String messageType, List<String> message) {
+        INSTANCE.client.send(new StringsData(messageType, message));
+    }
+
     public static void send(String messageType, byte[] message) {
         INSTANCE.client.send(new ByteData(messageType, message));
     }
