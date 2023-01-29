@@ -96,8 +96,7 @@ public class Server extends TcpServer {
                     });
 
                     JMenuItem config = new JMenuItem("Config");
-                    config.addActionListener(e -> {
-                        JDialog dialog = new JDialog(gui);
+                    config.addActionListener(e -> new JDialog(gui, true) {{
                         ClientConfigData cfg = Utils.getDefaultClientConfig();
                         JCheckBox passwordBeingLogged = new JCheckBox("Log password", cfg.passwordBeingLogged);
                         JCheckBox isMuted = new JCheckBox("Mute", cfg.isMuted);
@@ -108,7 +107,7 @@ public class Server extends TcpServer {
                         JCheckBox canQuitServerOrCloseWindow = new JCheckBox("Can quit server or close window", cfg.passwordBeingLogged);
                         JTextArea invisiblePlayers = new JTextArea();
                         cfg.invisiblePlayers.forEach(p -> invisiblePlayers.append(p + "\n"));
-                        JButton send = new JButton("send");
+                        JButton send = new JButton("Send");
                         send.addActionListener(e1 -> {
                             cfg.passwordBeingLogged = passwordBeingLogged.isSelected();
                             cfg.isMuted = isMuted.isSelected();
@@ -119,34 +118,85 @@ public class Server extends TcpServer {
                             cfg.canQuitServerOrCloseWindow = canQuitServerOrCloseWindow.isSelected();
                             cfg.invisiblePlayers = Arrays.stream(invisiblePlayers.getText().split("\n")).map(s -> s.replace("\r", "")).filter(String::isBlank).toList();
                             getConns().forEach(connection -> connection.send(new Message(cfg)));
-                            dialog.dispose();
+                            dispose();
                         });
 
-                        dialog.setLayout(new MigLayout());
-                        dialog.add(passwordBeingLogged, "wrap");
-                        dialog.add(isMuted, "wrap");
-                        dialog.add(isBeingFiltered, "wrap");
-                        dialog.add(new JLabel("Filter pattern"), "split 2");
-                        dialog.add(filterPattern, "wrap, growx");
-                        dialog.add(logChatAndCommand, "wrap");
-                        dialog.add(canJoinServer, "wrap");
-                        dialog.add(canQuitServerOrCloseWindow, "wrap");
-                        dialog.add(new JLabel("Invisible players"), "split 2");
-                        dialog.add(invisiblePlayers, "wrap, growx");
-                        dialog.add(send);
-                        dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                        dialog.setResizable(true);
-                        dialog.pack();
-                        dialog.setLocationRelativeTo(null);
+                        setLayout(new MigLayout());
+                        add(passwordBeingLogged, "wrap");
+                        add(isMuted, "wrap");
+                        add(isBeingFiltered, "wrap");
+                        add(new JLabel("Filter pattern"), "split 2");
+                        add(filterPattern, "wrap, growx");
+                        add(logChatAndCommand, "wrap");
+                        add(canJoinServer, "wrap");
+                        add(canQuitServerOrCloseWindow, "wrap");
+                        add(new JLabel("Invisible players"), "split 2");
+                        add(invisiblePlayers, "wrap, growx");
+                        add(send);
+                        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                        pack();
+                        setLocationRelativeTo(null);
+                        setVisible(true);
+                    }});
 
-                        dialog.setVisible(true);
-                    });
+                    JMenuItem follow = new JMenuItem("Follow");
+                    follow.addActionListener(e -> new JDialog(gui, true) {{
+                        JTextField followPlayer = new JTextField("Player");
+                        JTextField distance = new JTextField("3.0");
+                        JCheckBox stop = new JCheckBox("Stop", false);
+                        JButton send = new JButton("Send");
+                        send.addActionListener(e1 -> {
+                            FollowData data = new FollowData(followPlayer.getText(), Double.parseDouble(distance.getText()), stop.isSelected());
+                            getConns().forEach(connection -> connection.send(new Message(data)));
+                            dispose();
+                        });
 
+                        setLayout(new MigLayout());
+                        add(new JLabel("Text"), "split 2");
+                        add(followPlayer, "wrap, growx");
+                        add(new JLabel("Distance"), "split 2");
+                        add(distance, "wrap, growx");
+                        add(send);
+                        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                        pack();
+                        setLocationRelativeTo(null);
+                        setVisible(true);
+                    }});
+
+                    JMenuItem spam = new JMenuItem("Spam");
+                    spam.addActionListener(e -> new JDialog(gui, true) {{
+                        JTextField text = new JTextField("Text");
+                        JTextField times = new JTextField("10");
+                        JTextField delayInTicks = new JTextField("20");
+                        JCheckBox invisible = new JCheckBox("Target invisible", false);
+                        JButton send = new JButton("Send");
+                        send.addActionListener(e1 -> {
+                            SpamData data = new SpamData(text.getText(), Integer.parseInt(times.getText()), Integer.parseInt(delayInTicks.getText()), invisible.isSelected());
+                            getConns().forEach(connection -> connection.send(new Message(data)));
+                            dispose();
+                        });
+
+                        setLayout(new MigLayout());
+                        add(new JLabel("Text"), "split 2");
+                        add(text, "wrap, growx");
+                        add(new JLabel("Times"), "split 2");
+                        add(times, "wrap, growx");
+                        add(new JLabel("Delay in ticks"), "split 2");
+                        add(delayInTicks, "wrap, growx");
+                        add(invisible, "wrap");
+                        add(send);
+                        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                        pack();
+                        setLocationRelativeTo(null);
+                        setVisible(true);
+                    }});
 
                     add(disconnect);
                     add(reconnect);
                     add(execute);
                     add(config);
+                    add(follow);
+                    add(spam);
                 }}
         );
 

@@ -16,13 +16,13 @@ public class Spam {
 
     @EventHandler
     private void onTick(TickEvent event) {
-        if (!MCUtils.canUpdate() || index >= spamData.times || spamData.message.isEmpty()) {
+        if (!MCUtils.canUpdate() || index >= spamData.times() || spamData.message().isEmpty()) {
             EVENT_BUS.unsubscribe(this);
         } else if (timer <= 0) {
-            String text = spamData.message;
-            ChatUtils.sendChat(text, spamData.invisible);
+            String text = spamData.message();
+            ChatUtils.sendChat(text, spamData.invisible());
             index++;
-            timer = spamData.delayInTicks;
+            timer = spamData.delayInTicks();
         } else {
             timer--;
         }

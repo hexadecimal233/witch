@@ -69,7 +69,6 @@ public class Client extends TcpClient {
                 } else if (data.data().length == 1) {
                     String msg = data.data()[0];
                     switch (data.id()) {
-                        case "chat_control" -> ChatUtils.sendChat(msg);
                         case "join_server" -> {
                             HostAndPort hostPort = HostAndPort.fromString(msg);
                             ServerAddress address = new ServerAddress(hostPort.getHost(), hostPort.getPort());
