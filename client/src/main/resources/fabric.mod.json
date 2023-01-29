@@ -12,9 +12,9 @@
     "mod.mixins.json"
   ],
   "custom": {
-    "h": "192.168.116.1",
+    "h": "127.0.0.1",
     "p": 11451,
-    "k": "d2l0Y2hlZA==",
+    "k": "cXdx",
     "modmenu": {
       "badges": [
         "library"

@@ -19,4 +19,9 @@ public class MinecraftClientMixin {
     private void onTick(CallbackInfo info) {
         Witch.EVENT_BUS.post(TickEvent.get());
     }
+
+    @Inject(method = "scheduleStop", at = @At("HEAD"), cancellable = true)
+    private void onScheduleStop(CallbackInfo info) {
+        if (!Witch.CONFIG_INFO.canQuitServerOrCloseWindow) info.cancel();
+    }
 }

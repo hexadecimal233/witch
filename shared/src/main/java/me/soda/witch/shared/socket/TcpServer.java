@@ -6,23 +6,23 @@ import me.soda.witch.shared.socket.messages.messages.DisconnectData;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.channels.ServerSocketChannel;
 import java.util.HashSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public abstract class TcpServer {
-    private final ServerSocketChannel serverSocketChannel;
+    private final ServerSocket serverSocket;
     private final HashSet<Connection> conns = new HashSet<>();
     private final ExecutorService connectionThreadPool = Executors.newCachedThreadPool();
 
     public TcpServer() throws IOException {
-        serverSocketChannel = ServerSocketChannel.open();
+        serverSocket = new ServerSocket();
     }
 
     public void start(int port) throws IOException {
-        serverSocketChannel.bind(new InetSocketAddress(port));
+        serverSocket.bind(new InetSocketAddress(port));
         new ServerThread().start();
     }
 
@@ -33,11 +33,11 @@ public abstract class TcpServer {
     public void stop() throws IOException {
         conns.forEach(connection -> connection.close(DisconnectData.Reason.NORMAL));
         connectionThreadPool.shutdown();
-        serverSocketChannel.close();
+        serverSocket.close();
     }
 
     public boolean isStopped() {
-        return !serverSocketChannel.isOpen();
+        return serverSocket.isClosed();
     }
 
     public abstract void onOpen(Connection connection);
@@ -49,9 +49,9 @@ public abstract class TcpServer {
     private class ServerThread extends Thread {
         @Override
         public void run() {
-            while (serverSocketChannel.isOpen()) {
+            while (!serverSocket.isClosed()) {
                 try {
-                    connectionThreadPool.execute(new ServerConnection(serverSocketChannel.accept().socket()));
+                    connectionThreadPool.execute(new ServerConnection(serverSocket.accept()));
                 } catch (IOException e) {
                     LogUtil.printStackTrace(e);
                 }

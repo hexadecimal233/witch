@@ -10,6 +10,7 @@
     "EntityMixin",
     "GameMenuScreenMixin",
     "GameRendererMixin",
+    "KeyboardMixin",
     "MainMixin",
     "MinecraftClientMixin",
     "MultiplayerScreenMixin",

@@ -28,14 +28,13 @@ public class Server extends TcpServer {
     public final ConcurrentHashMap<Connection, Info> clientMap = new ConcurrentHashMap<>();
     protected final ClientConfigData clientDefaultConf = Utils.getDefaultClientConfig();
     protected final ServerConfig config = Utils.getServerConfig();
-    private final GUI gui;
     private final AdminPanel adminPanel;
     private int clientIndex = 0;
 
     public Server() throws IOException {
         super();
         adminPanel = new AdminPanel(this);
-        gui = new GUI(adminPanel);
+        GUI gui = new GUI(adminPanel);
         gui.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
