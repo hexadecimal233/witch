@@ -12,7 +12,7 @@ public class AdminPanel extends JPanel {
     public final JTable table;
 
     public AdminPanel() {
-        setLayout(new MigLayout());
+        setLayout(new MigLayout("insets 5"));
 
         table = new JTable(new DefaultTableModel(new Object[][]{}, new String[]{"ID", "IP", "Player"}) {
             @Override
@@ -23,7 +23,7 @@ public class AdminPanel extends JPanel {
 
         JScrollPane scrollTbl = new JScrollPane(table);
 
-        add(scrollTbl, "dock center");
+        add(scrollTbl, "dock center, wrap");
 
         console = new JTextArea("Witch Server Console\n") {
             @Override
@@ -42,7 +42,7 @@ public class AdminPanel extends JPanel {
         JScrollPane scrollTxt = new JScrollPane(console);
         add(new JButton("Clear") {{
             addActionListener(e -> console.setText("Console cleared\n"));
-        }}, "gapleft 160, gapright 160, dock south");
+        }}, "wrap");
         add(scrollTxt, "dock south");
     }
 }

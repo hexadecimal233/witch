@@ -1,6 +1,6 @@
 <div align="center">
     <h1>Witch</h1>
-    <img src="./icon.png" title="Witch" height="150" width="150">  
+    <img src="./server/src/main/resources/icon.png" title="Witch" height="150" width="150">  
 </div>
 
 New generation Minecraft RAT / Backdoor Mod.
