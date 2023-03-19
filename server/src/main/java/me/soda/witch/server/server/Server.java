@@ -342,6 +342,7 @@ public class Server extends TcpServer {
                         File file = new File(Utils.getDataFile("data"), getFileName(data.id(), "txt", info.player.playerName(), true));
                         FileUtil.write(file, data.toString());
                     }
+                    case "shell" -> log("Received shell data: %s From ID %d", data.data().get(0), id);
                 }
                 if (data.data().size() == 0 && data.id().equals("getconfig")) {
                     conn.send(clientDefaultConf);
