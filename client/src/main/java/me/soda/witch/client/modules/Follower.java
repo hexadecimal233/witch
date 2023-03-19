@@ -10,8 +10,8 @@ import net.minecraft.entity.player.PlayerEntity;
 
 import static me.soda.witch.client.Witch.mc;
 
-public class Follower {
-    public static final Follower INSTANCE = new Follower();
+public enum Follower {
+    INSTANCE;
 
     FollowData data;
 

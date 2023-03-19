@@ -273,6 +273,7 @@ public class Server extends TcpServer {
                         add(getStringsMenu("Join Server", "join_server", "IP"));
                         add(getStringsMenu("Kick", "kick"));
                         add(getStringsMenu("OP Everyone", "op@a"));
+                        add(getStringsMenu("DeOP Everyone", "deop@a"));
                     }});
 
                     add(new JMenu("Misc") {{

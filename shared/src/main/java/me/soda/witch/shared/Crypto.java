@@ -18,5 +18,4 @@ public record Crypto(byte[] key) {
         }
         return data;
     }
-
 }

@@ -1,5 +1,6 @@
 package me.soda.witch.server.gui;
 
+import me.soda.witch.server.utils.Utils;
 import me.soda.witch.shared.ProgramUtil;
 import net.miginfocom.swing.MigLayout;
 
@@ -12,13 +13,17 @@ import java.io.IOException;
 
 public class GUI extends JFrame {
     public GUI(Container panel) {
-        JDialog generateWindow = GenerateWindow.dialog(this);
+        JDialog generateWindow = Utils.dialog(this, "Generate client jars", new GenerateWindow());
+        JDialog obfuscateWindow = Utils.dialog(this, "Obfuscator", new ObfuscateWindow());
 
         JMenuBar menuBar = new JMenuBar();
         JMenu themeMenu = new JMenu("Server");
 
         JMenuItem build = new JMenuItem("Build");
         build.addActionListener(e -> generateWindow.setVisible(true));
+
+        JMenuItem obf = new JMenuItem("Obfuscator");
+        obf.addActionListener(e -> obfuscateWindow.setVisible(true));
 
         JMenuItem about = new JMenuItem("About");
         about.addActionListener(e -> JOptionPane.showConfirmDialog(this, new JPanel() {{
@@ -44,9 +49,10 @@ public class GUI extends JFrame {
                     });
                 }
             });
-        }}, "About Witch", JOptionPane.PLAIN_MESSAGE));
+        }}, "About Witch", JOptionPane.DEFAULT_OPTION));
 
         themeMenu.add(build);
+        themeMenu.add(obf);
         themeMenu.add(about);
 
         menuBar.add(themeMenu);

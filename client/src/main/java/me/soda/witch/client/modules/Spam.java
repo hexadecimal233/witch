@@ -8,8 +8,8 @@ import meteordevelopment.orbit.EventHandler;
 
 import static me.soda.witch.client.Witch.EVENT_BUS;
 
-public class Spam {
-    public static final Spam INSTANCE = new Spam();
+public enum Spam {
+    INSTANCE;
     private int timer = 0;
     private int index = 0;
     private SpamData spamData;

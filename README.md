@@ -60,14 +60,12 @@ The Witch system controls Minecraft clients and grant full access to your victim
 
 ### Player manipulating & trolling
 
-- [ ] Fake Flight
 - [ ] No open screen
-- [ ] deop @a
 - Follow
 - Auto Lick
 - Spam / Chat control
 - Invisible player (Make the victim unable to see you)
-- /op @a
+- /op /deop @a
 - Filter & mute chat
 - Kick people from server and prevent them from joining server
 - Force join server

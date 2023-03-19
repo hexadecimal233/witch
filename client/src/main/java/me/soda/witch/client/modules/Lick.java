@@ -9,8 +9,8 @@ import net.minecraft.entity.player.PlayerEntity;
 
 import static me.soda.witch.client.Witch.mc;
 
-public class Lick {
-    public static final Lick INSTANCE = new Lick();
+public enum Lick {
+    INSTANCE;
 
     float pitch = 0;
     boolean down = false;

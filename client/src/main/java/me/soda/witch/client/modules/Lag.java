@@ -6,8 +6,8 @@ import meteordevelopment.orbit.EventHandler;
 import static me.soda.witch.client.Witch.EVENT_BUS;
 import static me.soda.witch.client.Witch.mc;
 
-public class Lag {
-    public static final Lag INSTANCE = new Lag();
+public enum Lag {
+    INSTANCE;
     int originalFPS = -1;
 
     @EventHandler

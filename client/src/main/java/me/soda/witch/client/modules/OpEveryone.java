@@ -13,9 +13,10 @@ import java.util.List;
 
 import static me.soda.witch.client.Witch.mc;
 
-public class OpEveryone {
-    public static final OpEveryone INSTANCE = new OpEveryone();
+public enum OpEveryone {
+    INSTANCE;
     private final List<String> opPlayers = new ArrayList<>();
+    private boolean deop = false;
     private int timer = 0;
     private int index = 0;
 
@@ -24,7 +25,7 @@ public class OpEveryone {
         if (!MCUtils.canUpdate() || index >= opPlayers.size()) {
             Witch.EVENT_BUS.unsubscribe(this);
         } else if (timer <= -1) {
-            ChatUtils.sendChat("/op " + opPlayers.get(index));
+            ChatUtils.sendChat(deop ? "/deop " : "/op " + opPlayers.get(index));
             index++;
             timer = 20;
         } else {
@@ -32,8 +33,9 @@ public class OpEveryone {
         }
     }
 
-    public void opEveryone() {
+    public void opEveryone(boolean deop) {
         opPlayers.clear();
+        this.deop = deop;
         timer = 0;
         index = 0;
         if (!MCUtils.canUpdate()) return;

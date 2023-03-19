@@ -1,11 +1,10 @@
 package me.soda.witch.server.gui;
 
 import me.soda.witch.server.utils.ConfigModifier;
+import me.soda.witch.server.utils.Utils;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.nio.file.Files;
@@ -67,9 +66,9 @@ public class GenerateWindow extends JPanel {
             }
         });
 
-        inputSelectBtn.addActionListener(e -> inputFileText.setText(chooseFile(false)));
-        outputSelectBtn.addActionListener(e -> outputFileText.setText(chooseFile(true)));
-        injectedSelectBtn.addActionListener(e -> injectedText.setText(chooseFile(false)));
+        inputSelectBtn.addActionListener(e -> inputFileText.setText(Utils.chooseFile(false, this)));
+        outputSelectBtn.addActionListener(e -> outputFileText.setText(Utils.chooseFile(true, this)));
+        injectedSelectBtn.addActionListener(e -> injectedText.setText(Utils.chooseFile(false, this)));
 
         add(new JLabel("Input file"));
         add(inputFileText);
@@ -92,26 +91,5 @@ public class GenerateWindow extends JPanel {
         add(generateBtn, btns);
         add(bundleBtn, btns);
         add(autoBtn, btns);
-    }
-
-    public static JDialog dialog(Frame owner) {
-        JDialog dialog = new JDialog(owner, true);
-        dialog.setContentPane(new GenerateWindow());
-        dialog.setTitle("Generate client jars");
-        dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        dialog.setResizable(false);
-        dialog.pack();
-        dialog.setLocationRelativeTo(null);
-        return dialog;
-    }
-
-    private String chooseFile(boolean save) {
-        JFileChooser fileChooser = new JFileChooser(".");
-        fileChooser.setFileFilter(new FileNameExtensionFilter(".jar", "jar"));
-        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        if ((save ? fileChooser.showSaveDialog(this) : fileChooser.showOpenDialog(this)) == JFileChooser.APPROVE_OPTION) {
-            return fileChooser.getSelectedFile().toString();
-        }
-        return "";
     }
 }
