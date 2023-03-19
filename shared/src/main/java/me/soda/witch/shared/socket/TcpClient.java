@@ -7,11 +7,13 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public abstract class TcpClient extends Connection {
     private final String host;
     private final int port;
-    private final ExecutorService reconnectExecutor = Executors.newSingleThreadExecutor();
+    private final ScheduledExecutorService reconnectExecutor = Executors.newSingleThreadScheduledExecutor();
     private final ExecutorService connectExecutor = Executors.newSingleThreadExecutor();
     public long reconnectTimeout;
 
@@ -33,16 +35,15 @@ public abstract class TcpClient extends Connection {
             reconnectExecutor.shutdown();
             return;
         }
-        reconnectExecutor.execute(() -> {
+        reconnectExecutor.schedule(() -> {
             try {
-                if (!noTimeout) Thread.sleep(reconnectTimeout);
                 connect(new Socket(host, port));
                 connectExecutor.execute(this);
-            } catch (IOException | InterruptedException e) {
+            } catch (IOException e) {
                 LogUtil.printStackTrace(e);
                 reconnect(noTimeout);
             }
-        });
+        }, noTimeout ? 0 : reconnectTimeout, TimeUnit.MILLISECONDS);
     }
 
     public boolean onReconnect() {

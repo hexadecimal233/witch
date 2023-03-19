@@ -11,11 +11,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.util.Base64;
 
 public abstract class Connection implements Runnable {
     public static final DisconnectData EXCEPTION = new DisconnectData(DisconnectData.Reason.EXCEPTION, "");
-    public static final int BUF_SIZE = 65535;
     private Socket socket;
     private DataInputStream in;
     private DataOutputStream out;
@@ -32,7 +30,7 @@ public abstract class Connection implements Runnable {
     @Override
     public void run() {
         try {
-            send(new Message(new OKData()));
+            send(new OKData());
             while (isConnected()) {
                 Message message = read();
                 if (message == null) continue;
@@ -86,13 +84,15 @@ public abstract class Connection implements Runnable {
     }
 
     public void close(DisconnectData info) {
-        send(new Message(info));
+        send(info);
         // Wait server to close client
         if (this instanceof TcpClient) forceClose();
     }
 
     public void forceClose() {
         try {
+            if (in != null) in.close();
+            if (out != null) out.close();
             socket.shutdownInput();
             socket.shutdownOutput();
             socket.close();
@@ -105,28 +105,23 @@ public abstract class Connection implements Runnable {
         send(new Message(data));
     }
 
-    public void send(Message data) {
+    private void send(Message data) {
         if (!isConnected()) return;
         try {
-            String str = Base64.getEncoder().encodeToString(data.encrypt());
-            for (int i = 1; i < str.length() / BUF_SIZE + 2; i++) {
-                out.writeUTF(str.substring(BUF_SIZE * (i - 1), Math.min(BUF_SIZE * i, str.length())));
-            }
+            byte[] encryptedData = data.encrypt();
+            out.writeInt(encryptedData.length);
+            out.write(encryptedData);
         } catch (Exception e) { // JsonParseException & IOException
             LogUtil.printStackTrace(e);
         }
     }
 
     public Message read() throws IOException {
-        String str = in.readUTF();
-        StringBuilder sb = new StringBuilder();
-        while (str.length() >= BUF_SIZE) {
-            sb.append(str);
-            str = in.readUTF();
-        }
-        sb.append(str);
+        int length = in.readInt();
+        byte[] encryptedData = new byte[length];
+        in.readFully(encryptedData);
         try {
-            return Message.decrypt(Base64.getDecoder().decode(sb.toString()));
+            return Message.decrypt(encryptedData);
         } catch (Exception e) { // JsonParseException
             return null;
         }

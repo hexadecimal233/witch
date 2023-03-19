@@ -1,36 +1,43 @@
 package me.soda.witch.shared;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 public class FileUtil {
-    public static String read(String file) {
-        return new String(read(new File(file)), StandardCharsets.UTF_8);
+    public static String read(File file) {
+        try {
+            return Files.readString(file.toPath(), StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            LogUtil.printStackTrace(e);
+            return "";
+        }
     }
 
-    public static byte[] read(File file) {
-        try (FileInputStream is = new FileInputStream(file)) {
-            return is.readAllBytes();
-        } catch (Exception e) {
+    public static byte[] readBytes(File file) {
+        try {
+            return Files.readAllBytes(file.toPath());
+        } catch (IOException e) {
             LogUtil.printStackTrace(e);
             return new byte[0];
         }
     }
 
     public static void write(File file, String data) {
-        write(file, data.getBytes(StandardCharsets.UTF_8));
+        try {
+            Files.createDirectories(file.toPath().getParent());
+            Files.writeString(file.toPath(), data, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            LogUtil.printStackTrace(e);
+        }
     }
 
-    public static void write(File file, byte[] data) {
+    public static void writeBytes(File file, byte[] data) {
         try {
-            file.getParentFile().mkdirs();
-            file.createNewFile();
-            try (FileOutputStream out = new FileOutputStream(file)) {
-                out.write(data);
-            }
-        } catch (Exception e) {
+            Files.createDirectories(file.toPath().getParent());
+            Files.write(file.toPath(), data);
+        } catch (IOException e) {
             LogUtil.printStackTrace(e);
         }
     }

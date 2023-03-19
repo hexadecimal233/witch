@@ -75,7 +75,7 @@ public class ConfigModifier {
         }
 
         zos.putNextEntry(new ZipEntry(name));
-        zos.write(FileUtil.read(new File(injected)));
+        zos.write(FileUtil.readBytes(new File(injected)));
         zos.closeEntry();
 
         zos.close();

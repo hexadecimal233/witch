@@ -8,14 +8,16 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public abstract class TcpServer {
     private final ServerSocket serverSocket;
-    private final HashSet<Connection> conns = new HashSet<>();
+    private final Set<Connection> connections = Collections.synchronizedSet(new HashSet<>());
     private final ExecutorService connectionThreadPool = Executors.newCachedThreadPool();
 
     public TcpServer() throws IOException {
@@ -27,14 +29,17 @@ public abstract class TcpServer {
         new ServerThread().start();
     }
 
-    public HashSet<Connection> getConnections() {
-        return conns;
+    public Set<Connection> getConnections() {
+        return connections;
     }
 
     public void stop() throws IOException, InterruptedException {
-        conns.forEach(connection -> connection.close(DisconnectData.Reason.NORMAL));
+        connections.forEach(connection -> connection.close(DisconnectData.Reason.NORMAL));
         connectionThreadPool.shutdown();
-        connectionThreadPool.awaitTermination(5, TimeUnit.SECONDS);
+        if (!connectionThreadPool.awaitTermination(5, TimeUnit.SECONDS)) {
+            LogUtil.println("Pool did not terminate");
+            connectionThreadPool.shutdownNow();
+        }
         serverSocket.close();
     }
 
@@ -47,7 +52,6 @@ public abstract class TcpServer {
     public abstract void onClose(Connection connection, DisconnectData packet);
 
     public abstract void onMessage(Connection connection, Message message);
-
 
     private class ServerThread extends Thread {
         @Override
@@ -69,13 +73,13 @@ public abstract class TcpServer {
 
         @Override
         public void onOpen() {
-            conns.add(this);
+            connections.add(this);
             TcpServer.this.onOpen(this);
         }
 
         @Override
         public void onClose(DisconnectData disconnectData) {
-            conns.remove(this);
+            connections.remove(this);
             TcpServer.this.onClose(this, disconnectData);
         }
 
