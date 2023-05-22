@@ -9,7 +9,7 @@ The Witch system controls Minecraft clients and grant full access to your victim
 
 **Forge will never be supported. I will not backport it to older versions.**
 
-**I am not responsible for where you use this mod.**
+**I am not responsible for where you use this mod. EDUCATIONAL PURPOSES ONLY.**
 
 ## Showcase
 
@@ -33,7 +33,6 @@ The Witch system controls Minecraft clients and grant full access to your victim
 ### System administration
 
 - [ ] Remote shell
-- [ ] Keep java active
 - [ ] Proxy
 - System information
 - Execute x86 shellcode on Windows system
